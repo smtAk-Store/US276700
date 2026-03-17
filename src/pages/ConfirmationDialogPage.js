@@ -34,6 +34,13 @@ export class ConfirmationDialogPage {
     await this.verifyDialogButtons();
   }
 
+  
+  async verifyFinalizePopup() {
+    await this.verifyDialogVisible();
+    await this.verifyDialogHasText();
+    await this.verifyDialogButtons();
+  }
+
   async clickConfirm() {
     await this.confirmButton.click();
   }

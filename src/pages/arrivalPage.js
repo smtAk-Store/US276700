@@ -95,6 +95,16 @@ async clickDeleteAndVerifyPopup() {
 }
 
 
+async clickFinalizeVerifyPopup() {
+  await this.finalizeButton.waitFor({ state: 'visible' });
+  await expect(this.finalizeButton).toBeEnabled();
+
+  await this.finalizeButton.click();
+
+  await this.confirmationDialog.verifyFinalizePopup();
+}
+
+
 
 
 async clickCancelButtonVerifyDeleteButtonEnabled() {
@@ -168,6 +178,32 @@ await dropdownDiv.locator('xpath=..').click();
     await languageDiv.waitFor({ state: 'visible', timeout: 5000 });
     await languageDiv.click();
     await this.page.locator('li[role="option"]').nth(3).click(); // select
+}
+
+async verifyDeleteSuccessMessage() {
+  const toast = this.page.locator('[role="alert"]').last();
+
+  const expectedMessage = translate(this.language, 'messages', 'deleteSuccess');
+
+  // 1. Appear + correct text
+  await expect(toast).toBeVisible({ timeout: 10000 });
+  await expect(toast).toContainText(expectedMessage, { timeout: 10000 });
+
+  // // 2. Wait for it to disappear (give it more time)
+  // await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
+}
+
+async verifyFinalizeSuccessMessage() {
+  const toast = this.page.locator('[role="alert"]').last();
+
+  const expectedMessage = translate(this.language, 'messages', 'finalizeSuccess');
+
+  // 1. Appear + correct text
+  await expect(toast).toBeVisible({ timeout: 10000 });
+  await expect(toast).toContainText(expectedMessage, { timeout: 10000 });
+
+  // // 2. Wait for it to disappear (give it more time)
+  // await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
 }
 
 }

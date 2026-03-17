@@ -8,6 +8,15 @@
   },
   "currency": {
     "USD": "USD"
+  },
+  "messages": {
+    "DELETESUCCESS": "Data deleted successfully",
+    "FINALIZESUCCESS": "Data updated successfully"
+  },
+
+   "formLabels": {
+    "SHIPPINGREF": "Shipping Reference"
   }
+
 }
 

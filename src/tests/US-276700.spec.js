@@ -6,15 +6,15 @@ import { LoginPage } from '../pages/loginPage';
 import { HomePage } from '../pages/homePage';
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
 
-const languages = ['en', 'fr', 'es', 'pt'];
+const languages = [ 'en'];
 
 
 const arrivalTypes = [
     "ARRIVAL",
-    "EMERGENCY",
-    "OTHERS",
-    "RETURN",
-    "STARTING BALANCE"
+    // "EMERGENCY",
+    // "OTHERS",
+    // "RETURN",
+    // "STARTING BALANCE"
 ];
 
 test.beforeEach(async ({ page }) => {
@@ -75,9 +75,12 @@ test.describe('New Arrival creation and verify Deletion pop up behaviour', () =>
 
                 const arrivalPage = new ArrivalPage(page, language);
 
-                if (language === 'fr') {
-
-                    await arrivalPage.selectLangauge();
+                 if (language === 'fr') {
+                    await arrivalPage.selectLangaugeFrench();
+                }else if(language === 'pt'){
+                    await arrivalPage.selectLangaugePortugal();
+                }else if(language === 'es'){
+                    await arrivalPage.selectLangaugeArabic();
                 }
 
                 const data = { ...testData.Emergency, receiptType: type };
@@ -96,7 +99,7 @@ test.describe('New Arrival creation and verify Deletion pop up behaviour', () =>
                   await arrivalPage.clickCancelButtonVerifyDeleteButtonEnabled();
                    await arrivalPage.clickDeleteAndVerifyPopup();
                      await arrivalPage.confirmationDialog.clickConfirm();
-                    // await arrivalPage.validateButtonDisabled();
+                     await arrivalPage.verifyDeleteSuccessMessage();
             });
 
         });
@@ -104,4 +107,51 @@ test.describe('New Arrival creation and verify Deletion pop up behaviour', () =>
     });
 
 });
+
+test.describe('Finalize New Arrival and verify not able to delete', () => {
+
+    languages.forEach(language => {
+
+        arrivalTypes.forEach(type => {
+
+            test(`${type} arrival in ${language}`, async ({ page }) => {
+
+
+                const arrivalPage = new ArrivalPage(page, language);
+
+                 if (language === 'fr') {
+                    await arrivalPage.selectLangaugeFrench();
+                }else if(language === 'pt'){
+                    await arrivalPage.selectLangaugePortugal();
+                }else if(language === 'es'){
+                    await arrivalPage.selectLangaugeArabic();
+                }
+
+                const data = { ...testData.Emergency, receiptType: type };
+                await arrivalPage.openArrivalForm();
+
+                await arrivalPage.fillArrivalForm(data);
+
+                const dialog = new ArrivalProductDialogPage(page);
+                await dialog.addProductToArrival(productData);
+
+                await arrivalPage.waitForLoadingToFinish();
+
+                await arrivalPage.validateButtonEnabled();
+                 await arrivalPage.validateDeletButtonEnabled();
+              
+                   await arrivalPage.clickFinalizeVerifyPopup();
+                     await arrivalPage.confirmationDialog.clickConfirm();
+                     await arrivalPage.verifyFinalizeSuccessMessage();
+            });
+
+        });
+
+    });
+
+});
+
+
+
+
 

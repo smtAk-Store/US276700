@@ -8,5 +8,14 @@
   },
   "currency": {
     "USD": "USD"
+  },
+    "messages": {
+    "DELETESUCCESS": "Data deleted successfully",
+    "FINALIZESUCCESS": "تم تحديث البيانات بنجاح"
+  },
+
+    "formLabels": {
+   "SHIPPINGREF": "مرجع الشحن"
   }
+  
 }
