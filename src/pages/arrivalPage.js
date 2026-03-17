@@ -84,17 +84,6 @@ async waitForLoadingToFinish() {
   await this.page.locator('.MuiBackdrop-root').waitFor({ state: 'hidden' });
 }
 
-async selectLangauge() {
-  const dropdownDiv = this.page.locator('div.MuiGrid-root.MuiGrid-item > svg').first();
-
-// Click its parent div (the clickable area)
-await dropdownDiv.locator('xpath=..').click();
- const languageDiv = this.page.locator('//div[@aria-haspopup="listbox"]');
-    await languageDiv.waitFor({ state: 'visible', timeout: 5000 });
-    await languageDiv.click();
-    await this.page.locator('li[role="option"]').nth(1).click(); // select
-}
-
 
 async clickDeleteAndVerifyPopup() {
   await this.deleteButton.waitFor({ state: 'visible' });
@@ -150,7 +139,36 @@ async validateButtonDisabled() {
     await this.clickElement(this.finalizeButton);
   }
 
+async selectLangaugeFrench() {
+  const dropdownDiv = this.page.locator('div.MuiGrid-root.MuiGrid-item > svg').first();
 
+// Click its parent div (the clickable area)
+await dropdownDiv.locator('xpath=..').click();
+ const languageDiv = this.page.locator('//div[@aria-haspopup="listbox"]');
+    await languageDiv.waitFor({ state: 'visible', timeout: 5000 });
+    await languageDiv.click();
+    await this.page.locator('li[role="option"]').nth(1).click(); // select
+}
+async selectLangaugePortugal() {
+  const dropdownDiv = this.page.locator('div.MuiGrid-root.MuiGrid-item > svg').first();
+
+// Click its parent div (the clickable area)
+await dropdownDiv.locator('xpath=..').click();
+ const languageDiv = this.page.locator('//div[@aria-haspopup="listbox"]');
+    await languageDiv.waitFor({ state: 'visible', timeout: 5000 });
+    await languageDiv.click();
+    await this.page.locator('li[role="option"]').nth(2).click(); // select
+}
+async selectLangaugeArabic() {
+  const dropdownDiv = this.page.locator('div.MuiGrid-root.MuiGrid-item > svg').first();
+
+// Click its parent div (the clickable area)
+await dropdownDiv.locator('xpath=..').click();
+ const languageDiv = this.page.locator('//div[@aria-haspopup="listbox"]');
+    await languageDiv.waitFor({ state: 'visible', timeout: 5000 });
+    await languageDiv.click();
+    await this.page.locator('li[role="option"]').nth(3).click(); // select
+}
 
 }
 

@@ -1,6 +1,10 @@
 {
   "receiptType": {
-    "ARRIVAL": "Arrivée"
+   "ARRIVAL": "Arrivée",
+    "EMERGENCY": "Urgence",
+    "OTHERS": "Autres",
+    "RETURN": "Retour",
+    "STARTING BALANCE": "Balance Initiale"
   },
   "currency": {
     "USD": "USD"

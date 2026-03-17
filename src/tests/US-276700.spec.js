@@ -6,26 +6,23 @@ import { LoginPage } from '../pages/loginPage';
 import { HomePage } from '../pages/homePage';
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
 
+const languages = ['en', 'fr', 'es', 'pt'];
 
-const languages = ['en'];
 
 const arrivalTypes = [
     "ARRIVAL",
-    // "EMERGENCY",
-    // "OTHERS",
-    // "RETURN",
-    // "STARTING BALANCE"
+    "EMERGENCY",
+    "OTHERS",
+    "RETURN",
+    "STARTING BALANCE"
 ];
 
 test.beforeEach(async ({ page }) => {
-
     const loginPage = new LoginPage(page);
     const homePage = new HomePage(page);
 
     await loginPage.loginAs('storeOperator');
-
     await homePage.verifyMenus();
-
 });
 
 test.describe('Arrival creation', () => {
@@ -36,33 +33,27 @@ test.describe('Arrival creation', () => {
 
             test(`${type} arrival in ${language}`, async ({ page }) => {
 
-
                 const arrivalPage = new ArrivalPage(page, language);
 
+                // Select French language if needed
                 if (language === 'fr') {
-
-                    await arrivalPage.selectLangauge();
+                    await arrivalPage.selectLangaugeFrench();
+                }else if(language === 'pt'){
+                    await arrivalPage.selectLangaugePortugal();
+                }else if(language === 'es'){
+                    await arrivalPage.selectLangaugeArabic();
                 }
-                // } else if (language === 'pt') {
-                //   await this.profileDropdown.click();
-                //     await page.locator('li[role="option"]').nth(2).click();
-                // } else if (language === 'ar') {
-                //     await this.profileDropdown.click();
-                //     await page.locator('li[role="option"]').nth(3).click();
-                // } 
-
-
-
 
                 const data = { ...testData.Emergency, receiptType: type };
                 await arrivalPage.openArrivalForm();
-
                 await arrivalPage.fillArrivalForm(data);
 
                 const dialog = new ArrivalProductDialogPage(page);
-                await dialog.addProductToArrival(productData);
+                
+                // Pass language here to pick correct values
+                await dialog.addProductToArrival(productData, language);
 
-                await arrivalPage.validateButtonEnabled()
+                await arrivalPage.validateButtonEnabled();
             });
 
         });

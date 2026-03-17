@@ -1,16 +1,86 @@
 {
-  "productType": "Vaccine",
-  "product": "BCG",
-  "batchNumber": "BATCH123",
-  "expiryDate": "26-03-2026",
-  "producer": "Japan BCG Laboratory",
-  "commercialName": "BCG Freeze Dried Glutamate vaccine",
-  "formulation": "Lyophilised : reconstituted with excipient diluent",
-  "presentation": "10",
-  "vvmStage": "0.None",
-  "quantity": "100",
-  "routineOrSia": "Routine",
-  "origin": "Japan",
-  "freezeIndicator": "Ok",
-  "storageLocation": "STORE ROOM"
+  "productType": {
+    "en": "Vaccine",
+    "fr": "Vaccin",
+    "pt": "Vacina",
+    "es": "لقاح"
+  },
+  "product": {
+    "en": "BCG",
+    "fr": "BCG",
+    "pt": "BCG",
+    "es": "BCG"
+  },
+  "batchNumber": {
+    "en": "BATCH123",
+    "fr": "BATCH123",
+    "pt": "BATCH123",
+    "es": "BATCH123"
+  },
+  "expiryDate": {
+    "en": "26-03-2026",
+    "fr": "26-03-2026",
+    "pt": "26-03-2026",
+    "es": "26-03-2026"
+  },
+  "producer": {
+    "en": "Japan BCG Laboratory",
+    "fr": "Japan BCG Laboratory",
+    "pt": "Japan BCG Laboratory",
+    "es": "Japan BCG Laboratory"
+  },
+  "commercialName": {
+    "en": "BCG Freeze Dried Glutamate vaccine",
+    "fr": "BCG Freeze Dried Glutamate vaccine",
+    "pt": "BCG Freeze Dried Glutamate vaccine",
+    "es": "BCG Freeze Dried Glutamate vaccine"
+  },
+  "formulation": {
+    "en": "Lyophilised : reconstituted with excipient diluent",
+    "fr": "Lyophilised : reconstituted with excipient diluent",
+    "pt": "Lyophilised : reconstituted with excipient diluent",
+    "es": "Lyophilised : reconstituted with excipient diluent"
+  },
+  "presentation": {
+    "en": "10",
+    "fr": "10",
+    "pt": "10",
+    "es": "10"
+  },
+  "vvmStage": {
+    "en": "0.None",
+    "fr": "0.Aucun",
+    "pt": "0. Nenhum",
+    "es": "0.None"
+  },
+  "quantity": {
+    "en": "100",
+    "fr": "100",
+    "pt": "100",
+    "es": "100"
+  },
+  "routineOrSia": {
+    "en": "Routine",
+    "fr": "Routine",
+    "pt": "Rotina",
+    "es":"روتيني"
+  },
+  "origin": {
+    "en": "Japan",
+    "fr": "Japon",
+    "pt": "Japão",
+    "es": "اليابان"
+  },
+  "freezeIndicator": {
+    "en": "Ok",
+    "fr": "Ok",
+    "pt": "Ok",
+    "es": "Ok"
+  },
+  "storageLocation": {
+    "en": "STORE ROOM",
+    "fr": "STORE ROOM",
+    "pt": "STORE ROOM",
+    "es": "STORE ROOM"
+  }
 }

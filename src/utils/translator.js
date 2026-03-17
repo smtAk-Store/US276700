@@ -1,12 +1,13 @@
  const en = require('../testdata/translations/en.json');
 const fr = require('../testdata/translations/fr.json');
-//const es = require('../testdata/translations/es.json');
+const es = require('../testdata/translations/es.json');
 const pt = require('../testdata/translations/pt.json');
 
 const translations = {
   en,
   fr,
-  pt
+  pt,
+  es
 };
 
 // normalize dropdown value
