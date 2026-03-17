@@ -6,15 +6,15 @@ import { LoginPage } from '../pages/loginPage';
 import { HomePage } from '../pages/homePage';
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
 
-const languages = [ 'en'];
+const languages = ['en'];
 
 
 const arrivalTypes = [
     "ARRIVAL",
-    // "EMERGENCY",
-    // "OTHERS",
-    // "RETURN",
-    // "STARTING BALANCE"
+    "EMERGENCY",
+    "OTHERS",
+    "RETURN",
+    "STARTING BALANCE"
 ];
 
 test.beforeEach(async ({ page }) => {
@@ -38,9 +38,9 @@ test.describe('Arrival creation', () => {
                 // Select French language if needed
                 if (language === 'fr') {
                     await arrivalPage.selectLangaugeFrench();
-                }else if(language === 'pt'){
+                } else if (language === 'pt') {
                     await arrivalPage.selectLangaugePortugal();
-                }else if(language === 'es'){
+                } else if (language === 'es') {
                     await arrivalPage.selectLangaugeArabic();
                 }
 
@@ -49,7 +49,7 @@ test.describe('Arrival creation', () => {
                 await arrivalPage.fillArrivalForm(data);
 
                 const dialog = new ArrivalProductDialogPage(page);
-                
+
                 // Pass language here to pick correct values
                 await dialog.addProductToArrival(productData, language);
 
@@ -75,11 +75,11 @@ test.describe('New Arrival creation and verify Deletion pop up behaviour', () =>
 
                 const arrivalPage = new ArrivalPage(page, language);
 
-                 if (language === 'fr') {
+                if (language === 'fr') {
                     await arrivalPage.selectLangaugeFrench();
-                }else if(language === 'pt'){
+                } else if (language === 'pt') {
                     await arrivalPage.selectLangaugePortugal();
-                }else if(language === 'es'){
+                } else if (language === 'es') {
                     await arrivalPage.selectLangaugeArabic();
                 }
 
@@ -94,12 +94,12 @@ test.describe('New Arrival creation and verify Deletion pop up behaviour', () =>
                 await arrivalPage.waitForLoadingToFinish();
 
                 await arrivalPage.validateButtonEnabled();
-                 await arrivalPage.validateDeletButtonEnabled();
-                 await arrivalPage.clickDeleteAndVerifyPopup();
-                  await arrivalPage.clickCancelButtonVerifyDeleteButtonEnabled();
-                   await arrivalPage.clickDeleteAndVerifyPopup();
-                     await arrivalPage.confirmationDialog.clickConfirm();
-                     await arrivalPage.verifyDeleteSuccessMessage();
+                await arrivalPage.validateDeletButtonEnabled();
+                await arrivalPage.clickDeleteAndVerifyPopup();
+                await arrivalPage.clickCancelButtonVerifyDeleteButtonEnabled();
+                await arrivalPage.clickDeleteAndVerifyPopup();
+                await arrivalPage.confirmationDialog.clickConfirm();
+                await arrivalPage.verifyDeleteSuccessMessage();
             });
 
         });
@@ -119,11 +119,11 @@ test.describe('Finalize New Arrival and verify not able to delete', () => {
 
                 const arrivalPage = new ArrivalPage(page, language);
 
-                 if (language === 'fr') {
+                if (language === 'fr') {
                     await arrivalPage.selectLangaugeFrench();
-                }else if(language === 'pt'){
+                } else if (language === 'pt') {
                     await arrivalPage.selectLangaugePortugal();
-                }else if(language === 'es'){
+                } else if (language === 'es') {
                     await arrivalPage.selectLangaugeArabic();
                 }
 
@@ -138,11 +138,11 @@ test.describe('Finalize New Arrival and verify not able to delete', () => {
                 await arrivalPage.waitForLoadingToFinish();
 
                 await arrivalPage.validateButtonEnabled();
-                 await arrivalPage.validateDeletButtonEnabled();
-              
-                   await arrivalPage.clickFinalizeVerifyPopup();
-                     await arrivalPage.confirmationDialog.clickConfirm();
-                     await arrivalPage.verifyFinalizeSuccessMessage();
+                await arrivalPage.validateDeletButtonEnabled();
+
+                await arrivalPage.clickFinalizeVerifyPopup();
+                await arrivalPage.confirmationDialog.clickConfirm();
+                await arrivalPage.verifyFinalizeSuccessMessage();
             });
 
         });
