@@ -6,7 +6,8 @@ import { LoginPage } from '../pages/loginPage';
 import { HomePage } from '../pages/homePage';
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
 
-const languages = ['fr'];
+
+const languages = ['en'];
 
 const arrivalTypes = [
     "ARRIVAL",
@@ -35,22 +36,22 @@ test.describe('Arrival creation', () => {
 
             test(`${type} arrival in ${language}`, async ({ page }) => {
 
-               
-   const arrivalPage = new ArrivalPage(page, language);
-    
-    if (language === 'fr') {
-       
-         await arrivalPage.selectLangauge();
-    }
-    // } else if (language === 'pt') {
-    //   await this.profileDropdown.click();
-    //     await page.locator('li[role="option"]').nth(2).click();
-    // } else if (language === 'ar') {
-    //     await this.profileDropdown.click();
-    //     await page.locator('li[role="option"]').nth(3).click();
-    // } 
 
-             
+                const arrivalPage = new ArrivalPage(page, language);
+
+                if (language === 'fr') {
+
+                    await arrivalPage.selectLangauge();
+                }
+                // } else if (language === 'pt') {
+                //   await this.profileDropdown.click();
+                //     await page.locator('li[role="option"]').nth(2).click();
+                // } else if (language === 'ar') {
+                //     await this.profileDropdown.click();
+                //     await page.locator('li[role="option"]').nth(3).click();
+                // } 
+
+
 
 
                 const data = { ...testData.Emergency, receiptType: type };
@@ -70,29 +71,46 @@ test.describe('Arrival creation', () => {
 
 });
 
-// test.describe('New Arrival creation and verify Deletion pop up behaviour', () => {
-//     languages.forEach(language => {
-//         arrivalTypes.forEach(type => {
-//             test(`${type} arrival in ${language}`, async ({ page }) => {
-//                 const arrivalPage = new ArrivalPage(page, language);
-//                 const data = { ...testData.arrival, receiptType: type };
-//                 await arrivalPage.fillArrivalForm(data);
-//                 const dialog = new ArrivalProductDialogPage(page);
-//                 await dialog.addProductToArrival(productData);
-//                 await verifyButtonEnabled(page, '#btnFianlize');
-//                 await arrivalPage.clickDeleteAndVerifyPopup();
-//                 await arrivalPage.confirmationDialog.clickCancel(); await arrivalPage.deleteArrivalAndVerify();     // verifyFinalebuttone enabled      // verify delete button pop up      //verify cancel button and see delete button enable     // verify continue delete button clicked      // veify arrival deleted successfully pop up -no disable of delete button and finalize button      });
-//             });
-//         });
-//     });
 
-//     test.describe('Finalize the Arrival creation and verify Delet behaviour', () => {
-//         languages.forEach(language => {
-//             arrivalTypes.forEach(type => {
-//                 test(`${type} arrival in ${language}`, async ({ page }) => {
-//                     const arrivalPage = new ArrivalPage(page, language);
-//                     const data = { ...testData.arrival, receiptType: type };
-//                     await arrivalPage.fillArrivalForm(data);
-//                     const dialog = new ArrivalProductDialogPage(page); await dialog.addProductToArrival(productData); await verifyButtonEnabled(page, '#btnFianlize');     // verifyFinalebuttone endable      // click the  finalize button      // verify delete buttion  disable      });
-//                 });
-//             });
+
+test.describe('New Arrival creation and verify Deletion pop up behaviour', () => {
+
+    languages.forEach(language => {
+
+        arrivalTypes.forEach(type => {
+
+            test(`${type} arrival in ${language}`, async ({ page }) => {
+
+
+                const arrivalPage = new ArrivalPage(page, language);
+
+                if (language === 'fr') {
+
+                    await arrivalPage.selectLangauge();
+                }
+
+                const data = { ...testData.Emergency, receiptType: type };
+                await arrivalPage.openArrivalForm();
+
+                await arrivalPage.fillArrivalForm(data);
+
+                const dialog = new ArrivalProductDialogPage(page);
+                await dialog.addProductToArrival(productData);
+
+                await arrivalPage.waitForLoadingToFinish();
+
+                await arrivalPage.validateButtonEnabled();
+                 await arrivalPage.validateDeletButtonEnabled();
+                 await arrivalPage.clickDeleteAndVerifyPopup();
+                  await arrivalPage.clickCancelButtonVerifyDeleteButtonEnabled();
+                   await arrivalPage.clickDeleteAndVerifyPopup();
+                     await arrivalPage.confirmationDialog.clickConfirm();
+                     await arrivalPage.validateButtonDisabled();
+            });
+
+        });
+
+    });
+
+});
+

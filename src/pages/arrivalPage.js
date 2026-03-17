@@ -2,6 +2,8 @@ const { translate } = require('../utils/translator');
 const { FormComponent } = require('../components/FormComponent');
 const { log } = require('node:console');
 const { generateUniqueSMT ,getCurrentDate,verifyButtonEnabled} = require('../utils/reusableFunction');
+import { ConfirmationDialogPage } from '../pages/ConfirmationDialogPage';
+import { expect } from '@playwright/test';
 
 class ArrivalPage {
 
@@ -9,8 +11,11 @@ class ArrivalPage {
     this.page = page;
     this.form = new FormComponent(page);
     this.language = language;
-    this.deleteButton = page.locator('button.MuiButton-containedSecondary');
-     this.finalizeButton = page.locator('#btnFianlize');
+this.deleteButton = this.page.locator(
+  'button.MuiButton-contained[style*="background-color: rgb(255, 0, 0)"]'
+);
+    this.finalizeButton = page.locator('#btnFianlize');
+   this.confirmationDialog = new ConfirmationDialogPage(page);
   }
 
   receiptTypeDropdown = () => this.page.locator('#receiptTypeId');
@@ -69,12 +74,15 @@ console.log('Raw data.currency:', data.currency);
 
   
 async validateButtonEnabled() {
-  await verifyButtonEnabled(this.finalizeButton);
+  await this.page.waitForLoadState('networkidle'); // optional safety
+
+  await expect(this.finalizeButton).toBeVisible();
+  await expect(this.finalizeButton).toBeEnabled();
 }
 
-// async pressClickButton() {
-  
-// }
+async waitForLoadingToFinish() {
+  await this.page.locator('.MuiBackdrop-root').waitFor({ state: 'hidden' });
+}
 
 async selectLangauge() {
   const dropdownDiv = this.page.locator('div.MuiGrid-root.MuiGrid-item > svg').first();
@@ -86,6 +94,66 @@ await dropdownDiv.locator('xpath=..').click();
     await languageDiv.click();
     await this.page.locator('li[role="option"]').nth(1).click(); // select
 }
+
+
+async clickDeleteAndVerifyPopup() {
+  await this.deleteButton.waitFor({ state: 'visible' });
+  await expect(this.deleteButton).toBeEnabled();
+
+  await this.deleteButton.click();
+
+  await this.confirmationDialog.verifyDeleteConfirmationPopup();
 }
+
+
+
+
+async clickCancelButtonVerifyDeleteButtonEnabled() {
+ 
+
+  await this.confirmationDialog.clickCancel();
+  await this.page.waitForLoadState('networkidle'); // optional safety
+  await this.validateDeletButtonEnabled();
+}
+
+  
+async validateDeletButtonEnabled() {
+  await this.page.waitForLoadState('networkidle'); // optional safety
+
+  await expect(this.deleteButton).toBeVisible();
+  await expect(this.deleteButton).toBeEnabled();
+}
+
+async validateButtonDisabled() {
+  // wait for dialog to disappear (important!)
+  await this.page.locator('[role="dialog"]').waitFor({ state: 'hidden' });
+
+  await expect(this.deleteButton).toBeDisabled();
+}
+// async deleteArrivalAndVerify() {
+
+//     // Click Delete
+//     await this.clickDelete();
+
+//     // Confirm in popup
+//     await this.confirmationDialog.confirmDelete();
+
+//     // Wait for UI update
+//     await this.page.waitForTimeout(1000);
+
+//     // Verify Delete button disabled
+//     await expect(this.deleteButton).toBeDisabled();
+
+//   }
+
+    async clickFinalizeButton() {
+    await this.clickElement(this.finalizeButton);
+  }
+
+
+
+}
+
+
 
 module.exports = { ArrivalPage };
