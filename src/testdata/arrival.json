@@ -7,6 +7,8 @@
     "shippingRef": "SHIP123",
     "smtNumber": "SMT-00121"
   },
+
+  
     "Emergency": {
     "receiptType": "EMERGENCY",
     "currency": "USD",
