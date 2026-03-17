@@ -1,0 +1,11 @@
+
+{
+    "Emergency": {
+    "receiptType": "Emergency",
+    "currency": "USD",
+    "freightCost": "120",
+    "sendingStore": "STORE_1",
+    "shippingRef": "SHIP123",
+    "smtNumber": "SMT-0011"
+  }
+}

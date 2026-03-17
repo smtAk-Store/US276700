@@ -1,0 +1,46 @@
+{
+  "arrival": {
+    "receiptType": "ARRIVAL",
+    "currency": "USD",
+    "freightCost": "120",
+    "sendingStore": "STORE_1",
+    "shippingRef": "SHIP123",
+    "smtNumber": "SMT-00121"
+  },
+    "Emergency": {
+    "receiptType": "EMERGENCY",
+    "currency": "USD",
+    "freightCost": "120",
+    "sendingStore": "STORE_1",
+    "shippingRef": "SHIP123",
+    "smtNumber": "SMT-00311"
+  },
+  "Others": {
+    "receiptType": "OTHERS",
+    "currency": "USD",
+    "freightCost": "120",
+    "sendingStore": "STORE_1",
+    "shippingRef": "SHIP123",
+    "smtNumber": "SMT-00141"
+  },
+  "Return": {
+    "receiptType": "Return",
+    "currency": "USD",
+    "freightCost": "120",
+    "sendingStore": "STORE_1",
+    "shippingRef": "SHIP123",
+    "smtNumber": "SMT-001441"
+  },
+  "Starting Balance": {
+    "receiptType": "STARTING BALANCE",
+    "currency": "USD",
+    "freightCost": "120",
+    "sendingStore": "STORE_1",
+    "shippingRef": "SHIP123",
+    "smtNumber": "SMT-001123"
+  }
+  
+  
+
+  
+}

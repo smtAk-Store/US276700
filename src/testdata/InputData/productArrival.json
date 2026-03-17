@@ -1,0 +1,16 @@
+{
+  "productType": "Vaccine",
+  "product": "BCG",
+  "batchNumber": "BATCH123",
+  "expiryDate": "26-03-2026",
+  "producer": "Japan BCG Laboratory",
+  "commercialName": "BCG Freeze Dried Glutamate vaccine",
+  "formulation": "Lyophilised : reconstituted with excipient diluent",
+  "presentation": "10",
+  "vvmStage": "0.None",
+  "quantity": "100",
+  "routineOrSia": "Routine",
+  "origin": "Japan",
+  "freezeIndicator": "Ok",
+  "storageLocation": "STORE ROOM"
+}

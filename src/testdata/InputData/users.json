@@ -1,0 +1,16 @@
+{
+  "users": {
+    "admin": {
+      "email": "admin@test.com",
+      "password": "Admin123"
+    },
+    "countryAdmin": {
+      "email": "countryadmin@test.com",
+      "password": "Admin123"
+    },
+    "storeOperator": {
+      "email": "operatorstore26@gmail.com",
+      "password": "Yawmtech@"
+    }
+  }
+}
