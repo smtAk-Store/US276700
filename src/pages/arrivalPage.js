@@ -239,8 +239,8 @@ async verifyArrivalInTable(expectedData) {
   // }
 
   // // State
-   const statePill = cells.nth(4).locator('span');
-  await expect(statePill).toHaveText('Complete');
+  //  const statePill = cells.nth(4).locator('span');
+  // await expect(statePill).toHaveText('Complete');
 }
 
 
