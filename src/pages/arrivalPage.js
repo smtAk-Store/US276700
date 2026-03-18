@@ -46,6 +46,11 @@ console.log('Raw data.currency:', data.currency);
  
 
      const currencyText = translate(this.language, "currency", data.currency);
+     const sendingStoreText = translate(this.language, "formLabels", data.sendingStore);
+      const shippingReferenceText = translate(this.language, "formLabels", data.shippingRef);
+
+        console.log('sending store type', sendingStoreText);
+    console.log('shiiping refernce:', shippingReferenceText);
 
     await this.form.selectDropdown(this.receiptTypeDropdown(), receiptTypeText);
 

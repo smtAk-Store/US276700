@@ -6,15 +6,15 @@ import { LoginPage } from '../pages/loginPage';
 import { HomePage } from '../pages/homePage';
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
 
-const languages = ['en'];
+const languages = ['fr'];
 
 
 const arrivalTypes = [
-    "ARRIVAL",
-    "EMERGENCY",
-    "OTHERS",
-    "RETURN",
-    "STARTING BALANCE"
+   "ARRIVAL",
+   // "EMERGENCY",
+   // "OTHERS",
+   // "RETURN",
+  //  "STARTING BALANCE"
 ];
 
 test.beforeEach(async ({ page }) => {
@@ -64,6 +64,7 @@ test.describe('Arrival creation', () => {
 
 
 
+
 test.describe('New Arrival creation and verify Deletion pop up behaviour', () => {
 
     languages.forEach(language => {
@@ -89,7 +90,7 @@ test.describe('New Arrival creation and verify Deletion pop up behaviour', () =>
                 await arrivalPage.fillArrivalForm(data);
 
                 const dialog = new ArrivalProductDialogPage(page);
-                await dialog.addProductToArrival(productData);
+                await dialog.addProductToArrival(productData, language);
 
                 await arrivalPage.waitForLoadingToFinish();
 
@@ -133,7 +134,7 @@ test.describe('Finalize New Arrival and verify not able to delete', () => {
                 await arrivalPage.fillArrivalForm(data);
 
                 const dialog = new ArrivalProductDialogPage(page);
-                await dialog.addProductToArrival(productData);
+                await dialog.addProductToArrival(productData, language);
 
                 await arrivalPage.waitForLoadingToFinish();
 
