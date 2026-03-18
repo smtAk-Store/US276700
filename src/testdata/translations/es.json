@@ -10,12 +10,13 @@
     "USD": "USD"
   },
     "messages": {
-    "DELETESUCCESS": "Data deleted successfully",
+    "DELETESUCCESS": "تم حذف البيانات بنجاح",
     "FINALIZESUCCESS": "تم تحديث البيانات بنجاح"
   },
 
     "formLabels": {
    "SHIPPINGREF": "مرجع الشحن"
+
   }
   
 }

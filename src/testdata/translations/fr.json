@@ -10,11 +10,12 @@
     "USD": "USD"
   },
  "messages": {
-    "DELETESUCCESS": "Data deleted successfully",
+    "DELETESUCCESS": "Données supprimées avec succès",
     "FINALIZESUCCESS": "Données mises à jour avec succès"
   },
   "formLabels": {
-    "SHIPPINGREF": "Referência de envio"
+    "SHIPPINGREF": "Referência de envio",
+    "STORE_1":"MAGASIN_1"
   }
 
 }
