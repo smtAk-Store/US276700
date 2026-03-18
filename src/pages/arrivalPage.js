@@ -16,6 +16,12 @@ this.deleteButton = this.page.locator(
 );
     this.finalizeButton = page.locator('#btnFianlize');
    this.confirmationDialog = new ConfirmationDialogPage(page);
+
+      this.tableBody = this.page.locator('tbody.MuiTableBody-root');
+  this.tableRows = this.tableBody.locator(
+    'tr.MuiTableRow-root:not([style*="height: 10px"])');
+
+
   }
 
   receiptTypeDropdown = () => this.page.locator('#receiptTypeId');
@@ -210,6 +216,35 @@ async verifyFinalizeSuccessMessage() {
   // // 2. Wait for it to disappear (give it more time)
   // await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
 }
+
+async verifyArrivalInTable(expectedData) {
+  const { smtNumber, receiptType, sendingStore = '' } = expectedData;
+
+  await expect(this.tableBody).toBeVisible({ timeout: 15000 });
+
+  const row = this.tableRows.first(); // 👈 always first row
+  const cells = row.locator('td');
+
+  // SMT validation (partial)
+  await expect(cells.nth(1)).toContainText(smtNumber);
+
+  // Receipt Type
+  const expectedType = translate(this.language, 'receiptType', receiptType);
+  log('Expected Receipt Type in Table:', expectedType);
+  await expect(cells.nth(2)).toHaveText(expectedType);
+
+  // // Sending Store
+  // if (sendingStore) {
+  //   await expect(cells.nth(3)).toHaveText(sendingStore);
+  // }
+
+  // // State
+   const statePill = cells.nth(4).locator('span');
+  await expect(statePill).toHaveText('Complete');
+}
+
+
+
 
 }
 

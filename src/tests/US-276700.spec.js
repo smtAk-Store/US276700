@@ -144,6 +144,7 @@ test.describe('Finalize New Arrival and verify not able to delete', () => {
                 await arrivalPage.clickFinalizeVerifyPopup();
                 await arrivalPage.confirmationDialog.clickConfirm();
                 await arrivalPage.verifyFinalizeSuccessMessage();
+                await arrivalPage.verifyArrivalInTable(data);
             });
 
         });
