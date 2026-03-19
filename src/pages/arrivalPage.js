@@ -21,7 +21,6 @@ this.deleteButton = this.page.locator(
   this.tableRows = this.tableBody.locator(
     'tr.MuiTableRow-root:not([style*="height: 10px"])');
 
-
   }
 
   receiptTypeDropdown = () => this.page.locator('#receiptTypeId');
@@ -85,7 +84,13 @@ console.log('Raw data.currency:', data.currency);
 
   
 async validateButtonEnabled() {
-  await this.page.waitForLoadState('networkidle'); // optional safety
+  await this.page.waitForLoadState('networkidle'); 
+
+  // Highlight the element we are validating
+  await this.finalizeButton.evaluate(el => {
+    el.style.outline = '3px solid red';
+    el.style.transition = 'outline 0.3s ease-in-out';
+  });
 
   await expect(this.finalizeButton).toBeVisible();
   await expect(this.finalizeButton).toBeEnabled();
@@ -94,7 +99,6 @@ async validateButtonEnabled() {
 async waitForLoadingToFinish() {
   await this.page.locator('.MuiBackdrop-root').waitFor({ state: 'hidden' });
 }
-
 
 async clickDeleteAndVerifyPopup() {
   await this.deleteButton.waitFor({ state: 'visible' });
@@ -105,11 +109,16 @@ async clickDeleteAndVerifyPopup() {
   await this.confirmationDialog.verifyDeleteConfirmationPopup();
 }
 
-
 async clickFinalizeVerifyPopup() {
   await this.finalizeButton.waitFor({ state: 'visible' });
-  await expect(this.finalizeButton).toBeEnabled();
 
+  // Highlight the element we are validating/clicking
+  await this.finalizeButton.evaluate(el => {
+    el.style.outline = '3px solid red';
+    el.style.transition = 'outline 0.3s ease-in-out';
+  });
+
+  await expect(this.finalizeButton).toBeEnabled();
   await this.finalizeButton.click();
 
   await this.confirmationDialog.verifyFinalizePopup();
@@ -117,18 +126,19 @@ async clickFinalizeVerifyPopup() {
 
 
 
-
 async clickCancelButtonVerifyDeleteButtonEnabled() {
  
 
   await this.confirmationDialog.clickCancel();
-  await this.page.waitForLoadState('networkidle'); // optional safety
+  await this.page.waitForLoadState('networkidle'); 
   await this.validateDeletButtonEnabled();
 }
 
   
 async validateDeletButtonEnabled() {
-  await this.page.waitForLoadState('networkidle'); // optional safety
+  await this.page.waitForLoadState('networkidle'); 
+  // Highlight the element we are validating
+  await this.deleteButton.evaluate(el => { el.style.outline = '3px solid red'; el.style.transition = 'outline 0.3s ease-in-out'; });
 
   await expect(this.deleteButton).toBeVisible();
   await expect(this.deleteButton).toBeEnabled();
@@ -140,21 +150,6 @@ async validateButtonDisabled() {
 
   await expect(this.deleteButton).toBeDisabled();
 }
-// async deleteArrivalAndVerify() {
-
-//     // Click Delete
-//     await this.clickDelete();
-
-//     // Confirm in popup
-//     await this.confirmationDialog.confirmDelete();
-
-//     // Wait for UI update
-//     await this.page.waitForTimeout(1000);
-
-//     // Verify Delete button disabled
-//     await expect(this.deleteButton).toBeDisabled();
-
-//   }
 
     async clickFinalizeButton() {
     await this.clickElement(this.finalizeButton);
@@ -163,7 +158,6 @@ async validateButtonDisabled() {
 async selectLangaugeFrench() {
   const dropdownDiv = this.page.locator('div.MuiGrid-root.MuiGrid-item > svg').first();
 
-// Click its parent div (the clickable area)
 await dropdownDiv.locator('xpath=..').click();
  const languageDiv = this.page.locator('//div[@aria-haspopup="listbox"]');
     await languageDiv.waitFor({ state: 'visible', timeout: 5000 });
@@ -173,17 +167,15 @@ await dropdownDiv.locator('xpath=..').click();
 async selectLangaugePortugal() {
   const dropdownDiv = this.page.locator('div.MuiGrid-root.MuiGrid-item > svg').first();
 
-// Click its parent div (the clickable area)
 await dropdownDiv.locator('xpath=..').click();
  const languageDiv = this.page.locator('//div[@aria-haspopup="listbox"]');
     await languageDiv.waitFor({ state: 'visible', timeout: 5000 });
     await languageDiv.click();
-    await this.page.locator('li[role="option"]').nth(2).click(); // select
+    await this.page.locator('li[role="option"]').nth(2).click(); 
 }
 async selectLangaugeArabic() {
   const dropdownDiv = this.page.locator('div.MuiGrid-root.MuiGrid-item > svg').first();
 
-// Click its parent div (the clickable area)
 await dropdownDiv.locator('xpath=..').click();
  const languageDiv = this.page.locator('//div[@aria-haspopup="listbox"]');
     await languageDiv.waitFor({ state: 'visible', timeout: 5000 });
@@ -204,6 +196,47 @@ async verifyDeleteSuccessMessage() {
   // await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
 }
 
+async verifyArrivalInTable(expectedData) {
+  const { smtNumber, receiptType } = expectedData;
+
+  // Wait for the table body to be visible
+  await expect(this.tableBody).toBeVisible({ timeout: 15000 });
+
+  const row = this.tableRows.first(); // Always first row
+  const cells = row.locator('td');
+
+  // --- Helper to highlight any cell safely ---
+  const highlightElement = async (locator, color = 'yellow', duration = 2000) => {
+    // Apply highlight
+    await locator.evaluate((el, color) => {
+      el.style.transition = 'all 0.5s ease';
+      el.style.backgroundColor = color;
+      el.style.border = '2px solid red';
+    }, color);
+
+    // Wait for duration using the Page object from this class
+    await this.page.waitForTimeout(duration);
+
+    // Remove highlight
+    await locator.evaluate(el => {
+      el.style.backgroundColor = '';
+      el.style.border = '';
+    });
+  };
+
+  // --- SMT Number validation ---
+  const smtCell = cells.nth(1);
+  await highlightElement(smtCell); // highlight immediately
+  await expect(smtCell).toContainText(smtNumber);
+
+  // --- Receipt Type validation ---
+  const receiptCell = cells.nth(2);
+  await highlightElement(receiptCell);
+  const expectedType = translate(this.language, 'receiptType', receiptType);
+  log('Expected Receipt Type in Table:', expectedType);
+  await expect(receiptCell).toHaveText(expectedType);
+}
+
 async verifyFinalizeSuccessMessage() {
   const toast = this.page.locator('[role="alert"]').last();
 
@@ -217,37 +250,8 @@ async verifyFinalizeSuccessMessage() {
   // await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
 }
 
-async verifyArrivalInTable(expectedData) {
-  const { smtNumber, receiptType, sendingStore = '' } = expectedData;
-
-  await expect(this.tableBody).toBeVisible({ timeout: 15000 });
-
-  const row = this.tableRows.first(); // 👈 always first row
-  const cells = row.locator('td');
-
-  // SMT validation (partial)
-  await expect(cells.nth(1)).toContainText(smtNumber);
-
-  // Receipt Type
-  const expectedType = translate(this.language, 'receiptType', receiptType);
-  log('Expected Receipt Type in Table:', expectedType);
-  await expect(cells.nth(2)).toHaveText(expectedType);
-
-  // // Sending Store
-  // if (sendingStore) {
-  //   await expect(cells.nth(3)).toHaveText(sendingStore);
-  // }
-
-  // // State
-  //  const statePill = cells.nth(4).locator('span');
-  // await expect(statePill).toHaveText('Complete');
 }
-
-
-
-
-}
-
 
 
 module.exports = { ArrivalPage };
+

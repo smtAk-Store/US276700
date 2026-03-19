@@ -21,12 +21,27 @@ export class ConfirmationDialogPage {
   }
 
   async verifyDialogButtons() {
-    await expect(this.confirmButton).toBeVisible();
-    await expect(this.cancelButton).toBeVisible();
+  await expect(this.confirmButton).toBeVisible();
+  await expect(this.cancelButton).toBeVisible();
 
-    await expect(this.confirmButton).toBeEnabled();
-    await expect(this.cancelButton).toBeEnabled();
-  }
+  await expect(this.confirmButton).toBeEnabled();
+  await expect(this.cancelButton).toBeEnabled();
+
+  // Highlight Confirm button
+  await this.confirmButton.evaluate(el => {
+    el.style.outline = '3px solid yellow';
+    el.style.backgroundColor = 'yellow';
+  });
+
+  // Highlight Cancel button
+  await this.cancelButton.evaluate(el => {
+    el.style.outline = '3px solid yellow';
+    el.style.backgroundColor = 'yellow';
+  });
+
+  // Keep highlight visible for 1 second
+  await this.page.waitForTimeout(1000);
+}
 
   async verifyDeleteConfirmationPopup() {
     await this.verifyDialogVisible();

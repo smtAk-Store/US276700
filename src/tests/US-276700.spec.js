@@ -6,15 +6,14 @@ import { LoginPage } from '../pages/loginPage';
 import { HomePage } from '../pages/homePage';
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
 
-const languages = ['fr'];
-
+const languages = ['en', 'fr', 'es', 'pt'];
 
 const arrivalTypes = [
    "ARRIVAL",
-   // "EMERGENCY",
-   // "OTHERS",
-   // "RETURN",
-  //  "STARTING BALANCE"
+   "EMERGENCY",
+   "OTHERS",
+   "RETURN",
+   "STARTING BALANCE"
 ];
 
 test.beforeEach(async ({ page }) => {
@@ -50,7 +49,6 @@ test.describe('Arrival creation', () => {
 
                 const dialog = new ArrivalProductDialogPage(page);
 
-                // Pass language here to pick correct values
                 await dialog.addProductToArrival(productData, language);
 
                 await arrivalPage.validateButtonEnabled();
@@ -61,9 +59,6 @@ test.describe('Arrival creation', () => {
     });
 
 });
-
-
-
 
 test.describe('New Arrival creation and verify Deletion pop up behaviour', () => {
 
@@ -104,22 +99,14 @@ test.describe('New Arrival creation and verify Deletion pop up behaviour', () =>
             });
 
         });
-
     });
-
 });
 
 test.describe('Finalize New Arrival and verify not able to delete', () => {
-
     languages.forEach(language => {
-
         arrivalTypes.forEach(type => {
-
             test(`${type} arrival in ${language}`, async ({ page }) => {
-
-
                 const arrivalPage = new ArrivalPage(page, language);
-
                 if (language === 'fr') {
                     await arrivalPage.selectLangaugeFrench();
                 } else if (language === 'pt') {
