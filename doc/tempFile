@@ -1,0 +1,8 @@
+•	Qty Needed per year (units or pieces) = (target population) * (estimated coverage) * (doses per target) * (estimated wastage factor (=100/ (100-wastage rate in %))  
+•	Qty Needed per week = Qty Needed per year/52  
+•	Current Stock (Weeks) = Current Stock in units or pieces / Qty Needed per week  
+
+50000*0.4*2*(wastage factor=  100/100-10)
+5*20*2*1.05= 2105.3 
+854
+Currentstock=11/854 ==.012
