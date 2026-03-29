@@ -61,6 +61,43 @@ export class ArrivalProductDialogPage {
    console.log("Continue button not present, moving on");
    }
   }
+
+   async addProductToArrivalCRR(sunset, language = 'en') {
+
+    // Fill dropdowns with language-specific values
+    await this.form.selectDropdown(this.productType, sunset.productType[language]);
+    await this.form.selectDropdown(this.product, sunset.product[language]);
+    await this.form.selectDropdown(this.producer, sunset.producer[language]);
+    await this.form.selectDropdown(this.commercialName, sunset.commercialName[language]);
+    await this.form.selectDropdown(this.formulation, sunset.formulation[language]);
+    await this.form.selectDropdown(this.presentation, sunset.presentation[language]);
+    await this.form.selectDropdown(this.vvmStage, sunset.vvmStage[language]);
+    await this.form.selectDropdown(this.routineOrSia, sunset.routineOrSia[language]);
+    await this.form.selectDropdown(this.origin, sunset.origin[language]);
+    await this.form.selectDropdown(this.storageLocation, sunset.storageLocation[language]);
+
+    // Input fields
+    await this.batchNumber.fill(sunset.batchNumber[language]);
+    await this.expiryDate.fill(sunset.expiryDate[language]);
+    await this.quantity.fill(sunset.quantity[language]);
+
+    // Checkbox/dropdown
+    await this.form.selectDropdown(this.freezeIndicator, sunset.freezeIndicator[language]);
+
+    // Click Save/Create
+    await this.createButton.click();
+    await this.page.waitForLoadState('networkidle');
+
+    // Handle "Continue" popup
+    const continueButton = this.page.locator("(//div[contains(@class,'MuiGrid-item')]/button[contains(@class,'MuiButton-root')])[6]");
+    try {
+    await continueButton.waitFor({ state: 'visible', timeout: 5000 });
+    await continueButton.click();
+    await this.page.waitForLoadState('networkidle');
+   } catch (err) {
+   console.log("Continue button not present, moving on");
+   }
+  }
 }
 
 module.exports = { ArrivalProductDialogPage };

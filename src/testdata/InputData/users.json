@@ -5,10 +5,14 @@
       "password": "Admin123"
     },
     "countryAdmin": {
-      "email": "countryadmin@test.com",
-      "password": "Admin123"
+      "email": "ajaruddina.kachavi@e-Zest.com",
+      "password": "BadDecision#123"
     },
     "storeOperator": {
+      "email": "erdtf61221@minitts.net",
+      "password": "Asdf@1234"
+    },
+    "storeOperator1": {
       "email": "operatorstore26@gmail.com",
       "password": "Yawmtech@"
     }

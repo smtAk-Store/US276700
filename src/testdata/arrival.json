@@ -40,6 +40,11 @@
     "sendingStore": "STORE_1",
     "shippingRef": "SHIP123",
     "smtNumber": "SMT-001123"
+  },
+   "SimpleArrival": {      
+    "receiptType": "ARRIVAL",
+    "sendingStore": "CRR",
+    "smtNumber": "SMT-00311"
   }
   
   

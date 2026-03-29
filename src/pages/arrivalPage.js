@@ -81,6 +81,27 @@ console.log('Raw data.currency:', data.currency);
     await this.submitButton().click();
 
   }
+async fillArrivalFormCRROnly(data) {
+  // Translate receipt type if needed
+  const receiptTypeText = translate(this.language, "receiptType", data.receiptType);
+
+  // Select Receipt Type
+  await this.form.selectDropdown(this.receiptTypeDropdown(), receiptTypeText);
+
+  // Fill current date in Receipt Date
+  await this.form.fillInput(this.receiptDate(), getCurrentDate());
+
+  // Generate and fill SMT Number
+  const uniqueSMT = generateUniqueSMT(data.smtNumber);
+  await this.form.fillInput(this.smtNumber(), uniqueSMT);
+
+  // Select Sending Store dropdown (CRR)
+  await this.form.selectReactDropdown(this.sendingStoreInput(), data.sendingStore);
+
+  // Submit Form
+  await this.submitButton().click();
+}
+
 
   
 async validateButtonEnabled() {

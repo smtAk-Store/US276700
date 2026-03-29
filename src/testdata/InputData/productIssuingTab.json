@@ -1,0 +1,33 @@
+[
+{"storageLocation": {
+      "en": "STORE ROOM",
+      "fr": "STORE ROOM",
+      "pt": "STORE ROOM",
+      "es": "STORE ROOM"
+    },
+    "batchNumber": {
+      "en": "BATCH123",
+      "fr": "BATCH123",
+      "pt": "BATCH123",
+      "es": "BATCH123"
+    },
+    "productType": {
+    "en": "Vaccine",
+    "fr": "Vaccin",
+    "pt": "Vacina",
+    "es": "لقاح"
+  },
+  "product": {
+    "en": "COVID-C",
+    "fr": "COVID-C",
+    "pt": "COVID-C",
+    "es": "COVID-C"
+  },
+   "quantity": {
+      "en": "9",
+      "fr": "100",
+      "pt": "100",
+      "es": "100"
+    }
+}
+]

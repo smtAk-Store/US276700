@@ -1,0 +1,14 @@
+{
+    
+  "requisition": {
+    "issueType": "Requisition",
+    "currency": "USD",
+    "sendingStore": "CRR"
+   
+  },
+    "wastage": {
+    "issueType": "Wastage",
+    "currency": "USD",
+    "sendingStore": "CRR"
+  }
+}

@@ -1,0 +1,76 @@
+[
+  {
+    "vaccine": {
+      "en": "Dengue",
+      "fr": "BCG",
+      "pt": "BCG",
+      "es": "BCG"
+    },
+    "formulation": {
+      "en": "Lyophilised : reconstituted with excipient diluent",
+      "fr": "Lyophilisé : reconstitué avec diluant excipient",
+      "pt": "Liofilizado: reconstituído com diluente excipiente",
+      "es": "Liofilizado: reconstituido con diluyente excipiente"
+    },
+    "dosesTarget": {
+      "en": "2",
+      "fr": "",
+      "pt": "2",
+      "es": "2"
+    },
+    "targetGroup": {
+      "en": "Adult population",
+      "fr": "Enfants",
+      "pt": "Crianças",
+      "es": "Niños"
+    },
+    "coverageExpected": {
+      "en": "60",
+      "fr": "60",
+      "pt": "60",
+      "es": "60"
+    },
+    "presentation": {
+      "en": "5",
+      "fr": "5",
+      "pt": "5",
+      "es": "5"
+    },
+    "wastageRates": {
+      "en": "10",
+      "fr": "10",
+      "pt": "10",
+      "es": "10"
+    },
+    "administrationSyringe": {
+      "en": "ADS_0.05ml",
+      "fr": "ADS_0.05ml",
+      "pt": "ADS_0.05ml",
+      "es": "ADS_0.05ml"
+    },
+    "syringes": {
+      "en": "RUPF_Sdilution_1ml",
+      "fr": "RUPF_Sdilution_1ml",
+      "pt": "RUPF_Sdilution_1ml",
+      "es": "RUPF_Sdilution_1ml"
+    },
+    "safetyStock": {
+      "en": "2",
+      "fr": "2",
+      "pt": "2",
+      "es": "2"
+    },
+    "leadTime": {
+      "en": "4",
+      "fr": "4",
+      "pt": "4",
+      "es": "4"
+    },
+    "store": {
+      "en": "CRR",
+      "fr": "National",
+      "pt": "National",
+      "es": "National"
+    }
+  }
+]

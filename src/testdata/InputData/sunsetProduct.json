@@ -1,0 +1,86 @@
+{
+  "productType": {
+    "en": "Vaccine",
+    "fr": "Vaccin",
+    "pt": "Vacina",
+    "es": "لقاح"
+  },
+  "product": {
+    "en": "COVID-C",
+    "fr": "COVID-C",
+    "pt": "COVID-C",
+    "es": "COVID-C"
+  },
+  "batchNumber": {
+    "en": "1335",
+    "fr": "1335",
+    "pt": "1335",
+    "es": "1335"
+  },
+  "expiryDate": {
+    "en": "29-03-2033",
+    "fr": "29-03-2033",
+    "pt": "29-03-2033",
+    "es": "29-03-2033"
+  },
+  "producer": {
+    "en": "Generic",
+    "fr": "Generic",
+    "pt": "Generic",
+    "es": "Generic"
+  },
+  "commercialName": {
+    "en": "COVID-C",
+    "fr": "COVID-C",
+    "pt": "COVID-C",
+    "es": "COVID-C"
+  },
+  "formulation": {
+    "en": "Liquid: ready to use",
+    "fr": "Liquid: ready to use",
+    "pt": "Liquid: ready to use",
+    "es": "Liquid: ready to use"
+  },
+  "presentation": {
+    "en": "1",
+    "fr": "1",
+    "pt": "1",
+    "es": "1"
+  },
+  "vvmStage": {
+    "en": "0.None",
+    "fr": "0.Aucun",
+    "pt": "0. Nenhum",
+    "es": "0.None"
+  },
+  "quantity": {
+    "en": "100",
+    "fr": "100",
+    "pt": "100",
+    "es": "100"
+  },
+  "routineOrSia": {
+    "en": "Routine",
+    "fr": "Routine",
+    "pt": "Rotina",
+    "es": "روتيني"
+  },
+  "origin": {
+    "en": "India",
+    "fr": "Japon",
+    "pt": "Japão",
+    "es": "اليابان"
+  },
+  "freezeIndicator": {
+    "en": "Ok",
+    "fr": "Ok",
+    "pt": "Ok",
+    "es": "Ok"
+  },
+  "storageLocation": {
+    "en": "STORE ROOM",
+    "fr": "STORE ROOM",
+    "pt": "STORE ROOM",
+    "es": "STORE ROOM"
+  }
+}
