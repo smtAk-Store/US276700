@@ -36,13 +36,13 @@ test.describe('Programme Data - Add entries for all languages', () => {
       const [data] = programmeData;
 
       // ---- Programme Data steps (uncomment when ready) ----
-      // await programmePage.highlightAndClickAdd();
-      // await programmePage.fillPopupForm(programmeData, language);
-      // await arrivalPage.waitForLoadingToFinish();
-      // await storePage.navigateToPopulationDemographics();
-      // await storePage.editGroup1AndSave();
-      // await storePage.editVaccine5AndSave();
-      // await storePage.fillStockParametersAndClickDocument();
+      await programmePage.highlightAndClickAdd();
+      await programmePage.fillPopupForm(programmeData, language);
+      await arrivalPage.waitForLoadingToFinish();
+      await storePage.navigateToPopulationDemographics();
+      await storePage.editGroup1AndSave();
+      await storePage.editVaccine5AndSave();
+      await storePage.fillStockParametersAndClickDocument();
 
       // Logout country admin and login as store operator
       await homePage.logout();
@@ -52,8 +52,7 @@ test.describe('Programme Data - Add entries for all languages', () => {
       await storePage.selectStore(data.store[language]);
       await stockOverviewPage.navigateTostockOverviewpage();
 
-      // You can add assertions here if needed
-      // e.g., expect(await stockOverviewPage.someElement()).toBeVisible();
+      
     });
 
   });

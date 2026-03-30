@@ -19,7 +19,7 @@ editButton = () => this.page.locator('button[title="Edit"]');
  group1Input = () => this.page.locator('input[name="group1"]');
  vaccineCoverageTab = () => this.page.locator('button#simple-tab-3');
  editButtonVaccineCoverage = () =>  this.page.locator('div[style="display: flex;"] > button[title="Edit"]');
- vaccine5Input = () => this.page.locator('input[name="vaccine5"]');
+ vaccine5Input = () => this.page.locator('input[name="vaccine1"]');
  stockParametersTab = () => this.page.locator('#simple-tab-4');
  safetyStockInput = () => this.page.locator('input[aria-label="Safety Stock (weeks)"]');
  leadTimeInput = () => this.page.locator('input[aria-label="Lead Time (weeks)"]');
@@ -37,21 +37,21 @@ editButton = () => this.page.locator('button[title="Edit"]');
    async editGroup1AndSave() {
     // Click the Edit button at the 3rd row (nth index 2)
     await this.editButton().nth(2).click();
-    await this.group1Input().fill('30000');
+    await this.group1Input().fill('50000');
     await this.saveButton().click();
 }
 async editVaccine5AndSave() {
    await this.vaccineCoverageTab().click();
   await this.editButton().nth(6).click();
-  await this.vaccine5Input().fill('50');
+  await this.vaccine5Input().fill('70');
   await this.saveButton().click();
 }
  async fillStockParametersAndClickDocument() {
     
     await this.stockParametersTab().click();
     await this.editButton().nth(6).click();
-    await this.safetyStockInput().fill('3');
-    await this.leadTimeInput().fill('3');
+    await this.safetyStockInput().fill('2');
+    await this.leadTimeInput().fill('4');
     await this.documentButton().click();
   }
   async selectStore(value) {
