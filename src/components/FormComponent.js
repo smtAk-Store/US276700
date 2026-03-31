@@ -252,6 +252,26 @@ async selectDropdown(locator, value) {
     await this.page.keyboard.press('Enter');
   }
 
+  async selectOptionByIndex(dropdownId, index = 0) {
+    const dropdown = this.page.locator(`div[role="button"][aria-labelledby="${dropdownId}"]`);
+
+    // Open the dropdown
+    await dropdown.click();
+
+    // Wait for options to appear
+    await this.page.waitForSelector('li[role="option"]', {
+      state: 'visible',
+      timeout: 10000
+    });
+
+    // Small buffer for RTL languages like Arabic
+    await this.page.waitForTimeout(300);
+
+    // Select option by index
+    await this.page.locator('li[role="option"]').nth(index).click();
+
+    console.log(`✅ Option at index ${index} selected for dropdown: ${dropdownId}`);
+  }
 
 
 }

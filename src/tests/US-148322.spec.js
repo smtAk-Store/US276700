@@ -29,7 +29,7 @@ test.describe('Programme Data - Add entries for all languages', () => {
       const programmePage = new ProgrammeData(page, language);
       const arrivalPage = new ArrivalPage(page, language);
       const storePage = new StoreData(page, language);
-    const stockOverviewPage = new StockOverviewPage(page, language);
+      const stockOverviewPage = new StockOverviewPage(page, language);
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
 
@@ -52,7 +52,39 @@ test.describe('Programme Data - Add entries for all languages', () => {
       await storePage.selectStore(data.store[language]);
       await stockOverviewPage.navigateTostockOverviewpage();
 
-      
+
+    });
+
+    test(`Verify  alert  appear when stock is below minimum level ${language}`, async ({ page }) => {
+      // Instantiate page objects
+      const programmePage = new ProgrammeData(page, language);
+      const arrivalPage = new ArrivalPage(page, language);
+      const storePage = new StoreData(page, language);
+      const stockOverviewPage = new StockOverviewPage(page, language);
+      const loginPage = new LoginPage(page);
+      const homePage = new HomePage(page);
+
+      const [data] = programmeData;
+
+      // ---- Programme Data steps (uncomment when ready) ----
+      await programmePage.highlightAndClickAdd();
+      await programmePage.fillPopupForm(programmeData, language);
+      await arrivalPage.waitForLoadingToFinish();
+      await storePage.navigateToPopulationDemographics();
+      await storePage.editGroup1AndSave();
+      await storePage.editVaccine5AndSave();
+      await storePage.fillStockParametersAndClickDocument();
+
+      // Logout country admin and login as store operator
+      await homePage.logout();
+      await loginPage.loginAs('storeOperator1');
+
+      // Select the store and navigate to stock overview
+      await storePage.selectStore(data.store[language]);
+      await stockOverviewPage.navigateTostockOverviewpage();
+      validateCalculateStockLevelsAndAlerts(stockOverviewPage, data);
+
+
     });
 
   });
