@@ -54,10 +54,13 @@ class ProgrammeData {
             await this.form.selectCustomDropdownById('vaccineNameId', data.vaccine[language]);
         }
         if (data.formulation) {
-            await this.form.selectCustomDropdownById('formulation', data.formulation[language]);
+
+          await this.form.selectOptionByIndex('formulation',1);
+          //  await this.form.selectCustomDropdownById('formulation', data.formulation[language]);
         }
         if (data.targetGroup) {
-            await this.form.selectCustomDropdownById('targetGroupId', data.targetGroup[language]);
+           // await this.form.selectCustomDropdownById('targetGroupId', data.targetGroup[language]);
+            await this.form.selectOptionByIndex('targetGroupId',2);
         }
         if (data.presentation) {
             await this.form.selectCustomDropdownById('presentation', data.presentation[language]);
