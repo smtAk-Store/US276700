@@ -43,7 +43,7 @@ editButton = () => this.page.locator('button[title="Edit"]');
 async editVaccine5AndSave() {
    await this.vaccineCoverageTab().click();
   await this.editButton().nth(6).click();
-  await this.vaccine5Input().fill('70');
+  await this.vaccine5Input().fill('80');
   await this.saveButton().click();
 }
  async fillStockParametersAndClickDocument() {

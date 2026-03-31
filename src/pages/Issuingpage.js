@@ -16,9 +16,10 @@ class IssuingPage {
     this.issuingTab = () => this.page.locator('span[role="menuitem"]').nth(3);
     this.productType = page.locator('#productType');
     this.product = page.locator('#product');
-    this.batchNumber = page.locator('input[name="batch"]');
-    this.quantity = page.locator('input[name="dosesOrUnit"]');
-    storeNameInput  = () => this.page.locator('input[name="storageLocation"]');
+    this.finalizeButton = page.locator("//button[@type='button' and contains(@class,'MuiButton-containedPrimary')]").nth(1);;
+    this.batchNumber = () => this.page.locator("//div[@id='batch' and @role='button']");
+    this.quantity = () => this.page.locator('input[name="dosesOrUnit"]');
+    this.storeNameInput  = () => this.page.locator("//div[@id='storageLocation' and @role='button']");
     this.saveButton = () => this.page.locator('//button[@type="submit"]');
   }
   async openIssuingForm() {
@@ -38,12 +39,27 @@ async fillIssuingFormCRROnly(data) {
   await this.submitButton().click();
 }
  async addProductToIssuingTabPopup(productData, language = 'en') {
-await this.form.selectDropdown(this.product, productData.productType[language]);
+await this.form.selectDropdown(this.productType, productData.productType[language]);
 await this.form.selectDropdown(this.product, productData.product[language]);
-await this.form.selectDropdown(this.product, productData.batchNumber[language]);
-await this.form.selectDropdown(this.product, productData.storageLocation[language]);
+await this.form.selectDropdown(this.batchNumber(),productData.batchNumber[language]);
+await this.quantity().fill(productData.quantity[language]);
+await this.page.pause();
+await this.form.selectDropdown(this.storeNameInput(),productData.storageLocation[language]);
 await this.saveButton().click();
+}
+async clickFinalizeVerifyPopupinIssuingTab() {
+  await this.finalizeButton.waitFor({ state: 'visible' });
 
+  // Highlight the element we are validating/clicking
+  await this.finalizeButton.evaluate(el => {
+    el.style.outline = '3px solid red';
+    el.style.transition = 'outline 0.3s ease-in-out';
+  });
+
+  await expect(this.finalizeButton).toBeEnabled();
+  await this.finalizeButton.click();
+
+  //await this.confirmationDialog.verifyFinalizePopup();
 }
 }
 module.exports = { IssuingPage };

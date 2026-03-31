@@ -1,13 +1,13 @@
 [
   {
     "vaccine": {
-      "en": "3rd mar new vaccine",
+      "en": "BCG",
       "fr": "BCG",
       "pt": "BCG",
       "es": "BCG"
     },
     "formulation": {
-      "en": "Frozen liquid, to be diluted after thawing",
+      "en": "Liquid: ready to use",
       "fr": "Lyophilisé : reconstitué avec diluant excipient",
       "pt": "Liofilizado: reconstituído com diluente excipiente",
       "es": "Liofilizado: reconstituido con diluyente excipiente"
@@ -25,13 +25,13 @@
       "es": "Niños"
     },
     "coverageExpected": {
-      "en": "60",
+      "en": "80",
       "fr": "60",
       "pt": "60",
       "es": "60"
     },
     "presentation": {
-      "en": "1234567787878787",
+      "en": "1",
       "fr": "5",
       "pt": "5",
       "es": "5"

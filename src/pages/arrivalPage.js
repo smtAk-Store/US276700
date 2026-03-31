@@ -20,7 +20,9 @@ this.deleteButton = this.page.locator(
       this.tableBody = this.page.locator('tbody.MuiTableBody-root');
   this.tableRows = this.tableBody.locator(
     'tr.MuiTableRow-root:not([style*="height: 10px"])');
-
+  this.smtFilterInput = page.locator("//input[@aria-label='filter data by SMT Number']");
+   this.secondTD = () => this.page.locator("//tr[@class='MuiTableRow-root'][2]/td[2]");
+        this.fifthTD = () => this.page.locator("//tr[@class='MuiTableRow-root'][2]/td[5]");
   }
 
   receiptTypeDropdown = () => this.page.locator('#receiptTypeId');
@@ -33,8 +35,10 @@ this.deleteButton = this.page.locator(
   sendingStoreInput = () => this.page.locator('#react-select-2-input');
   storeNameInput  = () => this.page.locator('input[name="storeName"]');
   arrivalTab = () => this.page.locator('span[role="menuitem"]').nth(2);
+   srockOverviewtab = () => this.page.locator('span[role="menuitem"]').nth(0);
   logNewArrivalButton = () => this.page.locator('button.MuiButton-containedPrimary');
   submitButton = () => this.page.locator('div.MuiGrid-item > button.MuiButton-containedPrimary').nth(0);  //
+  
 
   async openArrivalForm() {
     await this.arrivalTab().click();
@@ -158,22 +162,19 @@ async clickCancelButtonVerifyDeleteButtonEnabled() {
   
 async validateDeletButtonEnabled() {
   await this.page.waitForLoadState('networkidle'); 
-  // Highlight the element we are validating
   await this.deleteButton.evaluate(el => { el.style.outline = '3px solid red'; el.style.transition = 'outline 0.3s ease-in-out'; });
-
   await expect(this.deleteButton).toBeVisible();
   await expect(this.deleteButton).toBeEnabled();
+
 }
 
 async validateButtonDisabled() {
-  // wait for dialog to disappear (important!)
   await this.page.locator('[role="dialog"]').waitFor({ state: 'hidden' });
-
   await expect(this.deleteButton).toBeDisabled();
 }
 
-    async clickFinalizeButton() {
-    await this.clickElement(this.finalizeButton);
+  async clickFinalizeButton() {
+  await this.clickElement(this.finalizeButton);
   }
 
 async selectLangaugeFrench() {
@@ -270,9 +271,28 @@ async verifyFinalizeSuccessMessage() {
   // // 2. Wait for it to disappear (give it more time)
   // await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
 }
+     async switchTabs() {    
+        await this.srockOverviewtab().click();
+        await this.arrivalTab().click();
+          
+    }
+   async filterBySMT(smtNumber) {
+        await this.smtFilterInput.click();       
 
+    // Type the number like a user
+    await this.smtFilterInput.type(smtNumber, { delay: 100 }); // types slower
+
+    // Press Enter or Tab to trigger filter
+    await this.smtFilterInput.press('Enter'); 
+
+    // Optionally wait for filtered results to appear
+    await this.page.waitForTimeout(500);
 }
-
+async highlightSecondRowCells() {
+    await this.secondTD().evaluate(td => td.style.backgroundColor = 'yellow');
+    await this.fifthTD().evaluate(td => td.style.backgroundColor = 'lightgreen');
+}
+}
 
 module.exports = { ArrivalPage };
 

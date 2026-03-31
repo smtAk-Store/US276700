@@ -1,12 +1,13 @@
 [
-{"storageLocation": {
+{
+  "storageLocation": {
       "en": "STORE ROOM",
       "fr": "STORE ROOM",
       "pt": "STORE ROOM",
       "es": "STORE ROOM"
     },
     "batchNumber": {
-      "en": "BATCH123",
+      "en": "1335",
       "fr": "BATCH123",
       "pt": "BATCH123",
       "es": "BATCH123"
