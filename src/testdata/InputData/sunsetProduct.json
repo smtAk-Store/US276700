@@ -1,12 +1,12 @@
 {
   "productType": {
-    "en": "Vaccine",
+    "en": "Supplies",
     "fr": "Vaccin",
     "pt": "Vacina",
     "es": "لقاح"
   },
   "product": {
-    "en": "COVID-C",
+    "en": "ADS_0.05ml",
     "fr": "COVID-C",
     "pt": "COVID-C",
     "es": "COVID-C"
@@ -24,7 +24,7 @@
     "es": "29-03-2033"
   },
   "producer": {
-    "en": "Generic",
+    "en": "Bavarian Nordic A/S",
     "fr": "Generic",
     "pt": "Generic",
     "es": "Generic"
@@ -42,7 +42,7 @@
     "es": "Liquid: ready to use"
   },
   "presentation": {
-    "en": "1",
+    "en": "100",
     "fr": "1",
     "pt": "1",
     "es": "1"
@@ -66,7 +66,7 @@
     "es": "روتيني"
   },
   "origin": {
-    "en": "India",
+    "en": "Denmark",
     "fr": "Japon",
     "pt": "Japão",
     "es": "اليابان"
@@ -78,7 +78,7 @@
     "es": "Ok"
   },
   "storageLocation": {
-    "en": "STORE ROOM",
+    "en": "NONE",
     "fr": "STORE ROOM",
     "pt": "STORE ROOM",
     "es": "STORE ROOM"

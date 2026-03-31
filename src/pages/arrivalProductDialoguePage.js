@@ -68,17 +68,17 @@ export class ArrivalProductDialogPage {
     await this.form.selectDropdown(this.productType, sunset.productType[language]);
     await this.form.selectDropdown(this.product, sunset.product[language]);
     await this.form.selectDropdown(this.producer, sunset.producer[language]);
-    await this.form.selectDropdown(this.commercialName, sunset.commercialName[language]);
-    await this.form.selectDropdown(this.formulation, sunset.formulation[language]);
+ //   await this.form.selectDropdown(this.commercialName, sunset.commercialName[language]);
+    //await this.form.selectDropdown(this.formulation, sunset.formulation[language]);
     await this.form.selectDropdown(this.presentation, sunset.presentation[language]);
-    await this.form.selectDropdown(this.vvmStage, sunset.vvmStage[language]);
+   // await this.form.selectDropdown(this.vvmStage, sunset.vvmStage[language]);
     await this.form.selectDropdown(this.routineOrSia, sunset.routineOrSia[language]);
     await this.form.selectDropdown(this.origin, sunset.origin[language]);
     await this.form.selectDropdown(this.storageLocation, sunset.storageLocation[language]);
 
     // Input fields
     await this.batchNumber.fill(sunset.batchNumber[language]);
-    await this.expiryDate.fill(sunset.expiryDate[language]);
+  //  await this.expiryDate.fill(sunset.expiryDate[language]);
     await this.quantity.fill(sunset.quantity[language]);
 
     // Checkbox/dropdown

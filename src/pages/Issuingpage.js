@@ -11,7 +11,7 @@ class IssuingPage {
     this.form = new FormComponent(page);
     this.issueNewStockButton  = () => this.page.locator('//button[contains(@class,"MuiButton-containedPrimary")]');
     this.issueTypeDropdown = () => this.page.locator('#issueTypes');
-    this.recipientStoreDropdown = () => this.page.locator('#react-select-3-input');
+    this.recipientStoreDropdown = () => this.page.locator("//div[@id='recipientStore' and contains(@class,'MuiSelect-root')]");
     this.submitButton = () => this.page.locator('div.MuiGrid-item > button.MuiButton-containedPrimary').nth(0);
     this.issuingTab = () => this.page.locator('span[role="menuitem"]').nth(3);
     this.productType = page.locator('#productType');
@@ -21,6 +21,7 @@ class IssuingPage {
     this.quantity = () => this.page.locator('input[name="dosesOrUnit"]');
     this.storeNameInput  = () => this.page.locator("//div[@id='storageLocation' and @role='button']");
     this.saveButton = () => this.page.locator('//button[@type="submit"]');
+    this.recipientStoreOption = (value) => this.page.locator(`//ul[contains(@class,'MuiMenu-list')]//li[span[text()='${value}']]`);
   }
   async openIssuingForm() {
     await this.issuingTab().click();
@@ -32,8 +33,8 @@ async fillIssuingFormCRROnly(data) {
 
   // Select Receipt Type
   await this.form.selectDropdown(this.issueTypeDropdown(), receiptTypeText);
-
-  await this.form.selectReactDropdown(this.recipientStoreDropdown(), data.sendingStore);
+await this.page.pause();
+  await this.selectRecipientStore(data.sendingStore);
 
   // Submit Form
   await this.submitButton().click();
@@ -61,5 +62,9 @@ async clickFinalizeVerifyPopupinIssuingTab() {
 
   //await this.confirmationDialog.verifyFinalizePopup();
 }
-}
+async selectRecipientStore(value) {
+    const dropdown = this.page.locator('#recipientStore');
+    await dropdown.click(); 
+    await this.recipientStoreOption(value).click();
+}}
 module.exports = { IssuingPage };
