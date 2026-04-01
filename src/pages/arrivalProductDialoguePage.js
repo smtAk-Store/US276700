@@ -1,4 +1,5 @@
 const { FormComponent } = require('../components/FormComponent');
+const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
 
 export class ArrivalProductDialogPage {
 
@@ -62,7 +63,7 @@ export class ArrivalProductDialogPage {
    }
   }
 
-   async addProductToArrivalCRR(sunset, language = 'en') {
+   async addProductToArrivalCRR(sunset, language = 'en',newArrivalQuantity) {
 
     // Fill dropdowns with language-specific values
     await this.form.selectDropdown(this.productType, sunset.productType[language]);
@@ -79,7 +80,7 @@ export class ArrivalProductDialogPage {
     // Input fields
     await this.batchNumber.fill(sunset.batchNumber[language]);
   //  await this.expiryDate.fill(sunset.expiryDate[language]);
-    await this.quantity.fill(sunset.quantity[language]);
+   await this.quantity.fill(newArrivalQuantity.toString());
 
     // Checkbox/dropdown
     await this.form.selectDropdown(this.freezeIndicator, sunset.freezeIndicator[language]);

@@ -23,7 +23,7 @@ class StockOverviewPage {
     this.productType = page.locator('#productType');
     this.product = page.locator('#product');
     this.data = testData.SimpleArrival;
-   
+
   }
 
   // 📌 Locator: Menu items (used for navigation)
@@ -37,7 +37,7 @@ class StockOverviewPage {
   }
 
   // 📌 Verify & highlight element from JSON
-  async verifyAndHighlightFromJson(value, issuingData1) {
+  async verifyAndHighlightFromJson(value, issuingData1,newArrivalQuantity) {
     // find the row based on the second column text
     const rowLocator = this.page.locator('tbody tr').filter({
       has: this.page.locator('td:nth-child(2)', { hasText: value })
@@ -86,19 +86,19 @@ class StockOverviewPage {
       this.lastFoundNumericValue = null;
     }
     await this.arrivalPage.openArrivalForm();
-      await this.arrivalPage.fillArrivalFormCRROnly(this.data);
-      
-      await this.page.pause();
-       const dialog = new ArrivalProductDialogPage(this.page);
-      await dialog.addProductToArrivalCRR(sunset, 'en');
-     // await this.page.pause();
-     await this.arrivalPage.waitForLoadingToFinish();
-      await this.arrivalPage.clickFinalizeVerifyPopup();
-     
-     await this.arrivalPage.confirmationDialog.clickConfirm();
+    await this.arrivalPage.fillArrivalFormCRROnly(this.data);
+
+    await this.page.pause();
+    const dialog = new ArrivalProductDialogPage(this.page);
+    await dialog.addProductToArrivalCRR(sunset, 'en',newArrivalQuantity);
+    // await this.page.pause();
+    await this.arrivalPage.waitForLoadingToFinish();
+    await this.arrivalPage.clickFinalizeVerifyPopup();
+
+    await this.arrivalPage.confirmationDialog.clickConfirm();
     await this.arrivalPage.verifyFinalizeSuccessMessage();
-      await this.navigateTostockOverviewpage()
-          await this.page.pause();
+    await this.navigateTostockOverviewpage()
+    await this.page.pause();
   }
 
   async openFormAndDoSomething(issuingData1) {
@@ -136,36 +136,36 @@ class StockOverviewPage {
     await this.page.pause();
 
   }
- async highlightTdAndVerifyTooltip(value) {
-  const row = this.page.locator('tbody tr').filter({
-    has: this.page.locator('td:nth-child(2)', { hasText: value })
-  }).first();
+  async highlightTdAndVerifyTooltip(value) {
+    const row = this.page.locator('tbody tr').filter({
+      has: this.page.locator('td:nth-child(2)', { hasText: value })
+    }).first();
 
-  if (!(await row.count())) return;
+    if (!(await row.count())) return;
 
-  await row.scrollIntoViewIfNeeded();
+    await row.scrollIntoViewIfNeeded();
 
-  const targetTd = row.locator('td:nth-child(3)');
+    const targetTd = row.locator('td:nth-child(3)');
 
-  // highlight the td
-  await targetTd.evaluate(el => {
-    el.style.backgroundColor = 'lightcoral';
-  });
+    // highlight the td
+    await targetTd.evaluate(el => {
+      el.style.backgroundColor = 'lightcoral';
+    });
 
-  // locate the icon (svg inside span with data-tooltip)
-  const tooltipIcon = targetTd.locator('[data-tooltip]');
+    // locate the icon (svg inside span with data-tooltip)
+    const tooltipIcon = targetTd.locator('[data-tooltip]');
 
-  // hover on icon
-  await tooltipIcon.hover();
+    // hover on icon
+    await tooltipIcon.hover();
 
-  // get tooltip text
-  const tooltipText = await tooltipIcon.getAttribute('data-tooltip');
+    // get tooltip text
+    const tooltipText = await tooltipIcon.getAttribute('data-tooltip');
 
-  console.log("Tooltip value:", tooltipText);
+    console.log("Tooltip value:", tooltipText);
 
-  await this.page.pause();
+    await this.page.pause();
 
-}
+  }
 }
 
 module.exports = StockOverviewPage;

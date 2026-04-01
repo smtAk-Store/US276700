@@ -14,7 +14,7 @@ const issuingData = require('../testdata/IssuingTab.json');
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
 const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
 
-const languages = ['fr'];
+const languages = ['en'];
 
 languages.forEach(language => {
 
@@ -80,24 +80,27 @@ languages.forEach(language => {
 
       stockOverviewPage = new StockOverviewPage(page, language);
       await stockOverviewPage.navigateTostockOverviewpage();
-      await stockOverviewPage.verifyAndHighlightFromJson(
-        programmeData[0].administrationSyringe[language], issuingData.wastage);
-      await stockOverviewPage.highlightTdAndVerifyTooltip(
-        programmeData[0].administrationSyringe[language]
-      );
+      
 
       console.log(` Stock Overview page ready`);
     });
 
     // ================== TESTS ==================
     test(`Verify alert appears when stock is below minimum level`, async () => {
-      const expected = await validateCalculateStockLevelsAndAlerts();
+      const expected = await validateCalculateStockLevelsAndAlerts(BCGData.CurrentStockBelowMinimumLevel);
+
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
+      await stockOverviewPage.verifyAndHighlightFromJson(
+        programmeData[0].administrationSyringe[language], issuingData.wastage,BCGData.CurrentStockBelowMinimumLevel);
+      await stockOverviewPage.highlightTdAndVerifyTooltip(
+        programmeData[0].administrationSyringe[language]
+      );
+      
       expect(expected).toBeLessThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
     });
 
     test(`Verify No alert appears when stock is Above minimum level`, async () => {
-      const expected = await validateCalculateStockLevelsAndAlerts();
+      const expected = await validateCalculateStockLevelsAndAlerts(BCGData.CurrentStockAboveMinumLevel);
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
       expect(expected).toBeGreaterThan(BCGData.saftyWeeks + BCGData.LeadWeeks);
     });
@@ -111,7 +114,7 @@ languages.forEach(language => {
 });
 
 /** Helper Function */
-async function validateCalculateStockLevelsAndAlerts() {
+async function validateCalculateStockLevelsAndAlerts(CurrentStockThresholdLevel) {
   const targetPopulation = BCGData.target_population;
   const dosesPerTarget = BCGData.doses_per_target;
   const wastageRate = BCGData.wastage_rate;
@@ -120,5 +123,5 @@ async function validateCalculateStockLevelsAndAlerts() {
   const QtyNeededPerYear = targetPopulation * (estimatedCoverage / 100) * dosesPerTarget * (100 / (100 - wastageRate));
   const QtyNeededPerWeek = QtyNeededPerYear / 52;
 
-  return Math.round(BCGData.CurrentStockAboveMinumLevel / QtyNeededPerWeek);
+  return Math.round(CurrentStockThresholdLevel / QtyNeededPerWeek);
 }

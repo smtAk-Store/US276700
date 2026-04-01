@@ -68,6 +68,11 @@ async editVaccine5AndSave() {
 }
 async fillStockParametersAndClickDocument() {
   await this.stockParametersTab().click();
+  console.log('✅ Clicked on Stock Parameters tab');
+
+  await this.page.waitForTimeout(10000);           // ← 30 seconds as requested
+  await this.page.waitForLoadState('networkidle', { timeout: 40000 }).catch(() => {});
+
   // Find the row containing 'CRR'
   const rowWithCRR = this.page.locator('tbody.MuiTableBody-root tr').filter({
     hasText: 'CRR'
@@ -85,10 +90,33 @@ async fillStockParametersAndClickDocument() {
   await editBtnInRow.scrollIntoViewIfNeeded();
   await editBtnInRow.click();
 
-  // Fill the stock parameters and click document
-  await this.safetyStockInput().fill('2');
-  await this.leadTimeInput().fill('4');
-  await this.documentButton().click();
+  await this.page.waitForTimeout(10000);
+  await this.page.waitForLoadState('networkidle', { timeout: 40000 }).catch(() => {});
+
+// Step 5: Fill Safety Stock (nth(1))
+  const safetyInput = this.safetyStockInput();   // ← Call the function!
+  await safetyInput.waitFor({ state: 'visible', timeout: 20000 });
+  await safetyInput.scrollIntoViewIfNeeded();
+  await safetyInput.fill('2');
+  await safetyInput.press('Tab');
+
+  // Step 6: Fill Lead Time (nth(2))
+  const leadInput = this.leadTimeInput();        // ← Call the function!
+  await leadInput.waitFor({ state: 'visible', timeout: 15000 });
+  await leadInput.scrollIntoViewIfNeeded();
+  await leadInput.fill('4');
+  await leadInput.press('Tab');
+
+  // Step 7: Click Document button
+  const docButton = this.documentButton();
+  await docButton.waitFor({ state: 'visible', timeout: 15000 });
+  await docButton.scrollIntoViewIfNeeded();
+  await docButton.click();
+
+  // Final wait after save
+  await this.page.waitForLoadState('networkidle', { timeout: 40000 }).catch(() => {});
+
+  console.log('✅ Stock parameters (Safety=2, Lead=4) saved successfully');
 }
   async selectStore(value) {
   await this.form.selectDropdown(this.storeDropdown(), value);
