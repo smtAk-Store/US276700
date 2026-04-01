@@ -9,10 +9,10 @@ export class HomePage {
     this.masterData = page.getByRole('menuitem', { name: 'Master Data' });
     this.documentation = page.getByRole('menuitem', { name: 'Documentation' });
 
-    this.proceedLogin = page.getByRole('button', { name: /proceed to login/i });
+    this.proceedLogin = page.locator('button.btn-login');
 
     this.profileDropdown = page.locator("header svg").last();
-    this.logoutButton = page.getByRole('button', { name: /logout/i });
+    this.logoutButton = page.locator('button.dd-logout-button');
   }
 
   async handleProceedPopup() {

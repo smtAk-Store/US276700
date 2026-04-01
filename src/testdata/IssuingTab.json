@@ -1,12 +1,38 @@
 {
-    
   "requisition": {
-    "issueType": "Requisition",
-    "sendingStore": "CRR"
-   
+    "en": {
+      "issueType": "Requisition",
+      "sendingStore": "CRR"
+    },
+    "fr": {
+      "issueType": "Réquisition",
+      "sendingStore": "Bansang RAMNCH"
+    },
+    "pt": {
+      "issueType": "Réquisition",
+      "sendingStore": "Bansang RAMNCH"
+    },
+    "es": {
+      "issueType": "Réquisition",
+      "sendingStore": "Bansang RAMNCH"
+    }
   },
-    "wastage": {
-    "issueType": "Wastage",
-    "sendingStore": "Expired"
+  "wastage": {
+    "en": {
+      "issueType": "Wastage",
+      "sendingStore": "Expired"
+    },
+    "fr": {
+      "issueType": "Perte",
+      "sendingStore": "Expiré"
+    },
+    "pt": {
+      "issueType": "Wastage",
+      "sendingStore": "Expirado"
+    },
+    "es": {
+      "issueType": "Wastage",
+      "sendingStore": "Expired"
+    }
   }
 }

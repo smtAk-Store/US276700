@@ -68,9 +68,9 @@
     },
     "store": {
       "en": "CRR",
-      "fr": "National",
-      "pt": "National",
-      "es": "National"
+      "fr": "CRR",
+      "pt": "CRR",
+      "es": "CRR"
     }
   }
 ]

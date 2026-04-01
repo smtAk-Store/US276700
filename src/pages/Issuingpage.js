@@ -28,9 +28,13 @@ class IssuingPage {
     await this.issueNewStockButton().click();
   }
 async fillIssuingFormCRROnly(data) {
+
+  console.log('Full data received:', JSON.stringify(data, null, 2));
+  console.log( data.issueType,'   issue type ####');
+  
   // Translate receipt type if needed
   const receiptTypeText = translate(this.language, "issueType", data.issueType);
-
+console.log( receiptTypeText,'   receipient Text ####');
   // Select Receipt Type
   await this.form.selectDropdown(this.issueTypeDropdown(), receiptTypeText);
 await this.page.pause();

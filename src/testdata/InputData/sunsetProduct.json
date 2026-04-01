@@ -1,15 +1,15 @@
 {
   "productType": {
     "en": "Supplies",
-    "fr": "Vaccin",
-    "pt": "Vacina",
-    "es": "لقاح"
+    "fr": "Consommables",
+    "pt": "Fornecimentos",
+    "es": "لالمستلزمات الجافةح"
   },
   "product": {
     "en": "ADS_0.05ml",
-    "fr": "COVID-C",
-    "pt": "COVID-C",
-    "es": "COVID-C"
+    "fr": "ADS_0.05ml",
+    "pt": "ADS_0.05ml",
+    "es": "ADS_0.05ml"
   },
   "batchNumber": {
     "en": "1335",
@@ -25,9 +25,9 @@
   },
   "producer": {
     "en": "Bavarian Nordic A/S",
-    "fr": "Generic",
-    "pt": "Generic",
-    "es": "Generic"
+    "fr": "Bavarian Nordic A/S",
+    "pt": "Bavarian Nordic A/S",
+    "es": "Bavarian Nordic A/S"
   },
   "commercialName": {
     "en": "COVID-C",
@@ -43,9 +43,9 @@
   },
   "presentation": {
     "en": "100",
-    "fr": "1",
-    "pt": "1",
-    "es": "1"
+    "fr": "100",
+    "pt": "100",
+    "es": "100"
   },
   "vvmStage": {
     "en": "0.None",
@@ -54,10 +54,10 @@
     "es": "0.None"
   },
   "quantity": {
-    "en": "100",
-    "fr": "100",
-    "pt": "100",
-    "es": "100"
+    "en": "1000",
+    "fr": "1000",
+    "pt": "1000",
+    "es": "1000"
   },
   "routineOrSia": {
     "en": "Routine",
@@ -79,8 +79,8 @@
   },
   "storageLocation": {
     "en": "NONE",
-    "fr": "STORE ROOM",
-    "pt": "STORE ROOM",
-    "es": "STORE ROOM"
+    "fr": "NONE",
+    "pt": "NONE",
+    "es": "NONE"
   }
 }
