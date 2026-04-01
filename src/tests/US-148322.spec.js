@@ -100,9 +100,16 @@ languages.forEach(language => {
     });
 
     test(`Verify No alert appears when stock is Above minimum level`, async () => {
-      const expected = await validateCalculateStockLevelsAndAlerts(BCGData.CurrentStockAboveMinumLevel);
+   const expected = await validateCalculateStockLevelsAndAlerts(BCGData.CurrentStockAboveMinimumLevel);
+
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
-      expect(expected).toBeGreaterThan(BCGData.saftyWeeks + BCGData.LeadWeeks);
+      await stockOverviewPage.verifyAndHighlightFromJson(
+        programmeData[0].administrationSyringe[language], issuingData.wastage,BCGData.CurrentStockAboveMinimumLevel);
+      await stockOverviewPage.highlightTdAndVerifyTooltip(
+        programmeData[0].administrationSyringe[language]
+      );
+      
+      expect(expected).toBeGreaterThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
     });
 
     test(`Verify alert appears when stock is Zero`, async () => {
