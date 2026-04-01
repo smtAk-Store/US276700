@@ -1,6 +1,6 @@
 const { translate } = require('../utils/translator');
 const { FormComponent } = require('../components/FormComponent');
-const { log } = require('node:console');
+const { log, default: console } = require('node:console');
 const { generateUniqueSMT ,getCurrentDate,verifyButtonEnabled} = require('../utils/reusableFunction');
 import { ConfirmationDialogPage } from '../pages/ConfirmationDialogPage';
 import { expect } from '@playwright/test';
@@ -40,11 +40,13 @@ this.deleteButton = this.page.locator(
   submitButton = () => this.page.locator('div.MuiGrid-item > button.MuiButton-containedPrimary').nth(0);  //
   
 
-  async openArrivalForm() {
-    await this.arrivalTab().click();
-    await this.logNewArrivalButton().click();
-  }
+ async openArrivalForm() {
+  await this.arrivalTab().click();
+  //this.console.log("get me soon");
 
+  await this.logNewArrivalButton().waitFor({ state: 'visible' });
+  await this.logNewArrivalButton().click();
+}
   async fillArrivalForm(data) {
 
     const receiptTypeText = translate(this.language, "receiptType", data.receiptType);
@@ -100,7 +102,7 @@ async fillArrivalFormCRROnly(data) {
   await this.form.fillInput(this.smtNumber(), uniqueSMT);
 
   // Select Sending Store dropdown (CRR)
-  await this.form.selectReactDropdown(this.sendingStoreInput(), data.sendingStore);
+  //await this.form.selectReactDropdown(this.sendingStoreInput(), data.sendingStore);
 
   // Submit Form
   await this.submitButton().click();
@@ -181,7 +183,7 @@ async selectLangaugeFrench() {
   const dropdownDiv = this.page.locator('div.MuiGrid-root.MuiGrid-item > svg').first();
 
 await dropdownDiv.locator('xpath=..').click();
- const languageDiv = this.page.locator('//div[@aria-haspopup="listbox"]');
+ const languageDiv = this.page.locator('//div[@aria-haspopup="listbox"]').first();
     await languageDiv.waitFor({ state: 'visible', timeout: 5000 });
     await languageDiv.click();
     await this.page.locator('li[role="option"]').nth(1).click(); // select

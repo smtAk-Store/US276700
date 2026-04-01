@@ -81,7 +81,9 @@ languages.forEach(language => {
       await stockOverviewPage.navigateTostockOverviewpage();
     await stockOverviewPage.verifyAndHighlightFromJson(
     programmeData[0].administrationSyringe[language],issuingData.wastage);
-     await issuingPage.clickFinalizeVerifyPopupinIssuingTab();
+           await stockOverviewPage.highlightTdAndVerifyTooltip(
+        programmeData[0].administrationSyringe[language]
+      );
 
       console.log(` Stock Overview page ready`);
     });

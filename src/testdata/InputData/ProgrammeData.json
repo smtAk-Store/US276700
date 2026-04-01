@@ -14,13 +14,13 @@
     },
     "dosesTarget": {
       "en": "2",
-      "fr": "",
+      "fr": "2",
       "pt": "2",
       "es": "2"
     },
     "targetGroup": {
       "en": "Adult population",
-      "fr": "Enfants",
+      "fr": "Filles adolescentes",
       "pt": "Crianças",
       "es": "Niños"
     },
@@ -31,10 +31,10 @@
       "es": "60"
     },
     "presentation": {
-      "en": "1",
-      "fr": "5",
-      "pt": "5",
-      "es": "5"
+      "en": "10",
+      "fr": "10",
+      "pt": "10",
+      "es": "10"
     },
     "wastageRates": {
       "en": "10",

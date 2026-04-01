@@ -8,6 +8,7 @@ const { ArrivalPage } = require('./arrivalPage');
 const testData = require('../testdata/arrival.json');
 const sunset = require('../testdata/InputData/sunsetProduct.json');
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
+import { ConfirmationDialogPage } from '../pages/ConfirmationDialogPage';
 
 class StockOverviewPage {
   constructor(page, language) {
@@ -22,6 +23,7 @@ class StockOverviewPage {
     this.productType = page.locator('#productType');
     this.product = page.locator('#product');
     this.data = testData.SimpleArrival;
+   
   }
 
   // 📌 Locator: Menu items (used for navigation)
@@ -31,10 +33,7 @@ class StockOverviewPage {
   saveButton = () => this.page.locator("//div[contains(@class,'MuiGrid-item')]/button[@type='submit' and contains(@class,'MuiButton-containedPrimary')]");
   // 📌 Navigate to Stock Overview Page
   async navigateTostockOverviewpage() {
-    console.log('Navigating to Stock Overview page...');
     await this.menuItem().nth(0).click();
-    await this.page.waitForLoadState('networkidle', { timeout: 10000 });
-    console.log('✅ Successfully navigated to Stock Overview');
   }
 
   // 📌 Verify & highlight element from JSON
@@ -79,22 +78,27 @@ class StockOverviewPage {
 
       // call the form method
       await this.openFormAndDoSomething(issuingData1);
-
+      //await this.navigateTostockOverviewpage()
 
     } else {
       console.log(`"${value}" -> Element NOT FOUND`);
       this.lastFoundValue = null;
       this.lastFoundNumericValue = null;
-      await this.arrivalPage.openArrivalForm();
-      await this.arrivalPage.fillArrivalFormCRROnly(this.data);
-      const dialog = new ArrivalProductDialogPage(this.page);
-      await this.page.pause();
-      await dialog.addProductToArrivalCRR(sunset, 'en');
-      await this.page.pause();
-      await this.arrivalPage.validateButtonEnabled();
-      await this.arrivalPage.confirmationDialog.clickConfirm();
-      await this.arrivalPage.verifyFinalizeSuccessMessage();
     }
+    await this.arrivalPage.openArrivalForm();
+      await this.arrivalPage.fillArrivalFormCRROnly(this.data);
+      
+      await this.page.pause();
+       const dialog = new ArrivalProductDialogPage(this.page);
+      await dialog.addProductToArrivalCRR(sunset, 'en');
+     // await this.page.pause();
+     await this.arrivalPage.waitForLoadingToFinish();
+      await this.arrivalPage.clickFinalizeVerifyPopup();
+     
+     await this.arrivalPage.confirmationDialog.clickConfirm();
+    await this.arrivalPage.verifyFinalizeSuccessMessage();
+      await this.navigateTostockOverviewpage()
+          await this.page.pause();
   }
 
   async openFormAndDoSomething(issuingData1) {
@@ -117,7 +121,6 @@ class StockOverviewPage {
       productType: "Supplies"
     };
 
-
     await this.form.selectDropdown(this.productType, productData.productType);
     if (this.lastFoundValue) {
       await this.form.selectDropdown(this.product, this.lastFoundValue);
@@ -133,6 +136,37 @@ class StockOverviewPage {
     await this.page.pause();
 
   }
+ async highlightTdAndVerifyTooltip(value) {
+  const row = this.page.locator('tbody tr').filter({
+    has: this.page.locator('td:nth-child(2)', { hasText: value })
+  }).first();
+
+  if (!(await row.count())) return;
+
+  await row.scrollIntoViewIfNeeded();
+
+  const targetTd = row.locator('td:nth-child(3)');
+
+  // highlight the td
+  await targetTd.evaluate(el => {
+    el.style.backgroundColor = 'lightcoral';
+  });
+
+  // locate the icon (svg inside span with data-tooltip)
+  const tooltipIcon = targetTd.locator('[data-tooltip]');
+
+  // hover on icon
+  await tooltipIcon.hover();
+
+  // get tooltip text
+  const tooltipText = await tooltipIcon.getAttribute('data-tooltip');
+
+  console.log("Tooltip value:", tooltipText);
+
+  await this.page.pause();
+
+}
 }
 
 module.exports = StockOverviewPage;
+

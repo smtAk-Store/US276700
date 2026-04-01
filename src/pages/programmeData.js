@@ -31,7 +31,7 @@ class ProgrammeData {
   this.page.locator('div[role="button"][aria-labelledby="syringesId"]');
   safetyStockInput = () => this.page.locator('input[name="safetyStock"]');
   leadTimeInput = () => this.page.locator('input[name="leadTime"]');
-  saveButton = () => this.page.locator("//button[contains(@class,'MuiButton-root') and contains(@class,'MuiButton-containedPrimary') and .//span[text()='Save']]");
+  saveButton = () => this.page.locator('button.MuiButton-containedPrimary[type="submit"]');
 
 
   async highlightAndClickAdd() {
