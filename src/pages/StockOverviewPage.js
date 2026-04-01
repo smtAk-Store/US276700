@@ -31,7 +31,10 @@ class StockOverviewPage {
   saveButton = () => this.page.locator("//div[contains(@class,'MuiGrid-item')]/button[@type='submit' and contains(@class,'MuiButton-containedPrimary')]");
   // 📌 Navigate to Stock Overview Page
   async navigateTostockOverviewpage() {
+    console.log('Navigating to Stock Overview page...');
     await this.menuItem().nth(0).click();
+    await this.page.waitForLoadState('networkidle', { timeout: 10000 });
+    console.log('✅ Successfully navigated to Stock Overview');
   }
 
   // 📌 Verify & highlight element from JSON

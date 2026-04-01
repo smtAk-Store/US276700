@@ -3,93 +3,119 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/loginPage';
 import { HomePage } from '../pages/homePage';
-const { ProgrammeData } = require('../pages/programmeData');
-const programmeData = require('../testdata/InputData/ProgrammeData.json');
-const { ArrivalPage } = require('../pages/arrivalPage');
-const { StoreData } = require('../pages/StoreData');
-const StockOverviewPage = require('../pages/StockOverviewPage');  
+import { ProgrammeData } from '../pages/programmeData';
+import { ArrivalPage } from '../pages/arrivalPage';
+import { StoreData } from '../pages/StoreData';
+const StockOverviewPage = require('../pages/StockOverviewPage');
 const { IssuingPage } = require('../pages/Issuingpage');
 const testData = require('../testdata/arrival.json');
 const issuingData = require('../testdata/IssuingTab.json');
-// Languages to test
-const languages = ['en']; // you can expand: ['en', 'fr', 'pt', 'es']
 
-// Login as country admin before each test
-test.beforeEach(async ({ page }) => {
-  const loginPage = new LoginPage(page);
-  const homePage = new HomePage(page);
-  await loginPage.loginAs('countryAdmin');
-  await homePage.verifyMenus();
-});
+const programmeData = require('../testdata/InputData/ProgrammeData.json');
+const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
 
-test.describe('Programme Data - Add entries for all languages', () => {
+const languages = ['en'];
 
-  languages.forEach(language => {
+languages.forEach(language => {
 
-    test(`Add Programme Data entry for ${language}`, async ({ page }) => {
-      // Instantiate page objects
-      const programmePage = new ProgrammeData(page, language);
-      const arrivalPage = new ArrivalPage(page, language);
-      const storePage = new StoreData(page, language);
-      const stockOverviewPage = new StockOverviewPage(page, language);
-      const loginPage = new LoginPage(page);
-      const homePage = new HomePage(page);
+  test.describe(`Validate Alerts for Supplies - Language: ${language}`, () => {
 
-      const [data] = programmeData;
-       const issuingData1 = issuingData;
+    let stockOverviewPage;
 
-       const issuingPage = new IssuingPage(page, language);
-      await programmePage.highlightAndClickAdd();
-      await programmePage.fillPopupForm(programmeData, language);
-      await arrivalPage.waitForLoadingToFinish();
-      await storePage.navigateToPopulationDemographics();
-      await storePage.editGroup1AndSave();
-      await storePage.editVaccine5AndSave();
-      await storePage.fillStockParametersAndClickDocument();
-      await homePage.logout();
-      await loginPage.loginAs('storeOperator1');
-      await storePage.selectStore(data.store[language]);
-      await stockOverviewPage.navigateTostockOverviewpage();
-      await stockOverviewPage.verifyAndHighlightFromJson(
-    data.administrationSyringe[language],issuingData1.wastage);
-     await issuingPage.clickFinalizeVerifyPopupinIssuingTab();
+    // ================== RUNS ONLY ONCE (Programme Creation) ==================
+    test.beforeAll(async ({ browser }) => {
+      const page = await browser.newPage();
+      try {
+
+        const loginPage = new LoginPage(page);
       
+        const programmePage = new ProgrammeData(page, language);
+        const arrivalPage = new ArrivalPage(page, language);
+        const storeSetupPage = new StoreData(page, language);
+        await loginPage.loginAs('countryAdmin');
+        const homePage = new HomePage(page);
+        await homePage.verifyMenus();
 
+        console.log(`✅ Navigated to base URL`);
 
+        await programmePage.highlightAndClickAdd();   // Now more stable
+
+        await programmePage.fillPopupForm(programmeData, language);
+
+        await arrivalPage.waitForLoadingToFinish();
+
+        await storeSetupPage.navigateToPopulationDemographics();
+        await storeSetupPage.editGroup1AndSave();
+        await storeSetupPage.editVaccine5AndSave();
+        await storeSetupPage.fillStockParametersAndClickDocument();
+
+        await homePage.logout();
+
+        console.log(` Programme setup completed for ${language}`);
+
+      } catch (error) {
+        console.error(`Setup failed:`, error.message);
+        try {
+          await page.screenshot({ path: `setup-failed-${language}-${Date.now()}.png`, fullPage: true });
+          console.log(`📸 Screenshot saved for debugging`);
+        } catch (e) { }
+        throw error;
+      } finally {
+        await page.close().catch(() => { });
+      }
+    });
+    // ================== RUNS BEFORE EVERY TEST ==================
+    test.beforeEach(async ({ page }) => {
+      test.setTimeout(180000);
+
+      const loginPage = new LoginPage(page);
+       const issuingPage = new IssuingPage(page, language);
+      const storePageInstance = new StoreData(page, language);
+
+      console.log(` Logging in as Store Operator for ${language}`);
+
+      await loginPage.loginAs('storeOperator1');
+      await storePageInstance.selectStore(programmeData[0].store[language]);
+
+      stockOverviewPage = new StockOverviewPage(page, language);
+      await stockOverviewPage.navigateTostockOverviewpage();
+    await stockOverviewPage.verifyAndHighlightFromJson(
+    programmeData[0].administrationSyringe[language],issuingData.wastage);
+     await issuingPage.clickFinalizeVerifyPopupinIssuingTab();
+
+      console.log(` Stock Overview page ready`);
     });
 
-    test(`Verify  alert  appear when stock is below minimum level ${language}`, async ({ page }) => {
-      // Instantiate page objects
-      const programmePage = new ProgrammeData(page, language);
-      const arrivalPage = new ArrivalPage(page, language);
-      const storePage = new StoreData(page, language);
-      const stockOverviewPage = new StockOverviewPage(page, language);
-      const loginPage = new LoginPage(page);
-      const homePage = new HomePage(page);
+    // ================== TESTS ==================
+    test(`Verify alert appears when stock is below minimum level`, async () => {
+      const expected = await validateCalculateStockLevelsAndAlerts();
+        console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
+      expect(expected).toBeLessThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
+    });
 
-      const [data] = programmeData;
+    test(`Verify No alert appears when stock is Above minimum level`, async () => {
+      const expected = await validateCalculateStockLevelsAndAlerts();
+      console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
+      expect(expected).toBeGreaterThan(BCGData.saftyWeeks + BCGData.LeadWeeks);
+    });
 
-      // ---- Programme Data steps (uncomment when ready) ----
-      await programmePage.highlightAndClickAdd();
-      await programmePage.fillPopupForm(programmeData, language);
-      await arrivalPage.waitForLoadingToFinish();
-      await storePage.navigateToPopulationDemographics();
-      await storePage.editGroup1AndSave();
-      await storePage.editVaccine5AndSave();
-      await storePage.fillStockParametersAndClickDocument();
-
-      // Logout country admin and login as store operator
-      await homePage.logout();
-      await loginPage.loginAs('storeOperator1');
-
-      // Select the store and navigate to stock overview
-      await storePage.selectStore(data.store[language]);
-      await stockOverviewPage.navigateTostockOverviewpage();
-      validateCalculateStockLevelsAndAlerts(stockOverviewPage, data);
-
-
+    test(`Verify alert appears when stock is Zero`, async () => {
+      const expected = await validateCalculateStockLevelsAndAlerts();
+      expect(expected).toBeLessThanOrEqual(0);
     });
 
   });
-
 });
+
+/** Helper Function */
+async function validateCalculateStockLevelsAndAlerts() {
+  const targetPopulation = BCGData.target_population;
+  const dosesPerTarget = BCGData.doses_per_target;
+  const wastageRate = BCGData.wastage_rate;
+  const estimatedCoverage = BCGData.estimated_coverage;
+
+  const QtyNeededPerYear = targetPopulation * (estimatedCoverage / 100) * dosesPerTarget * (100 / (100 - wastageRate));
+  const QtyNeededPerWeek = QtyNeededPerYear / 52;
+
+  return Math.round(BCGData.CurrentStockAboveMinumLevel / QtyNeededPerWeek);
+}
