@@ -14,7 +14,7 @@ const issuingData = require('../testdata/IssuingTab.json');
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
 const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
 
-const languages = ['en'];
+const languages = ['fr'];
 
 languages.forEach(language => {
 
@@ -28,12 +28,13 @@ languages.forEach(language => {
       try {
 
         const loginPage = new LoginPage(page);
-      
+        const homePage = new HomePage(page);
         const programmePage = new ProgrammeData(page, language);
         const arrivalPage = new ArrivalPage(page, language);
         const storeSetupPage = new StoreData(page, language);
-        await loginPage.loginAs('countryAdmin');
-        const homePage = new HomePage(page);
+
+        await loginPage.loginAs('countryAdmin',language);
+
         await homePage.verifyMenus();
 
         console.log(`✅ Navigated to base URL`);
@@ -69,19 +70,19 @@ languages.forEach(language => {
       test.setTimeout(180000);
 
       const loginPage = new LoginPage(page);
-       const issuingPage = new IssuingPage(page, language);
+      const issuingPage = new IssuingPage(page, language);
       const storePageInstance = new StoreData(page, language);
 
       console.log(` Logging in as Store Operator for ${language}`);
 
-      await loginPage.loginAs('storeOperator1');
+      await loginPage.loginAs('storeOperator1', language);
       await storePageInstance.selectStore(programmeData[0].store[language]);
 
       stockOverviewPage = new StockOverviewPage(page, language);
       await stockOverviewPage.navigateTostockOverviewpage();
-    await stockOverviewPage.verifyAndHighlightFromJson(
-    programmeData[0].administrationSyringe[language],issuingData.wastage);
-           await stockOverviewPage.highlightTdAndVerifyTooltip(
+      await stockOverviewPage.verifyAndHighlightFromJson(
+        programmeData[0].administrationSyringe[language], issuingData.wastage);
+      await stockOverviewPage.highlightTdAndVerifyTooltip(
         programmeData[0].administrationSyringe[language]
       );
 
@@ -91,7 +92,7 @@ languages.forEach(language => {
     // ================== TESTS ==================
     test(`Verify alert appears when stock is below minimum level`, async () => {
       const expected = await validateCalculateStockLevelsAndAlerts();
-        console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
+      console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
       expect(expected).toBeLessThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
     });
 
