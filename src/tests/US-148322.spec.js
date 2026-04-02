@@ -39,9 +39,9 @@ languages.forEach(language => {
 
         await homePage.verifyMenus();
 
-        console.log(`✅ Navigated to base URL`);
+        console.log(`Navigated to base URL`);
 
-        await programmePage.highlightAndClickAdd();   // Now more stable
+        await programmePage.highlightAndClickAdd();   
 
         await programmePage.fillPopupForm(programmeData, language);
 
@@ -60,7 +60,7 @@ languages.forEach(language => {
         console.error(`Setup failed:`, error.message);
         try {
           await page.screenshot({ path: `setup-failed-${language}-${Date.now()}.png`, fullPage: true });
-          console.log(`📸 Screenshot saved for debugging`);
+          console.log(`Screenshot saved for debugging`);
         } catch (e) { }
         throw error;
       } finally {
@@ -100,10 +100,13 @@ languages.forEach(language => {
         BCGData.CurrentStockBelowMinimumLevel
       );
       await stockOverviewPage.highlightTdAndVerifyTooltip(
+        programmeData[0].administrationSyringe[language], issuingData.wastage[language],BCGData.CurrentStockBelowMinimumLevel);
+     const tooltipText =  await stockOverviewPage.highlightTdAndVerifyTooltip(
         programmeData[0].administrationSyringe[language]
       );
 
       expect(expected).toBeLessThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
+      expect(tooltipText).toContain('Product is less than minimum level');
     });
 
     test(`Verify No alert appears when stock is Above minimum level`, async () => {
@@ -111,12 +114,13 @@ languages.forEach(language => {
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
       await stockOverviewPage.verifyAndHighlightFromJson(
-        programmeData[0].administrationSyringe[language], issuingData.wastage[language], BCGData.CurrentStockAboveMinimumLevel,);
-      await stockOverviewPage.highlightTdAndVerifyTooltip(
+        programmeData[0].administrationSyringe[language], issuingData.wastage[language], BCGData.CurrentStockAboveMinimumLevel);
+     const tooltipCount = await stockOverviewPage.highlightTdAndVerifyNoTooltip(
         programmeData[0].administrationSyringe[language]
       );
 
       expect(expected).toBeGreaterThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
+      expect(tooltipCount).toBe(false);
     });
 
     test(`Verify alert appears when stock is Zero`, async () => {

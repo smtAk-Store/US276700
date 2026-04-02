@@ -99,23 +99,82 @@ class StockOverviewPage {
     await this.saveButton().click();
   }
   async highlightTdAndVerifyTooltip(value) {
-    const row = this.page.locator('tbody tr').filter({
-      has: this.page.locator('td:nth-child(2)', { hasText: value })
-    }).first();
-    if (!(await row.count())) return;
+    const row = this.page.locator('tbody tr')
+        .filter({ has: this.page.locator('td:nth-child(2)', { hasText: value }) })
+        .first();
+
+    if (!(await row.count())) {
+        console.warn(`Row not found for value: "${value}"`);
+        return null;
+    }
+
     await row.scrollIntoViewIfNeeded();
     const targetTd = row.locator('td:nth-child(3)');
+    const tooltipIcon = targetTd.locator('[data-tooltip]').first();
+
+    // Highlight
     await targetTd.evaluate(el => {
-      el.style.backgroundColor = 'lightcoral';
+        el.style.backgroundColor = 'lightcoral';
+        el.style.outline = '2px solid red';
     });
-    const tooltipIcon = targetTd.locator('[data-tooltip]');
-    await tooltipIcon.hover();
+
+    if (!(await tooltipIcon.count())) {
+        console.warn(`Tooltip icon not found for: "${value}"`);
+        return null;
+    }
+
+    await tooltipIcon.hover({ force: true });
+
     const tooltipText = await tooltipIcon.getAttribute('data-tooltip');
-    console.log("Tooltip value:", tooltipText);
 
+    console.log(`✅ Tooltip for "${value}":`, tooltipText);
 
+    await this.page.pause(); // Remove in CI / final runs
 
-  }
+    return tooltipText;
+}
+
+async highlightTdAndVerifyNoTooltip(value) {
+    const row = this.page.locator('tbody tr')
+        .filter({
+            has: this.page.locator('td:nth-child(2)', { hasText: value })
+        })
+        .first();
+
+    if (!(await row.count())) {
+        console.warn(`Row not found for value: "${value}"`);
+        return false;
+    }
+
+    await row.scrollIntoViewIfNeeded();
+
+    const targetTd = row.locator('td:nth-child(3)');
+
+    // Highlight the TD
+    await targetTd.evaluate((el) => {
+        el.style.backgroundColor = 'lightcoral';
+        el.style.outline = '2px solid red';
+    });
+
+    // Check if tooltip icon exists
+    const tooltipIcon = targetTd.locator('[data-tooltip]').first();
+    const tooltipCount = await tooltipIcon.count();
+
+    // Assert that no tooltip icon is present
+    if (tooltipCount > 0) {
+        console.error(`❌ FAIL: Tooltip icon found for "${value}" but expected none`);
+        // Optional: Fail the test
+        // throw new Error(`Tooltip icon should not be present for value: ${value}`);
+    } else {
+        console.log(`✅ PASS: No tooltip icon found and TD highlighted for value: "${value}"`);
+    }
+
+    // Pause for visual check during debugging (remove/comment in CI runs)
+    await this.page.pause();
+
+    return tooltipCount === 0;   // Returns true if no tooltip (as expected)
+}
+
 }
 
 module.exports = StockOverviewPage;
