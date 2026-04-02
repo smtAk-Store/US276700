@@ -14,7 +14,9 @@ storeDataMenu = () =>
     this.page.locator('span[role="menuitem"]').nth(1);
 populationDemographicsTab = () =>
     this.page.locator('button[aria-controls="simple-tabpanel-1"]');
-editButton = () => this.page.locator('//button[@title="Edit"] | //button[@title="Modifier"]');
+editButton = () => this.page.locator(
+  'button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])'
+);
  saveButton = () =>this.page.locator('div.MuiDialogActions-root button[type="submit"]');
  group1Input = () => this.page.locator('input[name="group1"]');
  vaccineCoverageTab = () => this.page.locator('button#simple-tab-3');
@@ -52,7 +54,9 @@ editButton = () => this.page.locator('//button[@title="Edit"] | //button[@title=
   });
 
   // Click the edit button inside that row only
-  const editBtnInRow = rowWithCRR.locator('button[title="Edit"], button[title="Modifier"]').first();
+  const editBtnInRow = rowWithCRR.locator(
+  'button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])'
+).first();
   await editBtnInRow.scrollIntoViewIfNeeded();
   await editBtnInRow.click();
 
@@ -86,7 +90,9 @@ async fillStockParametersAndClickDocument() {
   });
 
   // Click the edit button inside that row
-  const editBtnInRow = rowWithCRR.locator('button[title="Modifier"], button[title="Edit"], button:has(svg.arRotate270)').first();
+ const editBtnInRow = rowWithCRR.locator(
+    'button[title="Modifier"], button[title="Edit"], button[title="Editar"], button:has(svg[class*="arRotate270"])'
+).first();
   await editBtnInRow.scrollIntoViewIfNeeded();
   await editBtnInRow.click();
 

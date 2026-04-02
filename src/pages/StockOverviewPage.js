@@ -13,10 +13,8 @@ import { ConfirmationDialogPage } from '../pages/ConfirmationDialogPage';
 class StockOverviewPage {
   constructor(page, language) {
     this.page = page;
-    this.form = new FormComponent(page); // fixed typo
+    this.form = new FormComponent(page); 
     this.language = language;
-
-    // ✅ Create instance of IssuingPage here
     this.issuingPage = new IssuingPage(page, language);
     this.arrivalPage = new ArrivalPage(page, language);
     const [product] = productIssuingTab;
@@ -25,20 +23,17 @@ class StockOverviewPage {
     this.data = testData.SimpleArrival;
 
   }
-
-  // 📌 Locator: Menu items (used for navigation)
   menuItem = () => this.page.locator("//span[contains(@class,'MuiMenuItem-root')]");
   quantity = () => this.page.locator('input[name="dosesOrUnit"]');
   batchNumber = () => this.page.locator("//div[@id='batch' and @role='button']");
   saveButton = () => this.page.locator("//div[contains(@class,'MuiGrid-item')]/button[@type='submit' and contains(@class,'MuiButton-containedPrimary')]");
-  // 📌 Navigate to Stock Overview Page
   async navigateTostockOverviewpage() {
     await this.menuItem().nth(0).click();
   }
 
-  // 📌 Verify & highlight element from JSON
-  async verifyAndHighlightFromJson(value, issuingData1,newArrivalQuantity) {
-    // find the row based on the second column text
+  
+  async verifyAndHighlightFromJson(value, issuingData1, sunset, language, newArrivalQuantity) {
+   
     const rowLocator = this.page.locator('tbody tr').filter({
       has: this.page.locator('td:nth-child(2)', { hasText: value })
     });
@@ -47,27 +42,19 @@ class StockOverviewPage {
 
     if (count > 0) {
       const row = rowLocator.first();
-
-      // get adjacent numeric value (third column)
       const numericValueText = await row.locator('td:nth-child(3)').textContent();
       const numericValue = numericValueText ? parseInt(numericValueText.replace(/,/g, ''), 10) : 0;
-
-      // if numeric value is 0 or empty, treat as "not found"
       if (numericValue <= 0) {
         console.log(`"${value}" -> Numeric value is 0 or empty, skipping.`);
         this.lastFoundValue = null;
         this.lastFoundNumericValue = null;
         return;
       }
-
-      // scroll and highlight
       await row.scrollIntoViewIfNeeded();
       await row.evaluate(el => {
         el.style.border = '3px solid red';
         el.style.backgroundColor = 'yellow';
       });
-
-      // store main value and numeric value
       const mainValue = await row.locator('td:nth-child(2)').textContent();
       this.lastFoundValue = mainValue?.trim();
       this.lastFoundNumericValue = numericValue;
@@ -75,98 +62,62 @@ class StockOverviewPage {
       console.log(`"${value}" -> Element FOUND and highlighted`);
       console.log(`Stored value: ${this.lastFoundValue}`);
       console.log(`Stored numeric value: ${this.lastFoundNumericValue}`);
-
-      // call the form method
-      await this.openFormAndDoSomething(issuingData1);
-      //await this.navigateTostockOverviewpage()
-
-    } else {
-      console.log(`"${value}" -> Element NOT FOUND`);
-      this.lastFoundValue = null;
-      this.lastFoundNumericValue = null;
-    }
+      await this.openFormAndDoSomething(issuingData1, sunset, language);
+    } 
     await this.arrivalPage.openArrivalForm();
     await this.arrivalPage.fillArrivalFormCRROnly(this.data);
-
-    await this.page.pause();
     const dialog = new ArrivalProductDialogPage(this.page);
-    await dialog.addProductToArrivalCRR(sunset, 'en',newArrivalQuantity);
-    // await this.page.pause();
+    await dialog.addProductToArrivalCRR(sunset, language, newArrivalQuantity);
     await this.arrivalPage.waitForLoadingToFinish();
     await this.arrivalPage.clickFinalizeVerifyPopup();
-
     await this.arrivalPage.confirmationDialog.clickConfirm();
     await this.arrivalPage.verifyFinalizeSuccessMessage();
     await this.navigateTostockOverviewpage()
-    await this.page.pause();
   }
 
-  async openFormAndDoSomething(issuingData1) {
-    // 1️⃣ Open the issuing form
+  async openFormAndDoSomething(issuingData1, sunset, language) {
     await this.issuingPage.openIssuingForm();
-
-    // 2️⃣ Fill the main issuing form using your data
     await this.issuingPage.fillIssuingFormCRROnly(issuingData1);
-
-    // 3️⃣ Add the first product from JSON (like old spec)
-    // get first product
-    await this.addAllProductsFromJson();
+    await this.addAllProductsFromJson(sunset, language);
     await this.issuingPage.clickFinalizeVerifyPopupinIssuingTab();
-    // 4️⃣ Pause for debugging
-
   }
-  async addAllProductsFromJson() {
-
-    const productData = {
-      productType: "Supplies"
-    };
-
-    await this.form.selectDropdown(this.productType, productData.productType);
+  async addAllProductsFromJson(sunset, language) {
+    const productTypeValue = sunset.productType[language];
+    if (!productTypeValue) {
+      throw new Error(`productType not found for language: ${language}`);
+    }
+    await this.form.selectDropdown(this.productType, productTypeValue);
     if (this.lastFoundValue) {
       await this.form.selectDropdown(this.product, this.lastFoundValue);
     }
     await this.batchNumber().click();
     const firstRealOption = this.page.locator('ul[role="listbox"] li').nth(1);
     await firstRealOption.click();
-
     if (this.lastFoundNumericValue) {
       await this.quantity().fill(`${this.lastFoundNumericValue}`);
     }
     await this.saveButton().click();
-    await this.page.pause();
-
   }
   async highlightTdAndVerifyTooltip(value) {
     const row = this.page.locator('tbody tr').filter({
       has: this.page.locator('td:nth-child(2)', { hasText: value })
     }).first();
-
     if (!(await row.count())) return;
-
     await row.scrollIntoViewIfNeeded();
-
     const targetTd = row.locator('td:nth-child(3)');
-
-    // highlight the td
     await targetTd.evaluate(el => {
       el.style.backgroundColor = 'lightcoral';
     });
-
-    // locate the icon (svg inside span with data-tooltip)
     const tooltipIcon = targetTd.locator('[data-tooltip]');
-
-    // hover on icon
     await tooltipIcon.hover();
-
-    // get tooltip text
     const tooltipText = await tooltipIcon.getAttribute('data-tooltip');
-
     console.log("Tooltip value:", tooltipText);
 
-    await this.page.pause();
+
 
   }
 }
 
 module.exports = StockOverviewPage;
+
 

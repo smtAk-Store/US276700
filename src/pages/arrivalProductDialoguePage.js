@@ -74,7 +74,7 @@ export class ArrivalProductDialogPage {
     await this.form.selectDropdown(this.presentation, sunset.presentation[language]);
    // await this.form.selectDropdown(this.vvmStage, sunset.vvmStage[language]);
     await this.form.selectDropdown(this.routineOrSia, sunset.routineOrSia[language]);
-    await this.form.selectDropdown(this.origin, sunset.origin[language]);
+   // await this.form.selectDropdown(this.origin, sunset.origin[language]);
     await this.form.selectDropdown(this.storageLocation, sunset.storageLocation[language]);
 
     // Input fields

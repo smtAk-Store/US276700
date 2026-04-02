@@ -1,4 +1,3 @@
-// src/tests/US-148322.spec.js
 
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/loginPage';
@@ -13,8 +12,11 @@ const issuingData = require('../testdata/IssuingTab.json');
 
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
 const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
+const sunset = require('../testdata/InputData/sunsetProduct.json');
 
-const languages = ['en'];
+const languages = ['en', 'fr', 'pt', 'es'];
+
+//const languages = ['es'];
 
 languages.forEach(language => {
 
@@ -33,7 +35,7 @@ languages.forEach(language => {
         const arrivalPage = new ArrivalPage(page, language);
         const storeSetupPage = new StoreData(page, language);
 
-        await loginPage.loginAs('countryAdmin',language);
+        await loginPage.loginAs('countryAdmin', language);
 
         await homePage.verifyMenus();
 
@@ -80,7 +82,7 @@ languages.forEach(language => {
 
       stockOverviewPage = new StockOverviewPage(page, language);
       await stockOverviewPage.navigateTostockOverviewpage();
-      
+
 
       console.log(` Stock Overview page ready`);
     });
@@ -91,24 +93,29 @@ languages.forEach(language => {
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
       await stockOverviewPage.verifyAndHighlightFromJson(
-        programmeData[0].administrationSyringe[language], issuingData.wastage,BCGData.CurrentStockBelowMinimumLevel);
+        programmeData[0].administrationSyringe[language],
+        issuingData.wastage[language],
+        sunset,
+        language,
+        BCGData.CurrentStockBelowMinimumLevel
+      );
       await stockOverviewPage.highlightTdAndVerifyTooltip(
         programmeData[0].administrationSyringe[language]
       );
-      
+
       expect(expected).toBeLessThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
     });
 
     test(`Verify No alert appears when stock is Above minimum level`, async () => {
-   const expected = await validateCalculateStockLevelsAndAlerts(BCGData.CurrentStockAboveMinimumLevel);
+      const expected = await validateCalculateStockLevelsAndAlerts(BCGData.CurrentStockAboveMinimumLevel);
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
       await stockOverviewPage.verifyAndHighlightFromJson(
-        programmeData[0].administrationSyringe[language], issuingData.wastage,BCGData.CurrentStockAboveMinimumLevel);
+        programmeData[0].administrationSyringe[language], issuingData.wastage[language], BCGData.CurrentStockAboveMinimumLevel,);
       await stockOverviewPage.highlightTdAndVerifyTooltip(
         programmeData[0].administrationSyringe[language]
       );
-      
+
       expect(expected).toBeGreaterThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
     });
 

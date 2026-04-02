@@ -37,7 +37,7 @@ async fillIssuingFormCRROnly(data) {
 console.log( receiptTypeText,'   receipient Text ####');
   // Select Receipt Type
   await this.form.selectDropdown(this.issueTypeDropdown(), receiptTypeText);
-await this.page.pause();
+
   await this.selectRecipientStore(data.sendingStore);
 
   // Submit Form
@@ -48,7 +48,6 @@ await this.form.selectDropdown(this.productType, productData.productType[languag
 await this.form.selectDropdown(this.product, productData.product[language]);
 await this.form.selectDropdown(this.batchNumber(),productData.batchNumber[language]);
 await this.quantity().fill(productData.quantity[language]);
-await this.page.pause();
 await this.form.selectDropdown(this.storeNameInput(),productData.storageLocation[language]);
 await this.saveButton().click();
 }

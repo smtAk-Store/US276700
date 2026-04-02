@@ -14,8 +14,8 @@ export class LoginPage {
   this.signInButton = page.locator('#next');
     this.englishLanguageButton = page.getByRole('button', { name: /english/i });
     this.frenchLanguageButton = page.getByRole('button', { name: /french/i });
-    this.spanishLanguageButton = page.getByRole('button', { name: /spanish/i });
     this.portugueseLanguageButton = page.getByRole('button', { name: /portuguese/i });
+    this.spanishLanguageButton = page.getByRole('button', { name: /العربية/i });
   }
 
   async openApplication() {
@@ -67,7 +67,7 @@ export class LoginPage {
         break;
       case 'es':
       case 'spanish':
-        optionLocator = this.page.getByRole('option', { name: /spanish|español/i });
+         optionLocator = this.page.getByRole('option', { name: /العربية/i });
         break;
       case 'pt':
       case 'portuguese':
