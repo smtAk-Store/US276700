@@ -1,4 +1,3 @@
-
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/loginPage';
 import { HomePage } from '../pages/homePage';
@@ -16,7 +15,6 @@ const sunset = require('../testdata/InputData/sunsetProduct.json');
 
 const languages = ['en', 'fr', 'pt', 'es'];
 
-//const languages = ['es'];
 
 languages.forEach(language => {
 
@@ -24,7 +22,7 @@ languages.forEach(language => {
 
     let stockOverviewPage;
 
-    // ================== RUNS ONLY ONCE (Programme Creation) ==================
+    // ================== RUNS ONLY ONCE ==================
     test.beforeAll(async ({ browser }) => {
       const page = await browser.newPage();
       try {
@@ -36,13 +34,11 @@ languages.forEach(language => {
         const storeSetupPage = new StoreData(page, language);
 
         await loginPage.loginAs('countryAdmin', language);
-
         await homePage.verifyMenus();
 
         console.log(`Navigated to base URL`);
 
         await programmePage.highlightAndClickAdd();   
-
         await programmePage.fillPopupForm(programmeData, language);
 
         await arrivalPage.waitForLoadingToFinish();
@@ -61,13 +57,14 @@ languages.forEach(language => {
         try {
           await page.screenshot({ path: `setup-failed-${language}-${Date.now()}.png`, fullPage: true });
           console.log(`Screenshot saved for debugging`);
-        } catch (e) { }
+        } catch (e) {}
         throw error;
       } finally {
-        await page.close().catch(() => { });
+        await page.close().catch(() => {});
       }
     });
-    // ================== RUNS BEFORE EVERY TEST ==================
+
+    // ================== BEFORE EACH ==================
     test.beforeEach(async ({ page }) => {
       test.setTimeout(180000);
 
@@ -83,15 +80,18 @@ languages.forEach(language => {
       stockOverviewPage = new StockOverviewPage(page, language);
       await stockOverviewPage.navigateTostockOverviewpage();
 
-
       console.log(` Stock Overview page ready`);
     });
 
-    // ================== TESTS ==================
+    // ================== TEST ==================
+
     test(`Verify alert appears when stock is below minimum level`, async () => {
-      const expected = await validateCalculateStockLevelsAndAlerts(BCGData.CurrentStockBelowMinimumLevel);
+      const expected = await validateCalculateStockLevelsAndAlerts(
+        BCGData.CurrentStockBelowMinimumLevel
+      );
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
+
       await stockOverviewPage.verifyAndHighlightFromJson(
         programmeData[0].administrationSyringe[language],
         issuingData.wastage[language],
@@ -99,33 +99,67 @@ languages.forEach(language => {
         language,
         BCGData.CurrentStockBelowMinimumLevel
       );
-      await stockOverviewPage.highlightTdAndVerifyTooltip(
-        programmeData[0].administrationSyringe[language], issuingData.wastage[language],BCGData.CurrentStockBelowMinimumLevel);
-     const tooltipText =  await stockOverviewPage.highlightTdAndVerifyTooltip(
+
+      const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
         programmeData[0].administrationSyringe[language]
       );
 
-      expect(expected).toBeLessThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
-      expect(tooltipText).toContain('Product is less than minimum level');
+      expect(expected).toBeLessThanOrEqual(
+        BCGData.saftyWeeks + BCGData.LeadWeeks
+      );
+
+      // ✅ SWITCH CASE HERE
+      let expectedTooltip;
+
+      switch (language) {
+        case 'fr':
+          expectedTooltip = 'Le solde actuel de ce produit est inférieur au niveau minimum';
+          break;
+        case 'pt':
+          expectedTooltip = 'O saldo atual deste produto é inferior ao nível mínimo';
+          break;
+        case 'es': // Arabic
+          expectedTooltip = 'الرصيد الحالي لهذا المنتج أقل من الحد الأدنى المطلوب';
+          break;
+        case 'en':
+        default:
+          expectedTooltip = 'The current balance of this product is less than minimum level';
+          break;
+      }
+
+      expect(tooltipText.trim()).toContain(expectedTooltip);
     });
 
     test(`Verify No alert appears when stock is Above minimum level`, async () => {
-      const expected = await validateCalculateStockLevelsAndAlerts(BCGData.CurrentStockAboveMinimumLevel);
+      const expected = await validateCalculateStockLevelsAndAlerts(
+        BCGData.CurrentStockAboveMinimumLevel
+      );
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
+
       await stockOverviewPage.verifyAndHighlightFromJson(
-        programmeData[0].administrationSyringe[language], issuingData.wastage[language], BCGData.CurrentStockAboveMinimumLevel);
-     const tooltipCount = await stockOverviewPage.highlightTdAndVerifyNoTooltip(
+        programmeData[0].administrationSyringe[language],
+        issuingData.wastage[language],
+        BCGData.CurrentStockAboveMinimumLevel
+      );
+
+      const tooltipCount = await stockOverviewPage.highlightTdAndVerifyNoTooltip(
         programmeData[0].administrationSyringe[language]
       );
 
-      expect(expected).toBeGreaterThanOrEqual(BCGData.saftyWeeks + BCGData.LeadWeeks);
+      expect(expected).toBeGreaterThanOrEqual(
+        BCGData.saftyWeeks + BCGData.LeadWeeks
+      );
+
       expect(tooltipCount).toBe(false);
     });
 
     test(`Verify alert appears when stock is Zero`, async () => {
-      const expected = await validateCalculateStockLevelsAndAlerts();
-      expect(expected).toBeLessThanOrEqual(0);
+       await stockOverviewPage.verifyAndHighlightFromArrivalCount(
+        programmeData[0].vaccine[language],
+        issuingData.wastage[language],
+        BCGData.CurrentStockAboveMinimumLevel
+      );
     });
 
   });
@@ -138,7 +172,12 @@ async function validateCalculateStockLevelsAndAlerts(CurrentStockThresholdLevel)
   const wastageRate = BCGData.wastage_rate;
   const estimatedCoverage = BCGData.estimated_coverage;
 
-  const QtyNeededPerYear = targetPopulation * (estimatedCoverage / 100) * dosesPerTarget * (100 / (100 - wastageRate));
+  const QtyNeededPerYear =
+    targetPopulation *
+    (estimatedCoverage / 100) *
+    dosesPerTarget *
+    (100 / (100 - wastageRate));
+
   const QtyNeededPerWeek = QtyNeededPerYear / 52;
 
   return Math.round(CurrentStockThresholdLevel / QtyNeededPerWeek);
