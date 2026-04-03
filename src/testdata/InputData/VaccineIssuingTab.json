@@ -1,0 +1,80 @@
+{
+  "productType": {
+    "en": "Vaccine",
+    "fr": "Vaccin",
+    "pt": "Vacina",
+    "es": "لقاح"
+  },
+  "product": {
+    "en": "BCG",
+    "fr": "BCG",
+    "pt": "BCG",
+    "es": "BCG"
+  },
+  "producer": {
+      "en": "Japan BCG Laboratory",
+      "fr": "Japan BCG Laboratory",
+      "pt": "Japan BCG Laboratory",
+      "es": "Japan BCG Laboratory"
+    },
+    "commercialName": {
+      "en": "BCG Freeze Dried Glutamate vaccine",
+      "fr": "BCG Freeze Dried Glutamate vaccine",
+      "pt": "BCG Freeze Dried Glutamate vaccine",
+      "es": "BCG Freeze Dried Glutamate vaccine"
+    },
+    "formulation": {
+      "en": "Lyophilised : reconstituted with excipient diluent",
+      "fr": "Lyophilised : reconstituted with excipient diluent",
+      "pt": "Lyophilised : reconstituted with excipient diluent",
+      "es": "Lyophilised : reconstituted with excipient diluent"
+    },
+    "presentation": {
+      "en": "10",
+      "fr": "10",
+      "pt": "10",
+      "es": "10"
+    },
+    "vvmStage": {
+      "en": "0.None",
+      "fr": "0.Aucun",
+      "pt": "0. Nenhum",
+      "es": "0.None"
+    },
+    "quantity": {
+      "en": "100",
+      "fr": "100",
+      "pt": "100",
+      "es": "100"
+    },
+    "routineOrSia": {
+      "en": "Routine",
+      "fr": "Routine",
+      "pt": "Rotina",
+      "es": "روتيني"
+    },
+    "origin": {
+      "en": "Japan",
+      "fr": "Japon",
+      "pt": "Japão",
+      "es": "اليابان"
+    },
+    "freezeIndicator": {
+      "en": "Ok",
+      "fr": "Ok",
+      "pt": "Ok",
+      "es": "Ok"
+    },
+    "storageLocation": {
+      "en": "NONE",
+      "fr": "NONE",
+      "pt": "NONE",
+      "es": "NONE"
+    },
+     "batchNumber": {
+      "en": "1335",
+      "fr": "1335",
+      "pt": "1335",
+      "es": "1335"
+    }
+}

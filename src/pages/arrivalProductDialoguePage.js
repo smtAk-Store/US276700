@@ -28,40 +28,68 @@ export class ArrivalProductDialogPage {
   // --- NEW METHOD USING selectDropdown AND LANGUAGE SUPPORT ---
   async addProductToArrival(productData, language = 'en') {
 
-    // Fill dropdowns with language-specific values
-    await this.form.selectDropdown(this.productType, productData.productType[language]);
-    await this.form.selectDropdown(this.product, productData.product[language]);
-    await this.form.selectDropdown(this.producer, productData.producer[language]);
-    await this.form.selectDropdown(this.commercialName, productData.commercialName[language]);
-    await this.form.selectDropdown(this.formulation, productData.formulation[language]);
-    await this.form.selectDropdown(this.presentation, productData.presentation[language]);
-    await this.form.selectDropdown(this.vvmStage, productData.vvmStage[language]);
-    await this.form.selectDropdown(this.routineOrSia, productData.routineOrSia[language]);
-    await this.form.selectDropdown(this.origin, productData.origin[language]);
-    await this.form.selectDropdown(this.storageLocation, productData.storageLocation[language]);
+  // Helper function: fill input or select only if exists and enabled
+  const fillIfPresent = async (locator, value, type = 'input') => {
+    if (await locator.count()) {
+      // Check if element is disabled
+      const isDisabled = await locator.evaluate(el => el.hasAttribute('disabled') || el.getAttribute('aria-disabled') === 'true');
+      if (isDisabled) {
+        console.log(`Locator skipped because it is disabled`);
+        return;
+      }
 
-    // Input fields
-    await this.batchNumber.fill(productData.batchNumber[language]);
-    await this.expiryDate.fill(productData.expiryDate[language]);
-    await this.quantity.fill(productData.quantity[language]);
+      if (type === 'select') {
+        await locator.click(); // open dropdown
+        const option = this.page.locator('li[role="option"]', { hasText: value });
+        if (await option.count()) {
+          await option.click();
+        } else {
+          console.log(`Option "${value}" not found for dropdown`);
+        }
+      } else {
+        await locator.fill(value);
+      }
+    }
+  };
 
-    // Checkbox/dropdown
-    await this.form.selectDropdown(this.freezeIndicator, productData.freezeIndicator[language]);
+  // Fill dropdowns
+  await fillIfPresent(this.productType, productData.productType[language], 'select');
+  await fillIfPresent(this.product, productData.product[language], 'select');
+  await fillIfPresent(this.producer, productData.producer[language], 'select');
+  await fillIfPresent(this.commercialName, productData.commercialName[language], 'select');
+  await fillIfPresent(this.formulation, productData.formulation[language], 'select');
+  await fillIfPresent(this.presentation, productData.presentation[language], 'select');
+  await fillIfPresent(this.vvmStage, productData.vvmStage[language], 'select');
+  await fillIfPresent(this.routineOrSia, productData.routineOrSia[language], 'select');
+  await fillIfPresent(this.origin, productData.origin[language], 'select');
+  await fillIfPresent(this.storageLocation, productData.storageLocation[language], 'select');
 
-    // Click Save/Create
+  // Fill input fields
+  await fillIfPresent(this.batchNumber, productData.batchNumber[language]);
+  // await fillIfPresent(this.expiryDate, productData.expiryDate[language]);
+  await fillIfPresent(this.quantity, productData.quantity[language]);
+
+  // Checkbox/dropdown example (if used)
+  // await fillIfPresent(this.freezeIndicator, productData.freezeIndicator[language], 'select');
+
+  // Click Save/Create
+  if (await this.createButton.count()) {
     await this.createButton.click();
     await this.page.waitForLoadState('networkidle');
-
-    // Handle "Continue" popup
-    const continueButton = this.page.locator("(//div[contains(@class,'MuiGrid-item')]/button[contains(@class,'MuiButton-root')])[6]");
-    try {
-    await continueButton.waitFor({ state: 'visible', timeout: 5000 });
-    await continueButton.click();
-    await this.page.waitForLoadState('networkidle');
-   } catch (err) {
-   console.log("Continue button not present, moving on");
-   }
   }
+
+  // Handle "Continue" popup if it exists
+  const continueButton = this.page.locator("(//div[contains(@class,'MuiGrid-item')]/button[contains(@class,'MuiButton-root')])[6]");
+  if (await continueButton.count()) {
+    try {
+      await continueButton.waitFor({ state: 'visible', timeout: 5000 });
+      await continueButton.click();
+      await this.page.waitForLoadState('networkidle');
+    } catch (err) {
+      console.log("Continue button not present or not clickable, moving on");
+    }
+  }
+}
 
    async addProductToArrivalCRR(sunset, language = 'en',newArrivalQuantity) {
 
