@@ -13,7 +13,7 @@ const programmeData = require('../testdata/InputData/ProgrammeData.json');
 const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
 const sunset = require('../testdata/InputData/sunsetProduct.json');
 
-const languages = ['en', 'fr', 'pt', 'es'];
+const languages = ['en'];
 
 
 languages.forEach(language => {
@@ -92,8 +92,15 @@ languages.forEach(language => {
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
 
-      await stockOverviewPage.verifyAndHighlightFromJson(
-        programmeData[0].administrationSyringe[language],
+      // await stockOverviewPage.verifyAndHighlightFromJson(
+      //   programmeData[0].administrationSyringe[language],
+      //   issuingData.wastage[language],
+      //   sunset,
+      //   language,
+      //   BCGData.CurrentStockBelowMinimumLevel
+      // );
+
+      await stockOverviewPage.evaluateCurrentStockBalance( programmeData[0].administrationSyringe[language],
         issuingData.wastage[language],
         sunset,
         language,

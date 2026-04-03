@@ -31,6 +31,48 @@ class StockOverviewPage {
     await this.menuItem().nth(0).click();
   }
 
+
+  async evaluateCurrentStockBalance(value, issuingData1, sunset, language, newArrivalQuantity) {
+   let existingStock= fetchValueFromTable(value);
+    if(existingStock && existingStock.numericValue > 0) {
+      issueExistingStock(issuingData1, sunset, language);
+    } else {
+      await this.performArrival(this.data, sunset, language, newArrivalQuantity);
+    }
+
+  }
+
+
+  async fetchValueFromTable(value) {
+ const rowLocator = this.page.locator('tbody tr').filter({
+      has: this.page.locator('td:nth-child(2)', { hasText: value })
+    });
+
+    const count = await rowLocator.count();
+    const row = rowLocator.first();
+      const numericValueText = await row.locator('td:nth-child(3)').textContent();
+      const numericValue = numericValueText ? parseInt(numericValueText.replace(/,/g, ''), 10) : 0;
+
+      if (numericValue <= 0) {
+        console.log(`"${value}" -> Numeric value is 0 or empty, skipping.`);
+        this.lastFoundValue = null;
+        this.lastFoundNumericValue = null;
+        return;
+      }
+      await row.scrollIntoViewIfNeeded();
+      await row.evaluate(el => {
+        el.style.border = '3px solid red';
+        el.style.backgroundColor = 'yellow';
+      });
+      const mainValue = await row.locator('td:nth-child(2)').textContent();
+      this.lastFoundValue = mainValue?.trim();
+      this.lastFoundNumericValue = numericValue;
+
+      console.log(`"${value}" -> Element FOUND and highlighted`);
+      console.log(`Stored value: ${this.lastFoundValue}`);
+      console.log(`Stored numeric value: ${this.lastFoundNumericValue}`);
+      return { mainValue: this.lastFoundValue, numericValue: this.lastFoundNumericValue };
+  }
   
   async verifyAndHighlightFromJson(value, issuingData1, sunset, language, newArrivalQuantity) {
    
@@ -62,7 +104,7 @@ class StockOverviewPage {
       console.log(`"${value}" -> Element FOUND and highlighted`);
       console.log(`Stored value: ${this.lastFoundValue}`);
       console.log(`Stored numeric value: ${this.lastFoundNumericValue}`);
-      await this.openFormAndDoSomething(issuingData1, sunset, language);
+      await this.issueExistingStock(issuingData1, sunset, language);
     } 
     await this.arrivalPage.openArrivalForm();
     await this.arrivalPage.fillArrivalFormCRROnly(this.data);
@@ -75,12 +117,26 @@ class StockOverviewPage {
     await this.navigateTostockOverviewpage()
   }
 
-  async openFormAndDoSomething(issuingData1, sunset, language) {
+  async issueExistingStock(issuingData1, sunset, language) {
     await this.issuingPage.openIssuingForm();
     await this.issuingPage.fillIssuingFormCRROnly(issuingData1);
     await this.addAllProductsFromJson(sunset, language);
     await this.issuingPage.clickFinalizeVerifyPopupinIssuingTab();
   }
+
+  async performArrival(data,sunset, language, newArrivalQuantity) {
+    await this.arrivalPage.openArrivalForm();
+    await this.arrivalPage.fillArrivalFormCRROnly(this.data);
+    const dialog = new ArrivalProductDialogPage(this.page);
+    await dialog.addProductToArrivalCRR(sunset, language, newArrivalQuantity);
+    await this.arrivalPage.waitForLoadingToFinish();
+    await this.arrivalPage.clickFinalizeVerifyPopup();
+    await this.arrivalPage.confirmationDialog.clickConfirm();
+    await this.arrivalPage.verifyFinalizeSuccessMessage();
+    await this.navigateTostockOverviewpage()
+  }
+
+  
   async addAllProductsFromJson(sunset, language) {
     const productTypeValue = sunset.productType[language];
     if (!productTypeValue) {
