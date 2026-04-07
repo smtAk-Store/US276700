@@ -5,8 +5,8 @@ const { IssuingPage } = require('./Issuingpage'); // make sure file casing match
 const productIssuingTab = require('../testdata/InputData/productIssuingTab.json');
 const productData = require('../testdata/InputData/productArrival.json');
 const { ArrivalPage } = require('./arrivalPage');
-const testData = require('../testdata/arrival.json');
-const sunset = require('../testdata/InputData/sunsetProduct.json');
+const testData = require('../testdata/addlinetoarrival.json');
+const productTypeArrivalData = require('../testdata/InputData/addProductTypeArrival.json');
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
 import { ConfirmationDialogPage } from '../pages/ConfirmationDialogPage';
 
@@ -32,7 +32,7 @@ class StockOverviewPage {
   }
 
 
-  async evaluateCurrentStockBalance(value, issuingData1, vaccineIssuingTab, language, newArrivalQuantity) {
+  async evaluateCurrentStockBalance(value, addLineToIssueData, productTypeIssueData,addLineToArrivalData,addProductTypeArrivalData, productType, language, newArrivalQuantity) {
 
     // Try to fetch existing stock
     const existingStock = await this.fetchValueFromTable(value);
@@ -40,10 +40,10 @@ class StockOverviewPage {
     if (existingStock && existingStock.numericValue > 0) {
         // ✅ Stock exists → issue
         console.log(`"${value}" -> Stock available → issuing`);
-        await this.issueExistingStock(issuingData1, vaccineIssuingTab, language);
+        await this.issueExistingStock(addLineToIssueData, productTypeIssueData, language);
     } 
-        console.log(`"${value}" -> NOT FOUND or ZERO → performing arrival`);
-        await this.performArrival(this.data, vaccineIssuingTab, language, newArrivalQuantity);
+        console.log(`"${value}" -> NOT FOUND or ZERO → performing addlinetoarrival`);
+        await this.performArrival(addLineToArrivalData, addProductTypeArrivalData, language, newArrivalQuantity);
     
 
     // Optional: highlight or verify in stock overview after action
@@ -52,21 +52,21 @@ class StockOverviewPage {
 }
   
 
-    async validateZeroStockBalance(value, issuingData1, vaccineIssuingTab, language, newArrivalQuantity) {
+    async validateZeroStockBalance(value, addLineToIssueData, productTypeIssueData, language, newArrivalQuantity) {
     let existingStock = await this.fetchValueFromTable(value);
 
     if (existingStock && existingStock.numericValue > 0) {
-        await this.issueExistingStock(issuingData1, vaccineIssuingTab, language);
+        await this.issueExistingStock(addLineToIssueData, productTypeIssueData, language);
     } else {
-        // 1. Perform arrival first
-        await this.performArrival(this.data, vaccineIssuingTab, language, newArrivalQuantity);
+        // 1. Perform addlinetoarrival first
+        await this.performArrival(this.data, productTypeIssueData, language, newArrivalQuantity);
 
         // 2. Re-fetch the value from table to get lastFoundValue for issuing
         await this.navigateTostockOverviewpage();
         await this.fetchValueFromTable(value);
 
-        // 3. Issue stock after arrival
-        await this.issueExistingStock(issuingData1, vaccineIssuingTab, language);  
+        // 3. Issue stock after addlinetoarrival
+        await this.issueExistingStock(addLineToIssueData, productTypeIssueData, language);  
     }
 
     // 4. Final navigation and highlight
@@ -127,7 +127,7 @@ class StockOverviewPage {
     numericValue: this.lastFoundNumericValue
   };
 }
-  async verifyAndHighlightFromJson(value, issuingData1, sunset, language, newArrivalQuantity) {
+  async verifyAndHighlightFromJson(value, addLineToIssueData, productTypeArrivalData, language, newArrivalQuantity) {
    
     const rowLocator = this.page.locator('tbody tr').filter({
       has: this.page.locator('td:nth-child(2)', { hasText: value })
@@ -157,12 +157,12 @@ class StockOverviewPage {
       console.log(`"${value}" -> Element FOUND and highlighted`);
       console.log(`Stored value: ${this.lastFoundValue}`);
       console.log(`Stored numeric value: ${this.lastFoundNumericValue}`);
-      await this.issueExistingStock(issuingData1, sunset, language);
+      await this.issueExistingStock(addLineToIssueData, productTypeArrivalData, language);
     } 
     await this.arrivalPage.openArrivalForm();
     await this.arrivalPage.fillArrivalFormCRROnly(this.data);
     const dialog = new ArrivalProductDialogPage(this.page);
-    await dialog.addProductToArrivalCRR(sunset, language, newArrivalQuantity);
+    await dialog.addProductToArrivalCRR(productTypeArrivalData, language, newArrivalQuantity);
     await this.arrivalPage.waitForLoadingToFinish();
     await this.arrivalPage.clickFinalizeVerifyPopup();
     await this.arrivalPage.confirmationDialog.clickConfirm();
@@ -170,18 +170,18 @@ class StockOverviewPage {
     await this.navigateTostockOverviewpage()
   }
 
-  async issueExistingStock(issuingData1, vaccineIssuingTab, language) {
+  async issueExistingStock(addLineToIssueData, productTypeIssueData, language) {
     await this.issuingPage.openIssuingForm();
-    await this.issuingPage.fillIssuingFormCRROnly(issuingData1);
-    await this.addAllProductsFromJson(vaccineIssuingTab, language);
+    await this.issuingPage.fillIssuingFormCRROnly(addLineToIssueData);
+    await this.addAllProductsFromJson(productTypeIssueData, language);
     await this.issuingPage.clickFinalizeVerifyPopupinIssuingTab();
   }
 
-  async performArrival(data,vaccineIssuingTab, language, newArrivalQuantity) {
+  async performArrival(addLineToArrivalData, productTypeArrivalData, language, newArrivalQuantity) {
     await this.arrivalPage.openArrivalForm();
-    await this.arrivalPage.fillArrivalFormCRROnly(this.data);
+    await this.arrivalPage.fillArrivalFormCRROnly(addLineToArrivalData);
     const dialog = new ArrivalProductDialogPage(this.page);
-    await dialog.addProductToArrival(vaccineIssuingTab, language, newArrivalQuantity);
+    await dialog.addProductToArrival(productTypeArrivalData, language, newArrivalQuantity);
     await this.arrivalPage.waitForLoadingToFinish();
     await this.arrivalPage.clickFinalizeVerifyPopup();
     await this.arrivalPage.confirmationDialog.clickConfirm();
@@ -190,13 +190,11 @@ class StockOverviewPage {
   }
 
   
-  async addAllProductsFromJson(vaccineIssuingTab, language) {
-    const productTypeValue = vaccineIssuingTab.productType[language];
+  async addAllProductsFromJson(productTypeIssueData, language) {
+    const productTypeValue = productTypeIssueData.productType[language];
     if (!productTypeValue) {
       throw new Error(`productType not found for language: ${language}`);
     }
-
-    
     await this.form.selectDropdown(this.productType, productTypeValue);
     await this.page.waitForTimeout(2000);
     if (this.lastFoundValue) {

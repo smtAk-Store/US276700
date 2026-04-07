@@ -91,27 +91,27 @@ export class ArrivalProductDialogPage {
   }
 }
 
-   async addProductToArrivalCRR(sunset, language = 'en',newArrivalQuantity) {
+   async addProductToArrivalCRR(productTypeArrivalData, language = 'en',newArrivalQuantity) {
 
     // Fill dropdowns with language-specific values
-    await this.form.selectDropdown(this.productType, sunset.productType[language]);
-    await this.form.selectDropdown(this.product, sunset.product[language]);
-    await this.form.selectDropdown(this.producer, sunset.producer[language]);
- //   await this.form.selectDropdown(this.commercialName, sunset.commercialName[language]);
-    //await this.form.selectDropdown(this.formulation, sunset.formulation[language]);
-    await this.form.selectDropdown(this.presentation, sunset.presentation[language]);
-   // await this.form.selectDropdown(this.vvmStage, sunset.vvmStage[language]);
-    await this.form.selectDropdown(this.routineOrSia, sunset.routineOrSia[language]);
-   // await this.form.selectDropdown(this.origin, sunset.origin[language]);
-    await this.form.selectDropdown(this.storageLocation, sunset.storageLocation[language]);
+    await this.form.selectDropdown(this.productType, productTypeArrivalData.productType[language]);
+    await this.form.selectDropdown(this.product, productTypeArrivalData.product[language]);
+    await this.form.selectDropdown(this.producer, productTypeArrivalData.producer[language]);
+ //   await this.form.selectDropdown(this.commercialName, productTypeArrivalData.commercialName[language]);
+    //await this.form.selectDropdown(this.formulation, productTypeArrivalData.formulation[language]);
+    await this.form.selectDropdown(this.presentation, productTypeArrivalData.presentation[language]);
+   // await this.form.selectDropdown(this.vvmStage, productTypeArrivalData.vvmStage[language]);
+    await this.form.selectDropdown(this.routineOrSia, productTypeArrivalData.routineOrSia[language]);
+   // await this.form.selectDropdown(this.origin, productTypeArrivalData.origin[language]);
+    await this.form.selectDropdown(this.storageLocation, productTypeArrivalData.storageLocation[language]);
 
     // Input fields
-    await this.batchNumber.fill(sunset.batchNumber[language]);
-  //  await this.expiryDate.fill(sunset.expiryDate[language]);
+    await this.batchNumber.fill(productTypeArrivalData.batchNumber[language]);
+  //  await this.expiryDate.fill(productTypeArrivalData.expiryDate[language]);
    await this.quantity.fill(newArrivalQuantity.toString());
 
     // Checkbox/dropdown
-    await this.form.selectDropdown(this.freezeIndicator, sunset.freezeIndicator[language]);
+    await this.form.selectDropdown(this.freezeIndicator, productTypeArrivalData.freezeIndicator[language]);
 
     // Click Save/Create
     await this.createButton.click();

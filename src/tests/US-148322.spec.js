@@ -6,14 +6,14 @@ import { ArrivalPage } from '../pages/arrivalPage';
 import { StoreData } from '../pages/StoreData';
 const StockOverviewPage = require('../pages/StockOverviewPage');
 const { IssuingPage } = require('../pages/Issuingpage');
-const testData = require('../testdata/arrival.json');
-const issuingData = require('../testdata/IssuingTab.json');
+const addLineToArrivalData = require('../testdata/addlinetoarrival.json');
+const addLineToIssueData = require('../testdata/addLineToIssue.json');
 const productData = require('../testdata/InputData/productArrival.json');
 
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
 const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
-const sunset = require('../testdata/InputData/sunsetProduct.json');
-const vaccineIssuingTab = require('../testdata/InputData/VaccineIssuingTab.json');
+const productTypeArrivalData = require('../testdata/InputData/addProductTypeArrival.json');
+const productTypeIssueData = require('../testdata/InputData/ProductTypeIssue.json');
 
 const languages = ['en','fr'];
 
@@ -96,15 +96,19 @@ languages.forEach(language => {
 
       // await stockOverviewPage.verifyAndHighlightFromJson(
       //   programmeData[0].administrationSyringe[language],
-      //   issuingData.wastage[language],
-      //   sunset,
+      //   addLineToIssueData.wastage[language],
+      //   productTypeArrivalData,
       //   language,
       //   BCGData.CurrentStockBelowMinimumLevel
       // );
 
-      await stockOverviewPage.evaluateCurrentStockBalance( programmeData[0].administrationSyringe[language],
-        issuingData.wastage[language],
-        sunset,
+      const productType= 'Supplies'; 
+      await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].administrationSyringe[language],
+        addLineToIssueData.wastage[language],
+        productTypeIssueData,
+        addLineToArrivalData,
+        productTypeArrivalData,
+        productType,
         language,
         BCGData.CurrentStockBelowMinimumLevel
       );
@@ -147,8 +151,8 @@ languages.forEach(language => {
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
 
     await stockOverviewPage.evaluateCurrentStockBalance( programmeData[0].administrationSyringe[language],
-        issuingData.wastage[language],
-        sunset,
+        addLineToIssueData.wastage[language],
+        productTypeArrivalData,
         language,
         BCGData.CurrentStockBelowMinimumLevel
       );
@@ -168,8 +172,8 @@ languages.forEach(language => {
   
   await stockOverviewPage.validateZeroStockBalance(
     programmeData[0].vaccine[language],
-    issuingData.wastage[language],
-    vaccineIssuingTab,
+    addLineToIssueData.wastage[language],
+    productTypeIssueData,
     language,
     BCGData.CurrentStockAboveMinimumLevel
   );

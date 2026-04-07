@@ -1,10 +1,10 @@
 const { test } = require('@playwright/test');
 const { ArrivalPage } = require('../pages/arrivalPage');
 const { IssuingPage } = require('../pages/Issuingpage');
-const testData = require('../testdata/arrival.json');
-const issuingData = require('../testdata/IssuingTab.json');
+const testData = require('../testdata/addlinetoarrival.json');
+const addLineToIssueData = require('../testdata/IssuingTab.json');
 const productData = require('../testdata/InputData/productArrival.json');
-const sunset = require('../testdata/InputData/sunsetProduct.json');
+const productTypeArrivalData = require('../testdata/InputData/addProductTypeArrival.json');
 import { LoginPage } from '../pages/loginPage';
 import { HomePage } from '../pages/homePage';
 const productIssuingTab = require('../testdata/InputData/productIssuingTab.json');
@@ -38,7 +38,7 @@ test.describe('Create New Arrival and Validate buttons', () => {
 
         arrivalTypes.forEach(type => {
 
-            test(`${type} arrival in ${language}`, async ({ page }) => {
+            test(`${type} addlinetoarrival in ${language}`, async ({ page }) => {
 
                 const arrivalPage = new ArrivalPage(page, language);
 
@@ -173,13 +173,13 @@ test.describe('Automatic Approval and Verification of Pending state', () => {
                 
                 await arrivalPage.fillArrivalFormCRROnly(data);
                 const dialog = new ArrivalProductDialogPage(page);
-                await dialog.addProductToArrivalCRR(sunset, language);
+                await dialog.addProductToArrivalCRR(productTypeArrivalData, language);
                 await arrivalPage.waitForLoadingToFinish();
                 await arrivalPage.clickFinalizeVerifyPopup();
                 await arrivalPage.confirmationDialog.clickConfirm();
                 await arrivalPage.verifyFinalizeSuccessMessage();
                 const issuingPage = new IssuingPage(page, language);
-                const issuingScenario = { ...issuingData.requisition };
+                const issuingScenario = { ...addLineToIssueData.requisition };
                 const [product] = productIssuingTab;
                 await issuingPage.openIssuingForm();
                 await issuingPage.fillIssuingFormCRROnly(issuingScenario);
