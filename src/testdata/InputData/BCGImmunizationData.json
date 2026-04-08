@@ -6,5 +6,6 @@
   "saftyWeeks": 2,
   "LeadWeeks": 4,
   "CurrentStockAboveMinimumLevel": 20000,
-    "CurrentStockBelowMinimumLevel": 1000
+  "CurrentStockBelowMinimumLevel": 1000,
+    "presentations": 10
 }
