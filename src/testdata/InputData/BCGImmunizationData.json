@@ -5,7 +5,7 @@
   "wastage_rate": 10,
   "saftyWeeks": 2,
   "LeadWeeks": 4,
-  "CurrentStockAboveMinimumLevel": 20000,
+  "CurrentStockAboveMinimumLevel": 200000,
   "CurrentStockBelowMinimumLevel": 1000,
     "presentations": 10
 }

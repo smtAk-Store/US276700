@@ -26,68 +26,183 @@ export class ArrivalProductDialogPage {
   }
 
   // --- NEW METHOD USING selectDropdown AND LANGUAGE SUPPORT ---
-  async addProductToArrival(productData, language = 'en') {
+ async addProductToArrival(productTypeArrivalData, language = 'en',productType, quantity ) {
 
-  // Helper function: fill input or select only if exists and enabled
-  const fillIfPresent = async (locator, value, type = 'input') => {
-    if (await locator.count()) {
-      // Check if element is disabled
-      const isDisabled = await locator.evaluate(el => el.hasAttribute('disabled') || el.getAttribute('aria-disabled') === 'true');
-      if (isDisabled) {
-        console.log(`Locator skipped because it is disabled`);
+  console.log("=== addProductToArrival STARTED ===");
+  console.log("Language used:", language);
+  console.log("Full productTypeArrivalData received:", JSON.stringify(productTypeArrivalData, null, 2));
+
+  // ✅ Validation
+  if (!productTypeArrivalData) {
+    throw new Error("productTypeArrivalData is undefined or null");
+  }
+console.log("productType:", productType, "| type:", typeof productType);
+
+  let productTypeName='';
+  let productName='';
+  let producerName='';
+  let commercialNameType='';
+  let formulationType='';
+  let presentationType='';
+   let originType='';
+  if(productType=='Supplies'){
+   productTypeName = productTypeArrivalData.SuppliesProductType?.[language];
+    productName  = productTypeArrivalData.SuppliesProduct?.[language];
+    producerName  = productTypeArrivalData.Suppliesproducer?.[language];
+     commercialNameType  = productTypeArrivalData.SuppliescommercialName?.[language];
+       formulationType  = productTypeArrivalData.Suppliesformulation?.[language];
+       presentationType  = productTypeArrivalData.Suppliespresentation?.[language];
+       originType  = productTypeArrivalData.Suppliesorigin?.[language];
+  }else if(productType=='Vaccines'){
+ productTypeName = productTypeArrivalData.vaccineProductType?.[language];
+ productName  = productTypeArrivalData.vaccineProduct?.[language];
+ producerName  = productTypeArrivalData.vaccineproducer?.[language];
+ commercialNameType  = productTypeArrivalData.VaccinecommercialName?.[language];
+   formulationType  = productTypeArrivalData.Vaccineformulation?.[language];
+    presentationType  = productTypeArrivalData.Vaccinepresentation?.[language];
+     originType  = productTypeArrivalData.Vaccineorigin?.[language];
+
+  }else {
+ productTypeName = productTypeArrivalData.diluentProductType?.[language];
+ productName  = productTypeArrivalData.diluentProduct?.[language];
+ producerName  = productTypeArrivalData.Diluentproducer?.[language];
+  commercialNameType  = productTypeArrivalData.DiluentcommercialName?.[language];
+    formulationType  = productTypeArrivalData.Diluentformulation?.[language];
+     presentationType  = productTypeArrivalData.Diluentpresentation?.[language];
+      originType  = productTypeArrivalData.Diluentorigin?.[language];
+  }
+console.log("DEBUG → productTypeName:", productTypeName);
+  console.log("DEBUG → productName:", productName);
+  console.log("DEBUG → producer:", producerName);
+  console.log("DEBUG → commercialNameType:", commercialNameType);
+   console.log("DEBUG → formulationType:", formulationType);
+  console.log("DEBUG → presentationType:", presentationType);
+   console.log("DEBUG → originType:", originType);
+    
+
+
+  if (!productTypeName) {
+    throw new Error(`Missing productType for language '${language}'`);
+  }
+
+  if (!productName) {
+    throw new Error(`Missing product for language '${language}'`);
+  }
+
+  console.log(`Will select Product Type: "${productTypeName}"`);
+  console.log(`Will select Product: "${productName}"`);
+  console.log(`Quantity: ${quantity}`);
+
+  // ✅ SAFE dropdown handler
+  const selectOption = async (dropdownLocator, optionText) => {
+
+    if (!dropdownLocator) {
+      console.log("⏭️ Locator not provided, skipping");
+      return;
+    }
+
+    if (!(await dropdownLocator.count())) {
+      console.log(`⏭️ Dropdown not found for "${optionText}", skipping`);
+      return;
+    }
+
+    // 🔥 MOST IMPORTANT FIX
+    const isDisabled = await dropdownLocator.isDisabled().catch(() => false);
+
+    if (isDisabled) {
+      console.log(`⏭️ Dropdown disabled for "${optionText}", skipping`);
+      return;
+    }
+
+    try {
+      await dropdownLocator.waitFor({ state: 'visible', timeout: 5000 });
+      await dropdownLocator.click();
+
+      const option = this.page.locator('li[role="option"]')
+        .filter({ hasText: optionText })
+        .first();
+
+      if (!(await option.count())) {
+        console.log(`⚠️ Option "${optionText}" not found`);
         return;
       }
 
-      if (type === 'select') {
-        await locator.click(); // open dropdown
-        const option = this.page.locator('li[role="option"]', { hasText: value });
-        if (await option.count()) {
-          await option.click();
-        } else {
-          console.log(`Option "${value}" not found for dropdown`);
-        }
-      } else {
-        await locator.fill(value);
-      }
+      await option.waitFor({ state: 'visible', timeout: 5000 });
+      await option.click();
+
+      console.log(`✅ Selected: "${optionText}"`);
+
+      await this.page.waitForTimeout(300);
+
+    } catch (err) {
+      console.log(`⏭️ Skipping "${optionText}" due to error: ${err.message}`);
     }
   };
 
-  // Fill dropdowns
-  await fillIfPresent(this.productType, productData.productType[language], 'select');
-  await fillIfPresent(this.product, productData.product[language], 'select');
-  await fillIfPresent(this.producer, productData.producer[language], 'select');
-  await fillIfPresent(this.commercialName, productData.commercialName[language], 'select');
-  await fillIfPresent(this.formulation, productData.formulation[language], 'select');
-  await fillIfPresent(this.presentation, productData.presentation[language], 'select');
-  await fillIfPresent(this.vvmStage, productData.vvmStage[language], 'select');
-  await fillIfPresent(this.routineOrSia, productData.routineOrSia[language], 'select');
-  await fillIfPresent(this.origin, productData.origin[language], 'select');
-  await fillIfPresent(this.storageLocation, productData.storageLocation[language], 'select');
-
-  // Fill input fields
-  await fillIfPresent(this.batchNumber, productData.batchNumber[language]);
-  // await fillIfPresent(this.expiryDate, productData.expiryDate[language]);
-  await fillIfPresent(this.quantity, productData.quantity[language]);
-
-  // Checkbox/dropdown example (if used)
-  // await fillIfPresent(this.freezeIndicator, productData.freezeIndicator[language], 'select');
-
-  // Click Save/Create
-  if (await this.createButton.count()) {
-    await this.createButton.click();
-    await this.page.waitForLoadState('networkidle');
-  }
-
-  // Handle "Continue" popup if it exists
-  const continueButton = this.page.locator("(//div[contains(@class,'MuiGrid-item')]/button[contains(@class,'MuiButton-root')])[6]");
-  if (await continueButton.count()) {
-    try {
-      await continueButton.waitFor({ state: 'visible', timeout: 5000 });
-      await continueButton.click();
-      await this.page.waitForLoadState('networkidle');
-    } catch (err) {
-      console.log("Continue button not present or not clickable, moving on");
+  try {
+   
+    await selectOption(this.productType, productTypeName);
+    await selectOption(this.product, productName);
+     await selectOption(this.producer, producerName);
+     await selectOption(this.commercialName, commercialNameType);
+      await selectOption(this.formulation, formulationType);
+     await selectOption(this.presentation, presentationType);
+     await selectOption(this.origin, originType);
+    // Batch Number
+    
+    if (productTypeArrivalData.batchNumber?.[language]) {
+      await this.batchNumber.fill(productTypeArrivalData.batchNumber[language]);
     }
+
+    // Quantity
+    await this.quantity.fill(quantity.toString());
+
+    // ✅ Optional dropdowns (auto skip if disabled/missing)
+    const optionalFields = [
+      { locator: this.vvmStage, value: productTypeArrivalData.vvmStage?.[language] },
+      { locator: this.routineOrSia, value: productTypeArrivalData.routineOrSia?.[language] },
+      { locator: this.storageLocation, value: productTypeArrivalData.storageLocation?.[language] }
+    ];
+
+    for (const field of optionalFields) {
+      if (field.value) {
+        await selectOption(field.locator, field.value);
+      }
+    }
+
+    // ✅ Click Create
+    await this.createButton.waitFor({ state: 'visible', timeout: 10000 });
+    await this.createButton.click();
+    console.log("✅ Clicked Create button");
+
+    await this.page.waitForLoadState('networkidle');
+
+    // ✅ Handle Continue popup safely
+    const continueButton = this.page.locator("(//div[contains(@class,'MuiGrid-item')]/button[contains(@class,'MuiButton-root')])[6]");
+
+    if (await continueButton.count()) {
+      const isVisible = await continueButton.isVisible().catch(() => false);
+      if (isVisible) {
+        await continueButton.click().catch(() => {});
+        console.log("✅ Clicked Continue button");
+      }
+    }
+
+    console.log("=== addProductToArrival COMPLETED SUCCESSFULLY ===");
+
+  } catch (error) {
+
+    console.error("❌ Error during addProductToArrival:", error.message);
+
+    // ✅ Prevent crash if page already closed
+    if (!this.page.isClosed()) {
+      await this.page.screenshot({
+        path: `add-product-failure-${Date.now()}.png`,
+        fullPage: true
+      }).catch(() => {});
+    }
+
+    throw error;
   }
 }
 

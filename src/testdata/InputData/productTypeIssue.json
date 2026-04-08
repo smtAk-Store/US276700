@@ -1,11 +1,35 @@
 {
-  "productType": {
+  "VaccineProductType": {
     "en": "Vaccine",
     "fr": "Vaccin",
     "pt": "Vacina",
     "es": "لقاح"
   },
-  "product": {
+  "VaccineProduct": {
+    "en": "BCG",
+    "fr": "BCG",
+    "pt": "BCG",
+    "es": "BCG"
+  },
+    "SupplyProductType": {
+    "en": "Supplies",
+    "fr": "Consommables",
+    "pt": "Fornecimentos",
+    "es": "المستلزمات الجافة "
+  },
+  "SupplyProduct": {
+    "en": "BCG",
+    "fr": "BCG",
+    "pt": "BCG",
+    "es": "BCG"
+  },
+    "DiluentProductType": {
+   "en": "Diluent",
+    "fr": "Diluant",
+    "pt": "Diluente",
+    "es": "مُحل"
+  },
+  "DiluentProduct": {
     "en": "BCG",
     "fr": "BCG",
     "pt": "BCG",

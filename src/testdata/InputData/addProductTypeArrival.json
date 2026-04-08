@@ -1,11 +1,11 @@
 {
-  "productType": {
+  "SuppliesProductType": {
     "en": "Supplies",
     "fr": "Consommables",
     "pt": "Fornecimentos",
     "es": "المستلزمات الجافة "
   },
-  "product": {
+  "Suppliesproduct": {
     "en": "ADS_0.05ml",
     "fr": "ADS_0.05ml",
     "pt": "ADS_0.05ml",
@@ -13,29 +13,29 @@
   },
 
    "vaccineProductType": {
-    "en": "Supplies",
-    "fr": "Consommables",
-    "pt": "Fornecimentos",
-    "es": "المستلزمات الجافة "
+     "en": "Vaccine",
+    "fr": "Vaccin",
+    "pt": "Vacina",
+    "es": "لقاح"
   },
-  "vacccineProduct": {
-    "en": "ADS_0.05ml",
-    "fr": "ADS_0.05ml",
-    "pt": "ADS_0.05ml",
-    "es": "ADS_0.05ml"
+  "vaccineProduct": {
+     "en": "BCG",
+    "fr": "BCG",
+    "pt": "BCG",
+    "es": "BCG"
   },
 
    "diluentProductType": {
-    "en": "Supplies",
-    "fr": "Consommables",
-    "pt": "Fornecimentos",
-    "es": "المستلزمات الجافة "
+    "en": "Diluent",
+    "fr": "Diluant",
+    "pt": "Diluente",
+    "es": "مُحل"
   },
   "diluentProduct": {
-    "en": "ADS_0.05ml",
-    "fr": "ADS_0.05ml",
-    "pt": "ADS_0.05ml",
-    "es": "ADS_0.05ml"
+    "en": "dil_COVID-B",
+    "fr": "dil_COVID-B",
+    "pt": "dil_COVID-B",
+    "es": "dil_COVID-B"
   },
   "batchNumber": {
     "en": "1335",
@@ -49,29 +49,77 @@
     "pt": "29-03-2033",
     "es": "29-03-2033"
   },
-  "producer": {
+  "vaccineproducer": {
+    "en": "Japan BCG Laboratory",
+    "fr": "Japan BCG Laboratory",
+    "pt": "Japan BCG Laboratory",
+    "es": "Japan BCG Laboratory"
+  },
+  "Suppliesproducer": {
     "en": "Bavarian Nordic A/S",
     "fr": "Bavarian Nordic A/S",
     "pt": "Bavarian Nordic A/S",
     "es": "Bavarian Nordic A/S"
   },
-  "commercialName": {
+  "Diluentproducer": {
+    "en": "Generic",
+    "fr": "Generic",
+    "pt": "Generic",
+    "es": "Generic"
+  },
+  "VaccinecommercialName": {
+    "en": "BCG Freeze Dried Glutamate vaccine",
+    "fr": "BCG Freeze Dried Glutamate vaccine",
+    "pt": "BCG Freeze Dried Glutamate vaccine",
+    "es": "BCG Freeze Dried Glutamate vaccine"
+  },
+   "SuppliescommercialName": {
     "en": "COVID-C",
     "fr": "COVID-C",
     "pt": "COVID-C",
     "es": "COVID-C"
   },
-  "formulation": {
+   "DiluentcommercialName": {
+     "en":"COVID-B",
+    "fr": "COVID-B",
+    "pt": "COVID-B",
+    "es": "COVID-B"
+  },
+  "Vaccineformulation": {
+    "en": "Lyophilised : reconstituted with excipient diluent",
+    "fr": "Lyophilised : reconstituted with excipient diluent",
+    "pt": "Lyophilised : reconstituted with excipient diluent",
+    "es": "Lyophilised : reconstituted with excipient diluent"
+  },
+   "Suppliesformulation": {
     "en": "Liquid: ready to use",
     "fr": "Liquid: ready to use",
     "pt": "Liquid: ready to use",
     "es": "Liquid: ready to use"
   },
-  "presentation": {
+   "Diluentformulation": {
+    "en": "Lyophilised active to be reconstituted with diluent",
+    "fr": "Lyophilised active to be reconstituted with diluent",
+    "pt": "Lyophilised active to be reconstituted with diluent",
+    "es": "Lyophilised active to be reconstituted with diluent"
+  },
+  "Vaccinepresentation": {
+    "en": "10",
+    "fr": "10",
+    "pt": "10",
+    "es": "10"
+  },
+  "Suppliespresentation": {
     "en": "100",
     "fr": "100",
     "pt": "100",
     "es": "100"
+  },
+  "Diluentpresentation": {
+    "en": "10",
+    "fr": "10",
+    "pt": "10",
+    "es": "10"
   },
   "vvmStage": {
     "en": "0.None",
@@ -91,11 +139,23 @@
     "pt": "Rotina",
     "es": "روتيني"
   },
-  "origin": {
+  "Suppliesorigin": {
     "en": "Denmark",
+    "fr": "Danemark",
+    "pt": "Dinamarca",
+    "es": "الدنمارك"
+  },
+   "Vaccineorigin": {
+    "en": "Japan",
     "fr": "Japon",
     "pt": "Japão",
     "es": "اليابان"
+  },
+   "Diluentorigin": {
+     "en": "India",
+    "fr": "Inde",
+    "pt": "Índia",
+    "es": "الهند"
   },
   "freezeIndicator": {
     "en": "Ok",

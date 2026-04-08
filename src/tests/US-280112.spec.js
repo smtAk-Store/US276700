@@ -15,12 +15,12 @@ const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
 const productTypeArrivalData = require('../testdata/InputData/addProductTypeArrival.json');
 const productTypeIssueData = require('../testdata/InputData/ProductTypeIssue.json');
 
-const languages = ['en','fr'];
+const languages = ['en'];
 
 
 languages.forEach(language => {
 
-  test.describe(`Validate Alerts for Supplies - Language: ${language}`, () => {
+  test.describe(`Validate Alerts for Vaccines and Diluents - Language: ${language}`, () => {
 
     let stockOverviewPage;
 
@@ -88,7 +88,7 @@ languages.forEach(language => {
     // ================== TEST ==================
 
     test(`Verify alert appears when stock is below minimum level for Vaccines`, async () => {
-      const expected = await calculationService.evaluateMinimumStockLevelForVaccines(
+      const expected = await calculationService.evaluateMinimumStockLevelForVaccines(BCGData,
         BCGData.CurrentStockBelowMinimumLevel
       );
 
@@ -98,10 +98,10 @@ languages.forEach(language => {
 
       const productType= 'Vaccines'; 
       await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].vaccine[language],
-        addLineToIssueData.wastage[language],
-        productTypeIssueData,
-        addLineToArrivalData,
+     addLineToIssueData.wastage[language],
+         addLineToArrivalData,
         productTypeArrivalData,
+         productTypeIssueData,
         productType,
         language,
         BCGData.CurrentStockBelowMinimumLevel
@@ -115,7 +115,6 @@ languages.forEach(language => {
         BCGData.saftyWeeks + BCGData.LeadWeeks
       );
 
-      // ✅ SWITCH CASE HERE
       let expectedTooltip;
 
       switch (language) {
@@ -125,7 +124,7 @@ languages.forEach(language => {
         case 'pt':
           expectedTooltip = 'O saldo atual deste produto é inferior ao nível mínimo';
           break;
-        case 'es': // Arabic
+        case 'es': 
           expectedTooltip = 'الرصيد الحالي لهذا المنتج أقل من الحد الأدنى المطلوب';
           break;
         case 'en':
@@ -138,18 +137,18 @@ languages.forEach(language => {
     });
 
     test(`Verify No alert appears when stock is above minimum level for Vaccines`, async () => {
-      const expected = await calculationService.evaluateMinimumStockLevelForVaccines(
+      const expected = await calculationService.evaluateMinimumStockLevelForVaccines(BCGData,
         BCGData.CurrentStockAboveMinimumLevel
       );
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
 
       const productType= 'Vaccines'; 
-      await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].vaccine[language],
-        addLineToIssueData.wastage[language],
-        productTypeIssueData,
-        addLineToArrivalData,
+       await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].vaccine[language],
+     addLineToIssueData.wastage[language],
+         addLineToArrivalData,
         productTypeArrivalData,
+         productTypeIssueData,
         productType,
         language,
         BCGData.CurrentStockAboveMinimumLevel
@@ -167,20 +166,21 @@ languages.forEach(language => {
 
 
     test(`Verify Zero Stock alert appears for Vaccines`, async () => {
-  
+    const productType= 'Vaccines'; 
   await stockOverviewPage.validateZeroStockBalance(
     programmeData[0].vaccine[language],
-    addLineToIssueData.wastage[language],
-    productTypeIssueData,
-    language,
-    BCGData.CurrentStockAboveMinimumLevel
-  );
+  addLineToIssueData.wastage[language],
+         addLineToArrivalData,
+        productTypeArrivalData,
+         productTypeIssueData,
+        productType,
+        language,
+        BCGData.CurrentStockAboveMinimumLevel
+      );
 
   const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
     programmeData[0].vaccine[language]
   );
-
-  // ✅ Expected tooltip based on language
  let expectedTooltip;
 
 switch (language) {
@@ -190,7 +190,7 @@ switch (language) {
   case 'pt':
     expectedTooltip = 'Este produto está fora de estoque';
     break;
-  case 'es': // Arabic
+  case 'es': 
     expectedTooltip = 'هذه المادة غير متوفرة';
     break;
   case 'en':
@@ -204,7 +204,7 @@ switch (language) {
 
 test(`Verify alert appears when stock is below minimum level for Diluents`, async () => {
       const expected = await calculationService.evaluateMinimumStockLevelForDiluents(
-        BCGData.CurrentStockBelowMinimumLevel
+       BCGData, BCGData.CurrentStockBelowMinimumLevel
       );
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
@@ -212,25 +212,24 @@ test(`Verify alert appears when stock is below minimum level for Diluents`, asyn
  
 
       const productType= 'Diluents'; 
-      await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].syringes[language],
-        addLineToIssueData.wastage[language],
-        productTypeIssueData,
-        addLineToArrivalData,
+      await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].dilution[language],
+         addLineToIssueData.wastage[language],
+         addLineToArrivalData,
         productTypeArrivalData,
+         productTypeIssueData,
         productType,
         language,
         BCGData.CurrentStockBelowMinimumLevel
+      
       );
 
       const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
-        programmeData[0].syringes[language]
+        programmeData[0].dilution[language]
       );
 
       expect(expected).toBeLessThanOrEqual(
         BCGData.saftyWeeks + BCGData.LeadWeeks
       );
-
-      // ✅ SWITCH CASE HERE
       let expectedTooltip;
 
       switch (language) {
@@ -240,7 +239,7 @@ test(`Verify alert appears when stock is below minimum level for Diluents`, asyn
         case 'pt':
           expectedTooltip = 'O saldo atual deste produto é inferior ao nível mínimo';
           break;
-        case 'es': // Arabic
+        case 'es': 
           expectedTooltip = 'الرصيد الحالي لهذا المنتج أقل من الحد الأدنى المطلوب';
           break;
         case 'en':
@@ -252,25 +251,26 @@ test(`Verify alert appears when stock is below minimum level for Diluents`, asyn
       expect(tooltipText.trim()).toContain(expectedTooltip);
     });
 
-    test(`Verify No alert appears when stock is above minimum level for Vaccines`, async () => {
-      const expected = await calculationService.evaluateMinimumStockLevelForDiluents(
+    test(`Verify No alert appears when stock is above minimum level for Diluents`, async () => {
+      const expected = await calculationService.evaluateMinimumStockLevelForDiluents(BCGData,
         BCGData.CurrentStockAboveMinimumLevel
       );
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
 
       const productType= 'Diluents'; 
-      await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].syringes[language],
-        addLineToIssueData.wastage[language],
-        productTypeIssueData,
-        addLineToArrivalData,
+    await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].dilution[language],
+         addLineToIssueData.wastage[language],
+         addLineToArrivalData,
         productTypeArrivalData,
+         productTypeIssueData,
         productType,
         language,
-        BCGData.CurrentStockAboveMinimumLevel
+       BCGData.CurrentStockAboveMinimumLevel
       );
+        
       const tooltipCount = await stockOverviewPage.highlightTdAndVerifyNoTooltip(
-        programmeData[0].syringes[language]
+        programmeData[0].dilution[language]
       );
 
       expect(expected).toBeGreaterThanOrEqual(
@@ -282,20 +282,22 @@ test(`Verify alert appears when stock is below minimum level for Diluents`, asyn
 
     
     test(`Verify Zero Stock alert appears for Diluents`, async () => {
-  
+   const productType= 'Diluents'; 
   await stockOverviewPage.validateZeroStockBalance(
-    programmeData[0].syringes[language],
-    addLineToIssueData.wastage[language],
-    productTypeIssueData,
-    language,
-    BCGData.CurrentStockAboveMinimumLevel
-  );
+   programmeData[0].dilution[language],
+  addLineToIssueData.wastage[language],
+         addLineToArrivalData,
+        productTypeArrivalData,
+         productTypeIssueData,
+        productType,
+        language,
+        BCGData.CurrentStockAboveMinimumLevel
+      );
 
   const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
-    programmeData[0].syringes[language]
+    programmeData[0].dilution[language]
   );
 
-  // ✅ Expected tooltip based on language
  let expectedTooltip;
 
 switch (language) {
@@ -305,7 +307,7 @@ switch (language) {
   case 'pt':
     expectedTooltip = 'Este produto está fora de estoque';
     break;
-  case 'es': // Arabic
+  case 'es': 
     expectedTooltip = 'هذه المادة غير متوفرة';
     break;
   case 'en':

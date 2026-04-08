@@ -54,6 +54,12 @@
       "pt": "RUPF_Sdilution_1ml",
       "es": "RUPF_Sdilution_1ml"
     },
+     "dilution": {
+      "en": "dil_COVID-B",
+      "fr": "dil_COVID-B",
+      "pt": "dil_COVID-B",
+      "es": "dil_COVID-B"
+    },
     "safetyStock": {
       "en": "2",
       "fr": "2",

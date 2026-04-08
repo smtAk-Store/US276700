@@ -25,6 +25,8 @@ editButton = () => this.page.locator(
  stockParametersTab = () => this.page.locator('#simple-tab-4');
  safetyStockInput = () => this.page.locator('div.MuiInputBase-root.MuiInput-root input[type="text"]').nth(1);
  leadTimeInput = () => this.page.locator('div.MuiInputBase-root.MuiInput-root input[type="text"]').nth(2);
+  minimumStock = () => this.page.locator('div.MuiInputBase-root.MuiInput-root input[type="text"]').nth(3);
+ maximumStock = () => this.page.locator('div.MuiInputBase-root.MuiInput-root input[type="text"]').nth(4);
  documentButton = () => this.page.locator('button:has(svg.sc-iNqMTl.hFrbFX.arScaleX)');
  storeDropdown = () => this.page.locator('#storeId');
  applyButton = () => this.page.locator("//button[contains(@class,'MuiButton-containedPrimary') and @type='button']");
@@ -107,11 +109,17 @@ async fillStockParametersAndClickDocument() {
   await safetyInput.press('Tab');
 
   // Step 6: Fill Lead Time (nth(2))
-  const leadInput = this.leadTimeInput();        // ← Call the function!
+  const leadInput = this.leadTimeInput(); 
+   const minimumStock = this.minimumStock(); 
+    const maximumStock = this.maximumStock();        // ← Call the function!
   await leadInput.waitFor({ state: 'visible', timeout: 15000 });
   await leadInput.scrollIntoViewIfNeeded();
   await leadInput.fill('4');
   await leadInput.press('Tab');
+   await minimumStock.fill('2');
+  await minimumStock.press('Tab');
+   await maximumStock.fill('4');
+  await maximumStock.press('Tab');
 
   // Step 7: Click Document button
   const docButton = this.documentButton();

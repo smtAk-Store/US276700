@@ -1,6 +1,5 @@
 const { translate } = require('../utils/translator');
 const { FormComponent } = require('../components/FormComponent');
-const { log, default: console } = require('node:console');
 const { generateUniqueSMT ,getCurrentDate,verifyButtonEnabled} = require('../utils/reusableFunction');
 import { ConfirmationDialogPage } from '../pages/ConfirmationDialogPage';
 import { expect } from '@playwright/test';
@@ -88,26 +87,43 @@ console.log('Raw data.currency:', data.currency);
 
   }
 async fillArrivalFormCRROnly(data) {
-  // Translate receipt type if needed
+  // 🔹 Safety check: ensure data is defined
+  if (!data) {
+    throw new Error("fillArrivalFormCRROnly called with undefined data!");
+  }
+
+  console.log('arrival json values are ',JSON.stringify(data, null, 2));
+  
+  // 🔹 Log incoming data in Node context for debugging
+  //console.log("fillArrivalFormCRROnly received data:", JSON.stringify(data, null, 2));
+
+  // 🔹 Translate receipt type if needed
   const receiptTypeText = translate(this.language, "receiptType", data.receiptType);
 
-  // Select Receipt Type
+  // 🔹 Select Receipt Type from dropdown
   await this.form.selectDropdown(this.receiptTypeDropdown(), receiptTypeText);
 
-  // Fill current date in Receipt Date
+  // 🔹 Fill current date in Receipt Date field
   await this.form.fillInput(this.receiptDate(), getCurrentDate());
 
-  // Generate and fill SMT Number
-  const uniqueSMT = generateUniqueSMT(data.smtNumber);
+  // 🔹 Generate and fill SMT Number
+  const uniqueSMT = generateUniqueSMT(data.smtNumber || "DEFAULT_SMT");
   await this.form.fillInput(this.smtNumber(), uniqueSMT);
 
-  // Select Sending Store dropdown (CRR)
-  //await this.form.selectReactDropdown(this.sendingStoreInput(), data.sendingStore);
+  // 🔹 Optional: Select Sending Store dropdown (CRR)
+  // if (data.sendingStore) {
+  //   await this.form.selectReactDropdown(this.sendingStoreInput(), data.sendingStore);
+  // // }
 
-  // Submit Form
+  // 🔹 Submit the form
   await this.submitButton().click();
-}
 
+  // 🔹 Wait for network idle or page load
+  await this.page.waitForLoadState("networkidle");
+
+  // 🔹 Optional: pause for manual inspection if needed
+  // await this.page.pause();
+}
 
   
 async validateButtonEnabled() {

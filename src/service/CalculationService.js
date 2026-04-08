@@ -1,4 +1,4 @@
-async function evaluateMinimumStockLevelForVaccines(CurrentStockThresholdLevel) {
+async function evaluateMinimumStockLevelForVaccines( BCGData,CurrentStockThresholdLevel) {
   const targetPopulation = BCGData.target_population;
   const dosesPerTarget = BCGData.doses_per_target;
   const wastageRate = BCGData.wastage_rate;
@@ -15,7 +15,7 @@ async function evaluateMinimumStockLevelForVaccines(CurrentStockThresholdLevel) 
   return Math.round(CurrentStockThresholdLevel / QtyNeededPerWeek);
 }
 
-async function evaluateMinimumStockLevelForSupplies(CurrentStockThresholdLevel) {
+async function evaluateMinimumStockLevelForSupplies(BCGData,CurrentStockThresholdLevel) {
   const targetPopulation = BCGData.target_population;
   const dosesPerTarget = BCGData.doses_per_target;
   const wastageRate = BCGData.wastage_rate;
@@ -35,7 +35,7 @@ async function evaluateMinimumStockLevelForSupplies(CurrentStockThresholdLevel) 
 
 
 
-async function evaluateMinimumStockLevelForDiluents(CurrentStockThresholdLevel) {
+async function evaluateMinimumStockLevelForDiluents(BCGData,CurrentStockThresholdLevel) {
   const targetPopulation = BCGData.target_population;
   const dosesPerTarget = BCGData.doses_per_target;
   const wastageRate = BCGData.wastage_rate;

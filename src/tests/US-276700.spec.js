@@ -2,7 +2,7 @@ const { test } = require('@playwright/test');
 const { ArrivalPage } = require('../pages/arrivalPage');
 const { IssuingPage } = require('../pages/Issuingpage');
 const testData = require('../testdata/addlinetoarrival.json');
-const addLineToIssueData = require('../testdata/IssuingTab.json');
+//const addLineToIssueData = require('../testdata/IssuingTab.json');
 const productData = require('../testdata/InputData/productArrival.json');
 const productTypeArrivalData = require('../testdata/InputData/addProductTypeArrival.json');
 import { LoginPage } from '../pages/loginPage';

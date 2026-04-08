@@ -15,7 +15,7 @@ const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
 const productTypeArrivalData = require('../testdata/InputData/addProductTypeArrival.json');
 const productTypeIssueData = require('../testdata/InputData/ProductTypeIssue.json');
 
-const languages = ['en','fr'];
+const languages = ['en','fr','pt','es'];
 
 
 languages.forEach(language => {
@@ -103,11 +103,13 @@ languages.forEach(language => {
       // );
 
       const productType= 'Supplies'; 
+      console.log('langauage is ',language);
+      
       await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].administrationSyringe[language],
         addLineToIssueData.wastage[language],
-        productTypeIssueData,
-        addLineToArrivalData,
+         addLineToArrivalData,
         productTypeArrivalData,
+         productTypeIssueData,
         productType,
         language,
         BCGData.CurrentStockBelowMinimumLevel
