@@ -7,5 +7,10 @@
   "LeadWeeks": 4,
   "CurrentStockAboveMinimumLevel": 200000,
   "CurrentStockBelowMinimumLevel": 1000,
-    "presentations": 10
+    "presentations": 10,
+     "saftyWeekstop": 2,
+  "LeadWeekstop": 2,
+  "ValueforAllVaccineCoverageInputs": 80,
+  "total_population": 100000,
+  "adult_population": 50000
 }

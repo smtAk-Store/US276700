@@ -55,7 +55,9 @@ class StockOverviewPage {
       await this.fetchValueFromTable(value);
       await this.issueExistingStock(addLineToIssueData, productTypeIssueData, productType, language);
     }
+    await this.page.waitForTimeout(800);
     await this.navigateTostockOverviewpage();
+    await this.page.waitForTimeout(800);
     await this.highlightTdAndVerifyTooltip(value);
   }
 

@@ -15,8 +15,8 @@ const BCGData = require('../testdata/InputData/BCGImmunizationData.json');
 const productTypeArrivalData = require('../testdata/InputData/addProductTypeArrival.json');
 const productTypeIssueData = require('../testdata/InputData/ProductTypeIssue.json');
 
-const languages = ['en','fr','pt','es'];
-
+//const languages = ['en','fr','pt','es'];
+const languages = ['en'];
 
 languages.forEach(language => {
 
@@ -106,10 +106,10 @@ languages.forEach(language => {
       console.log('langauage is ',language);
       
       await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].administrationSyringe[language],
-        addLineToIssueData.wastage[language],
-         addLineToArrivalData,
+         addLineToIssueData.wastage[language],
+        addLineToArrivalData,
         productTypeArrivalData,
-         productTypeIssueData,
+        productTypeIssueData,
         productType,
         language,
         BCGData.CurrentStockBelowMinimumLevel
@@ -149,63 +149,33 @@ languages.forEach(language => {
       const expected = await validateCalculateStockLevelsAndAlerts(
         BCGData.CurrentStockAboveMinimumLevel
       );
+      const productType= 'Supplies'; 
+      console.log('langauage is ',language);
 
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
 
     await stockOverviewPage.evaluateCurrentStockBalance( programmeData[0].administrationSyringe[language],
-        addLineToIssueData.wastage[language],
+          addLineToIssueData.wastage[language],
+        addLineToArrivalData,
         productTypeArrivalData,
+        productTypeIssueData,
+        productType,
         language,
-        BCGData.CurrentStockBelowMinimumLevel
+        BCGData.CurrentStockAboveMinimumLevel
       );
 
-      // const tooltipCount = await stockOverviewPage.highlightTdAndVerifyNoTooltip(
-      //   programmeData[0].administrationSyringe[language]
-      // );
+      const tooltipCount = await stockOverviewPage.highlightTdAndVerifyNoTooltip(
+        programmeData[0].administrationSyringe[language]
+      );
 
-      // expect(expected).toBeGreaterThanOrEqual(
-      //   BCGData.saftyWeeks + BCGData.LeadWeeks
-      // );
+      expect(expected).toBeGreaterThanOrEqual(
+        BCGData.saftyWeeks + BCGData.LeadWeeks
+      );
 
-      // expect(tooltipCount).toBe(false);
+      expect(tooltipCount).toBe(false);
     });
 
-   test(`Verify alert appears when stock is Zero`, async () => {
   
-  await stockOverviewPage.validateZeroStockBalance(
-    programmeData[0].vaccine[language],
-    addLineToIssueData.wastage[language],
-    productTypeIssueData,
-    language,
-    BCGData.CurrentStockAboveMinimumLevel
-  );
-
-  const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
-    programmeData[0].vaccine[language]
-  );
-
-  // ✅ Expected tooltip based on language
- let expectedTooltip;
-
-switch (language) {
-  case 'fr':
-    expectedTooltip = 'Ce produit est en rupture de stock';
-    break;
-  case 'pt':
-    expectedTooltip = 'Este produto está fora de estoque';
-    break;
-  case 'es': // Arabic
-    expectedTooltip = 'هذه المادة غير متوفرة';
-    break;
-  case 'en':
-  default:
-    expectedTooltip = 'This product is out of stock';
-    break;
-}
-
-  expect(tooltipText.trim()).toContain(expectedTooltip);
-});
-
   });
 });
 

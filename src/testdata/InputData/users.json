@@ -15,6 +15,14 @@
     "storeOperator1": {
       "email": "operatorstore26@gmail.com",
       "password": "Azhar#123"
+    },
+    "countryAdminVietnam": {
+      "email": "vietnamcountryadmin@yopmail.com",
+      "password": "Azhar#123"
+    },
+     "storeOperatorvietnam": {
+      "email": "vietnamstoreoperator@yopmail.com",
+      "password": "Azhar#123"
     }
   }
 }

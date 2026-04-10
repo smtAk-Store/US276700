@@ -233,6 +233,12 @@ async fillInputs(data, by = 'name') {
   async fillInput(locator, value) {
     await locator.fill(value);
   }
+  fillIntegerInput = async (locator, value) => {
+  if (!Number.isInteger(value)) {
+    throw new Error(`fillIntegerInput: value must be an integer, got ${value}`);
+  }
+  await locator.fill(value.toString()); 
+};
 
   // Material UI dropdown
 async selectDropdown(locator, value) {

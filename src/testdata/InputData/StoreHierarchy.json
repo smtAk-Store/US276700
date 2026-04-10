@@ -1,0 +1,72 @@
+{
+    "levels": {
+        "level1": {
+            "en": "Level1",
+            "fr": "Level1",
+            "pt": "Level1",
+            "es": "Level1"
+        },
+        "level2": {
+            "en": "Level2",
+            "fr": "Level2",
+            "pt": "Level2",
+            "es": "Level2"
+        },
+        "level3": {
+            "en": "Level3",
+            "fr": "Level3",
+            "pt": "Level3",
+            "es": "Level3"
+        },
+        "level4": {
+            "en": "Level4",
+            "fr": "Level4",
+            "pt": "Level4",
+            "es": "Level4"
+        },
+        "level5": {
+            "en": "Level5",
+            "fr": "Level5",
+            "pt": "Level5",
+            "es": "Level5"
+        }
+    },
+    "storeNames": {
+        "store1": {
+            "en": "StoreName1",
+            "fr": "StoreName1",
+            "pt": "StoreName1",
+            "es": "StoreName1"
+        },
+        "store2": {
+            "en": "StoreName2",
+            "fr": "StoreName2",
+            "pt": "StoreName2",
+            "es": "StoreName2"
+        },
+        "store3": {
+            "en": "StoreName3",
+            "fr": "StoreName3",
+            "pt": "StoreName3",
+            "es": "StoreName3"
+        },
+        "store4": {
+            "en": "StoreName4",
+            "fr": "StoreName4",
+            "pt": "StoreName4",
+            "es": "StoreName4"
+        },
+         "store41": {
+            "en": "StoreName41",
+            "fr": "StoreName41",
+            "pt": "StoreName41",
+            "es": "StoreName41"
+        },
+        "store5": {
+            "en": "StoreName5",
+            "fr": "StoreName5",
+            "pt": "StoreName5",
+            "es": "StoreName5"
+        }
+    }
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "vaccine": {
+      "en": "bOPV",
+      "fr": "bOPV",
+      "pt": "bOPV",
+      "es": "bOPV"
+    },
+    "formulation": {
+      "en": "Liquid: ready to use",
+      "fr": "Liquid: ready to use",
+      "pt": "Liquid: ready to use",
+      "es": "Liquid: ready to use"
+    },
+    "dosesTarget": {
+      "en": "2",
+      "fr": "2",
+      "pt": "2",
+      "es": "2"
+    },
+    "targetGroup": {
+      "en": "Adult population",
+      "fr": "Filles adolescentes",
+      "pt": "Crianças",
+      "es": "Niños"
+    },
+    "coverageExpected": {
+      "en": "80",
+      "fr": "60",
+      "pt": "60",
+      "es": "60"
+    },
+    "presentation": {
+      "en": "10",
+      "fr": "10",
+      "pt": "10",
+      "es": "10"
+    },
+    "wastageRates": {
+      "en": "10",
+      "fr": "10",
+      "pt": "10",
+      "es": "10"
+    },
+    "administrationSyringe": {
+      "en": "ADS_0.1ml",
+      "fr": "ADS_0.1ml",
+      "pt": "ADS_0.1ml",
+      "es": "ADS_0.1ml"
+    },
+    "syringes": {
+      "en": "RUPF_Sdilution_2ml",
+      "fr": "RUPF_Sdilution_2ml",
+      "pt": "RUPF_Sdilution_2ml",
+      "es": "RUPF_Sdilution_2ml"
+    },
+     "dilution": {
+      "en": "dil_COVID-B",
+      "fr": "dil_COVID-B",
+      "pt": "dil_COVID-B",
+      "es": "dil_COVID-B"
+    },
+    "safetyStock": {
+      "en": "2",
+      "fr": "2",
+      "pt": "2",
+      "es": "2"
+    },
+    "leadTime": {
+      "en": "4",
+      "fr": "4",
+      "pt": "4",
+      "es": "4"
+    },
+    "store": {
+      "en": "CRR",
+      "fr": "CRR",
+      "pt": "CRR",
+      "es": "CRR"
+    }
+  }
+]

@@ -47,7 +47,7 @@ console.log("productType:", productType, "| type:", typeof productType);
    let originType='';
   if(productType=='Supplies'){
    productTypeName = productTypeArrivalData.SuppliesProductType?.[language];
-    productName  = productTypeArrivalData.SuppliesProduct?.[language];
+    productName  = productTypeArrivalData.Suppliesproduct?.[language];
     producerName  = productTypeArrivalData.Suppliesproducer?.[language];
      commercialNameType  = productTypeArrivalData.SuppliescommercialName?.[language];
        formulationType  = productTypeArrivalData.Suppliesformulation?.[language];
