@@ -32,7 +32,7 @@ class StoreData {
   vaccine5Input = () => this.page.locator('input[name="vaccine1"]');
   stockParametersTab = () => this.page.locator('#simple-tab-4');
   totalPopulation = () => this.page.locator('input[name="population"]');
-  adultPopulation = () => this.page.locator('input[name="group3"][type="number"],input[name="group1"][type="number"]');
+  adultPopulation = () => this.page.locator('input[name="group1"][type="number"]');
   survivingInfants = () => this.page.locator('input[name="group2"][type="number"]');
   adolescentGirls = () => this.page.locator('input[name="group1"][type="number"]');
   liveBirths = () => this.page.locator('input[name="group4"][type="number"]');
@@ -62,17 +62,120 @@ class StoreData {
     await this.storeHierarchyTab().click();
     await this.page.waitForLoadState('networkidle');
   }
+   async isStorePresent(storeName) {
+    const row = this.page.locator('tbody.MuiTableBody-root tr', {
+        has: this.page.locator('td', { hasText: storeName })
+    });
 
-  async addNewStoreInStoreHierarchy(levelKey, storeKey) {
+    return (await row.count()) > 0;
+   }
+   async createStore(levelKey, storeName) {
+
     await this.AddiconinSHtab().click();
     await this.page.waitForLoadState('networkidle');
-    await this.page.pause();
-    await this.form.selectDropdown(this.StockLEVEL(), StoreHierarchyData.levels[levelKey][this.language]);
-    await this.form.selectReactDropdown(this.StoreName(), StoreHierarchyData.storeNames[storeKey][this.language]);
-    await this.page.waitForLoadState('networkidle');
-    await this.createButton().click();
-  }
 
+    await this.form.selectDropdown(
+        this.StockLEVEL(),
+        StoreHierarchyData.levels[levelKey][this.language]
+    );
+
+    await this.form.selectReactDropdown(this.StoreName(), storeName);
+
+    await this.createButton().click();
+}
+async createSubStore(levelKey, subStoreKey) {
+
+    await this.page.waitForLoadState('networkidle');
+
+    await this.form.selectDropdown(
+        this.StockLEVEL(),
+        StoreHierarchyData.substoreLevel[levelKey][this.language]
+    );
+
+    await this.form.selectReactDropdown(
+        this.StoreName(),
+        StoreHierarchyData.substore[subStoreKey][this.language]
+    );
+
+    await this.createButton().click();
+}
+async clickAddIconForStore(storeName) {
+
+    const row = this.page.locator('tbody.MuiTableBody-root tr', {
+        has: this.page.locator('td', { hasText: storeName })
+    });
+
+    const addButton = row.locator('td:last-child button').first();
+
+    await addButton.click();
+}
+async waitForStoreRow(storeName) {
+
+    const row = this.page.locator('tbody.MuiTableBody-root tr', {
+        has: this.page.locator('td', { hasText: storeName })
+    });
+
+    await row.first().waitFor({ state: 'visible' });
+
+    return row;
+}
+async addNewStoreInStoreHierarchy(levelKey, storeKey) {
+
+    const storeName = StoreHierarchyData.storeNames[storeKey][this.language];
+
+    await this.page.waitForLoadState('networkidle');
+
+    const exists = await this.isStorePresent(storeName);
+
+    if (exists) {
+        console.log(`ℹ️ Store already exists: ${storeName} → skipping all steps`);
+        return;
+    }
+
+    await this.createStore(levelKey, storeName);
+    await this.waitForStoreRow(storeName);
+    await this.clickAddIconForStore(storeName);
+}
+async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
+
+    const storeName =
+        StoreHierarchyData.storeNames?.[storeKey]?.[this.language];
+
+    const subStoreName =
+        StoreHierarchyData.substore?.[subStoreKey]?.[this.language];
+
+    const subLevelName =
+        StoreHierarchyData.substoreLevel?.[subLevelKey]?.[this.language];
+
+    if (!storeName) {
+        throw new Error(`❌ Invalid storeKey: ${storeKey}`);
+    }
+
+    if (!subStoreName) {
+        throw new Error(`❌ Invalid subStoreKey: ${subStoreKey}`);
+    }
+
+    if (!subLevelName) {
+        throw new Error(`❌ Invalid subLevelKey: ${subLevelKey}`);
+    }
+
+    // 🔥 FULL SKIP if store exists
+    const exists = await this.isStorePresent(storeName);
+
+    if (exists) {
+        console.log(`✅ Store "${storeName}" already exists. Skipping full flow.`);
+        return;
+    }
+
+    // create store
+    await this.createStore(levelKey, storeName);
+
+    // open store
+    await this.clickAddIconForStore(storeName);
+
+    // create substore
+    await this.createSubStore(subLevelKey, subStoreKey);
+}
   async editGroup1AndSave() {
 
     const rowWithCRR = this.page.locator('tr').filter({
@@ -127,7 +230,7 @@ class StoreData {
 
     await row.scrollIntoViewIfNeeded();
 
-    const editButton = row.locator('button[title="Edit"]');
+    const editButton = row.locator('button[title="Modifier"], button[title="Edit"], button[title="Editar"], button:has(svg[class*="arRotate270"])');
 
     await editButton.click();
 
@@ -160,7 +263,7 @@ class StoreData {
       el.style.border = '2px solid #ffc107';
     }, await row.elementHandle());
 
-    await row.locator('button[title="Edit"]').click();
+    await row.locator('button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])').click();
     console.log(` Find the Row Filling all vaccineInputs for : ${Value}`);
 
     await this.page.waitForTimeout(2000);
@@ -181,6 +284,63 @@ class StoreData {
     }
     await this.saveButton().click();
   }
+  async enterVaccineCoverageForSubStore(subStoreKey) {
+
+    await this.vaccineCoverageTab().click();
+    await this.page.waitForTimeout(3000);
+
+    const value = StoreHierarchyData.substore[subStoreKey][this.language];
+
+    const row = this.page.locator('tbody tr')
+        .filter({ has: this.page.locator(`td[value="${value}"]`) })
+        .first();
+
+    if (!(await row.count())) {
+        throw new Error(`Row not found for substore: ${value}`);
+    }
+
+    await row.scrollIntoViewIfNeeded();
+
+    await this.page.evaluate((el) => {
+        el.style.backgroundColor = '#d4edda'; // green highlight for substore
+        el.style.border = '2px solid #28a745';
+    }, await row.elementHandle());
+
+    await row.locator(
+        'button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])'
+    ).click();
+
+    console.log(`Find the Row Filling all vaccineInputs for SUBSTORE: ${value}`);
+
+    await this.page.waitForTimeout(2000);
+
+    const allVaccineInputs = this.page.locator('input[name^="vaccine"]');
+
+    const count = await allVaccineInputs.count();
+    if (count === 0) {
+        throw new Error('No vaccine input fields found!');
+    }
+
+    for (let i = 0; i < count; i++) {
+        const input = allVaccineInputs.nth(i);
+
+        await input.scrollIntoViewIfNeeded();
+        await input.fill('');
+
+        await this.form.fillIntegerInput(
+            input,
+            BCGData.ValueforAllVaccineCoverageInputs
+        );
+
+        const fieldName = await input.getAttribute('name');
+
+        console.log(
+            `   Filled ${fieldName} → ${BCGData.ValueforAllVaccineCoverageInputs}`
+        );
+    }
+
+    await this.saveButton().click();
+}
   async enterThePopulationDemographicsTabFilterByStoreNamesFillTotalPopulationAndAdultPopulation(storeKey) {
 
     await this.populationDemographicsTab().click();
@@ -201,7 +361,7 @@ class StoreData {
       el.style.border = '2px solid #ffc107';
     }, await row.elementHandle());
 
-    await row.locator('button[title="Edit"]').click();
+    await row.locator('button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])').click();
     console.log(`Giving the count to : ${Value}`);
 
     await this.page.waitForTimeout(2000);
@@ -277,6 +437,42 @@ class StoreData {
     await this.applyButton().click();
 
   }
+ async enterPopulationDemographicsForSubStore(subStoreKey) {
+
+    await this.populationDemographicsTab().click();
+    await this.page.waitForTimeout(3000);
+
+    const value = StoreHierarchyData.substore[subStoreKey][this.language];
+
+    const row = this.page.locator('tbody tr')
+        .filter({ has: this.page.locator(`td[value="${value}"]`) })
+        .first();
+
+    if (!(await row.count())) {
+        throw new Error(`Row not found for substore: ${value}`);
+    }
+
+    await row.scrollIntoViewIfNeeded();
+
+    await this.page.evaluate((el) => {
+        el.style.backgroundColor = '#d4edda'; // different color for substore
+        el.style.border = '2px solid #28a745';
+    }, await row.elementHandle());
+
+    await row.locator(
+        'button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])'
+    ).click();
+
+    console.log(`Giving the count to substore: ${value}`);
+
+    await this.page.waitForTimeout(2000);
+
+    await this.form.fillIntegerInput(this.totalPopulation(), BCGData.total_population);
+    await this.form.fillIntegerInput(this.adultPopulation(), BCGData.adult_population);
+
+    await this.page.waitForTimeout(800);
+    await this.saveButton().click();
+}
 }
 module.exports = { StoreData };
 

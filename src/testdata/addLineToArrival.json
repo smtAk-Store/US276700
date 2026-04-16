@@ -41,11 +41,28 @@
     "shippingRef": "SHIP123",
     "smtNumber": "SMT-001123"
   },
-   "SimpleArrival": {      
-    "receiptType": "ARRIVAL",
+  "SimpleArrival": {
+  "en": {
+    "receiptType": "Arrival",
+    "sendingStore": "CRR",
+    "smtNumber": "SMT-00311"
+  },
+  "fr": {
+    "receiptType": "Arrivée",
+    "sendingStore": "CRR",
+    "smtNumber": "SMT-00311"
+  },
+  "pt": {
+    "receiptType": "Arrival",
+    "sendingStore": "CRR",
+    "smtNumber": "SMT-00311"
+  },
+  "es": {
+     "receiptType": "Arrival",
     "sendingStore": "CRR",
     "smtNumber": "SMT-00311"
   }
+}
   
   
 

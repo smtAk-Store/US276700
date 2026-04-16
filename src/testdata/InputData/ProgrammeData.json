@@ -77,6 +77,24 @@
       "fr": "CRR",
       "pt": "CRR",
       "es": "CRR"
+    },
+    "Mainstore": {
+      "en": "LEVEL2MAINSTORE",
+      "fr": "LEVEL2MAINSTORE",
+      "pt": "LEVEL2MAINSTORE",
+      "es": "LEVEL2MAINSTORE"
+    },
+    "subStore1": {
+      "en": "substore1",
+      "fr": "substore1",
+      "pt": "substore1",
+      "es": "substore1"
+    },
+    "subStore2": {
+      "en": "substore2",
+      "fr": "substore2",
+      "pt": "substore2",
+      "es": "substore2"
     }
   }
 ]

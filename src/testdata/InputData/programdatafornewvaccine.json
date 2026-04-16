@@ -1,10 +1,10 @@
 [
   {
     "vaccine": {
-      "en": "bOPV",
-      "fr": "bOPV",
-      "pt": "bOPV",
-      "es": "bOPV"
+      "en": "C19-AZ ChAdOx1-S",
+      "fr": "C19-AZ ChAdOx1-S",
+      "pt": "C19-AZ ChAdOx1-S",
+      "es": "C19-AZ ChAdOx1-S"
     },
     "formulation": {
       "en": "Liquid: ready to use",

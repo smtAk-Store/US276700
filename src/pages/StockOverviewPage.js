@@ -26,12 +26,23 @@ class StockOverviewPage {
   quantity = () => this.page.locator('input[name="dosesOrUnit"]');
   batchNumber = () => this.page.locator("//div[@id='batch' and @role='button']");
   saveButton = () => this.page.locator("//div[contains(@class,'MuiGrid-item')]/button[@type='submit' and contains(@class,'MuiButton-containedPrimary')]");
+  addButton = () => this.page.locator('button.MuiButton-containedPrimary');
+  storageEquipmentDropdown = () => this.page.locator('#storageEquipmentId');
+  supplierDropdown = () => this.page.locator('#supplierId');
+  equipmentTypeDropdown = () => this.page.locator('#equipmentTypeId');
+  equipmentNameInput = () => this.page.locator('input[name="equipmentName"]');
+  statusDropdown = () => this.page.locator('#statusId');
+  equipmentTAb = () => this.page.locator('span[role="menuitem"]').nth(1);
+  closeButton = () => this.page.locator('div[role="dialog"] h2 button[aria-label="close"], div.MuiDialogTitle-root button[aria-label="close"]').first();
+
   async navigateTostockOverviewpage() {
     await this.menuItem().nth(0).click();
   }
 
 
   async evaluateCurrentStockBalance(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
+    console.log(productTypeArrivalData, 'product arrival data ');
+
     const existingStock = await this.fetchValueFromTable(value);
     if (existingStock && existingStock.numericValue > 0) {
       console.log(`"${value}" -> Stock available → issuing`);
@@ -42,6 +53,7 @@ class StockOverviewPage {
     await this.navigateTostockOverviewpage();
     await this.highlightTdAndVerifyTooltip(value);
   }
+
 
 
   async validateZeroStockBalance(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
@@ -81,7 +93,7 @@ class StockOverviewPage {
     if (numericValue <= 0) {
       console.log(`"${value}" -> Numeric value is 0 or empty`);
 
-      this.lastFoundValue = value; 
+      this.lastFoundValue = value;
       this.lastFoundNumericValue = 0;
 
       return { mainValue: value, numericValue: 0 };
@@ -119,16 +131,17 @@ class StockOverviewPage {
 
     console.log(' arrival line data in performArrival', addLineToArrivalData);
     console.log(' arrival ProductType data in performArrival', productTypeArrivalData);
-    const addArrivalData = addLineToArrivalData?.SimpleArrival;
+    console.log('  ProductType data in performArrival', productType);
     await this.arrivalPage.openArrivalForm();
-    await this.arrivalPage.fillArrivalFormCRROnly(addArrivalData);
-    const dialog = new ArrivalProductDialogPage(this.page);
+    await this.page.waitForTimeout(3000);
+    await this.arrivalPage.fillArrivalFormCRROnly(addLineToArrivalData);
+      const dialog = new ArrivalProductDialogPage(this.page);
     await dialog.addProductToArrival(productTypeArrivalData, language, productType, newArrivalQuantity);
     await this.arrivalPage.waitForLoadingToFinish();
-    await this.arrivalPage.clickFinalizeVerifyPopup();
+     await this.arrivalPage.clickFinalizeVerifyPopup();
     await this.arrivalPage.confirmationDialog.clickConfirm();
     await this.arrivalPage.verifyFinalizeSuccessMessage();
-    await this.navigateTostockOverviewpage()
+ await this.navigateTostockOverviewpage()
   }
 
 
@@ -199,7 +212,7 @@ class StockOverviewPage {
 
     console.log(` Tooltip for "${value}":`, tooltipText);
 
-    await this.page.pause(); 
+   await this.page.waitForTimeout(15000);
 
     return tooltipText;
   }
@@ -225,20 +238,98 @@ class StockOverviewPage {
       el.style.outline = '2px solid red';
     });
 
-    
+
     const tooltipIcon = targetTd.locator('[data-tooltip]').first();
     const tooltipCount = await tooltipIcon.count();
-    await this.page.pause();
-   
+    await this.page.waitForTimeout(15000);
+
     if (tooltipCount > 0) {
       console.error(`FAIL: Tooltip icon found for "${value}" but expected none`);
     } else {
       console.log(`PASS: No tooltip icon found and TD highlighted for value: "${value}"`);
     }
-   
-    return tooltipCount === 0; 
+
+    return tooltipCount === 0;
   }
 
+  async evaluateCurrentStockBalanceForReportPage(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
+
+    await this.page.waitForTimeout(12000);
+    const existingStock = await this.fetchValueFromTable(value);
+    console.log(value, 'product arrival data ');
+    console.log(existingStock, 'product arrival data ');
+    if (existingStock && existingStock.numericValue > 0) {
+      await this.issueExistingStock(addLineToIssueData, productTypeIssueData, productType, language);
+    }
+    await this.performArrival(addLineToArrivalData, productTypeArrivalData, productType, language, newArrivalQuantity);
+    await this.navigateTostockOverviewpage();
+    await this.highlightTdAndVerifyTooltip(value);
+
+    //      await reportPage.highlightTdAndVerifyTooltipForGenerateReportTable(value);
+    //     await reportPage.verifyStockColor(
+    //   value,
+    //   BCGData,
+    //   BCGData.CurrentStockBelowMinimumLevel
+    // );
+
+
+  }
+ async addEquipmentForStoreOperator() {
+    console.log("=== addEquipmentForStoreOperator STARTED ===");
+
+    await this.equipmentTAb().click();
+
+    await this.addButton().waitFor({ state: 'visible' });
+    await this.addButton().click();
+
+    await this.form.selectOptionByIndex('storageEquipmentId', 2);
+    await this.form.selectOptionByIndex('supplierId', 1);
+    await this.form.selectOptionByIndex('equipmentTypeId', 1);
+    await this.form.selectOptionByIndex('statusId', 1);
+
+    // Simple language handling - using fallback only for now
+    const language = this.language || 'en';
+
+    console.log('Using language:', language);
+
+    const equipmentName = productData?.[0]?.equipmentname?.[language];
+
+    if (!equipmentName) {
+        throw new Error(`Equipment name not found for language: ${language}`);
+    }
+
+    console.log(`Filling equipment name: "${equipmentName}"`);
+
+    await this.form.fillInput(this.equipmentNameInput(), equipmentName);
+
+    await this.saveButton().click();
+    console.log("Clicked Save button");
+
+    await this.page.waitForLoadState('networkidle');
+
+    // Check if "already exists" message appears
+  const alreadyExists = await this.page
+  .locator('.check-error .msg')
+  .filter({
+    hasText: /exists|existe|existe|موجود|existe/i
+  })
+  .first()
+  .isVisible()
+  .catch(() => false);
+
+    if (alreadyExists) {
+        console.log(`✅ Equipment "${equipmentName}" already exists. Skipping.`);
+        await this.closeButton().click();
+    } else {
+        console.log(`✅ Equipment "${equipmentName}" created successfully.`);
+    }
+
+    console.log("=== addEquipmentForStoreOperator COMPLETED ===");
+    
+
+}
+
+  
 }
 
 module.exports = StockOverviewPage;

@@ -1,30 +1,41 @@
-[
-  {
-    "productType": {
-      "en": "Vaccine",
-      "fr": "Vaccin",
-      "pt": "Vacina",
-      "es": "لقاح"
-    },
-    "product": {
-      "en": "BCG",
-      "fr": "BCG",
-      "pt": "BCG",
-      "es": "BCG"
-    },
-    "batchNumber": {
-      "en": "BATCH123",
-      "fr": "BATCH123",
-      "pt": "BATCH123",
-      "es": "BATCH123"
-    },
-    "expiryDate": {
-      "en": "26-03-2026",
-      "fr": "26-03-2026",
-      "pt": "26-03-2026",
-      "es": "26-03-2026"
-    },
-    "producer": {
+{
+  "VaccineProductType": {
+    "en": "Vaccine",
+    "fr": "Vaccin",
+    "pt": "Vacina",
+    "es": "لقاح"
+  },
+  "VaccineProduct": {
+    "en": "C19-AZ ChAdOx1-S",
+    "fr": "C19-AZ ChAdOx1-S",
+    "pt": "C19-AZ ChAdOx1-S",
+    "es": "C19-AZ ChAdOx1-S"
+  },
+    "SupplyProductType": {
+    "en": "Supplies",
+    "fr": "Consommables",
+    "pt": "Fornecimentos",
+    "es": "المستلزمات الجافة "
+  },
+  "SupplyProduct": {
+    "en": "BCG",
+    "fr": "BCG",
+    "pt": "BCG",
+    "es": "BCG"
+  },
+    "DiluentProductType": {
+   "en": "Diluent",
+    "fr": "Diluant",
+    "pt": "Diluente",
+    "es": "مُحل"
+  },
+  "DiluentProduct": {
+    "en": "BCG",
+    "fr": "BCG",
+    "pt": "BCG",
+    "es": "BCG"
+  },
+  "producer": {
       "en": "Japan BCG Laboratory",
       "fr": "Japan BCG Laboratory",
       "pt": "Japan BCG Laboratory",
@@ -79,18 +90,15 @@
       "es": "Ok"
     },
     "storageLocation": {
-      "en": "STORE ROOM",
-      "fr": "STORE ROOM",
-      "pt": "STORE ROOM",
-      "es": "STORE ROOM"
+      "en": "NONE",
+      "fr": "NONE",
+      "pt": "NONE",
+      "es": "NONE"
     },
-     "equipmentname": {
-      "en": "m416",
-      "fr": "m416",
-      "pt": "m416",
-      "es": "m416"
+     "batchNumber": {
+      "en": "1335",
+      "fr": "1335",
+      "pt": "1335",
+      "es": "1335"
     }
-  }
-  
- 
-]
+}

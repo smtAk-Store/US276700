@@ -1,72 +1,60 @@
 {
     "levels": {
-        "level1": {
+        "level1": { "en": "Level1", "fr": "Level1", "pt": "Level1", "es": "Level1" },
+        "level2": { "en": "Level2", "fr": "Level2", "pt": "Level2", "es": "Level2" },
+        "level3": { "en": "Level3", "fr": "Level3", "pt": "Level3", "es": "Level3" },
+        "level4": { "en": "Level4", "fr": "Level4", "pt": "Level4", "es": "Level4" },
+        "level5": { "en": "Level5", "fr": "Level5", "pt": "Level5", "es": "Level5" }
+    },
+
+    "storeNames": {
+        "store1": { "en": "StoreName1", "fr": "StoreName1", "pt": "StoreName1", "es": "StoreName1" },
+        "store2": { "en": "LEVEL2MAINSTORE", "fr": "LEVEL2MAINSTORE", "pt": "LEVEL2MAINSTORE", "es": "LEVEL2MAINSTORE" },
+        "store3": { "en": "StoreName3", "fr": "StoreName3", "pt": "StoreName3", "es": "StoreName3" },
+        "store4": { "en": "StoreName4", "fr": "StoreName4", "pt": "StoreName4", "es": "StoreName4" },
+        "store41": { "en": "StoreName41", "fr": "StoreName41", "pt": "StoreName41", "es": "StoreName41" },
+        "store5": { "en": "StoreName5", "fr": "StoreName5", "pt": "StoreName5", "es": "StoreName5" }
+    },
+
+    "substore": {
+        "substore1": { "en": "substore1", "fr": "substore1", "pt": "substore1", "es": "substore1" },
+        "substore2": { "en": "substore2", "fr": "substore2", "pt": "substore2", "es": "substore2" },
+        "substore3": { "en": "substore3", "fr": "substore3", "pt": "substore3", "es": "substore3" },
+        "substore4": { "en": "substore4", "fr": "substore4", "pt": "substore4", "es": "substore4" },
+        "substore41": { "en": "substore41", "fr": "substore41", "pt": "substore41", "es": "substore41" },
+        "substore5": { "en": "substore5", "fr": "substore5", "pt": "substore5", "es": "substore5" }
+    },
+
+    "substoreLevel": {
+        "substorelevel1": {
             "en": "Level1",
             "fr": "Level1",
             "pt": "Level1",
             "es": "Level1"
         },
-        "level2": {
+        "substorelevel2": {
             "en": "Level2",
             "fr": "Level2",
             "pt": "Level2",
             "es": "Level2"
         },
-        "level3": {
+        "substorelevel3": {
             "en": "Level3",
             "fr": "Level3",
             "pt": "Level3",
             "es": "Level3"
         },
-        "level4": {
+        "substorelevel4": {
             "en": "Level4",
             "fr": "Level4",
             "pt": "Level4",
             "es": "Level4"
         },
-        "level5": {
+        "substorelevel5": {
             "en": "Level5",
             "fr": "Level5",
             "pt": "Level5",
             "es": "Level5"
-        }
-    },
-    "storeNames": {
-        "store1": {
-            "en": "StoreName1",
-            "fr": "StoreName1",
-            "pt": "StoreName1",
-            "es": "StoreName1"
-        },
-        "store2": {
-            "en": "StoreName2",
-            "fr": "StoreName2",
-            "pt": "StoreName2",
-            "es": "StoreName2"
-        },
-        "store3": {
-            "en": "StoreName3",
-            "fr": "StoreName3",
-            "pt": "StoreName3",
-            "es": "StoreName3"
-        },
-        "store4": {
-            "en": "StoreName4",
-            "fr": "StoreName4",
-            "pt": "StoreName4",
-            "es": "StoreName4"
-        },
-         "store41": {
-            "en": "StoreName41",
-            "fr": "StoreName41",
-            "pt": "StoreName41",
-            "es": "StoreName41"
-        },
-        "store5": {
-            "en": "StoreName5",
-            "fr": "StoreName5",
-            "pt": "StoreName5",
-            "es": "StoreName5"
         }
     }
 }

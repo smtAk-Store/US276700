@@ -243,6 +243,7 @@ async fillInputs(data, by = 'name') {
   // Material UI dropdown
 async selectDropdown(locator, value) {
   await locator.click();
+    await this.page.waitForTimeout(300);
 
   const option = this.page
     .locator('li[role="option"]')
@@ -278,8 +279,41 @@ async selectDropdown(locator, value) {
 
     console.log(`✅ Option at index ${index} selected for dropdown: ${dropdownId}`);
   }
+async selectReactSelectByIndex(inputLocator, indexes = [0]) {
 
+  const dropdown = this.page.locator('div.css-11unzgr');
+  const options = dropdown.locator('div.autoselect-options');
 
+  for (let i = 0; i < indexes.length; i++) {
+
+    const index = indexes[i];
+
+    // 🔥 use inputLocator (fixes "declared but never used")
+    if (i === 0) {
+      await inputLocator.first().click({ force: true });
+    } else {
+      await inputLocator.nth(1).click({ force: true });
+    }
+
+    await dropdown.waitFor({ state: 'visible', timeout: 10000 });
+
+    const count = await options.count();
+
+    if (count === 0) {
+      throw new Error('❌ No dropdown options found');
+    }
+
+    if (index >= count) {
+      throw new Error(`❌ Index ${index} out of range. Total: ${count}`);
+    }
+
+    await options.nth(index).click();
+
+    console.log(`✅ Selected option index ${index}`);
+
+    await this.page.waitForTimeout(300);
+  }
+}
 }
 
 module.exports = { FormComponent };

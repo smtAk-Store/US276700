@@ -1,0 +1,172 @@
+{
+  "SuppliesProductType": {
+    "en": "Supplies",
+    "fr": "Consommables",
+    "pt": "Fornecimentos",
+    "es": "المستلزمات الجافة "
+  },
+  "Suppliesproduct": {
+    "en": "ADS_0.1ml",
+    "fr": "ADS_0.1ml",
+    "pt": "ADS_0.1ml",
+    "es": "ADS_0.1ml"
+  },
+
+   "vaccineProductType": {
+     "en": "Vaccine",
+    "fr": "Vaccin",
+    "pt": "Vacina",
+    "es": "لقاح"
+  },
+  "vaccineProduct": {
+     "en": "C19-AZ ChAdOx1-S",
+    "fr": "C19-AZ ChAdOx1-S",
+    "pt": "C19-AZ ChAdOx1-S",
+    "es": "C19-AZ ChAdOx1-S"
+  },
+
+   "diluentProductType": {
+    "en": "Diluent",
+    "fr": "Diluant",
+    "pt": "Diluente",
+    "es": "مُحل"
+  },
+  "diluentProduct": {
+    "en": "dil_COVID-B",
+    "fr": "dil_COVID-B",
+    "pt": "dil_COVID-B",
+    "es": "dil_COVID-B"
+  },
+  "batchNumber": {
+    "en": "1335",
+    "fr": "1335",
+    "pt": "1335",
+    "es": "1335"
+  },
+  "expiryDate": {
+    "en": "29-03-2033",
+    "fr": "29-03-2033",
+    "pt": "29-03-2033",
+    "es": "29-03-2033"
+  },
+  "vaccineproducer": {
+    "en": "SK Bioscience Co. Ltd (SK Bio-Korea) (s/c AZ)",
+    "fr": "SK Bioscience Co. Ltd (SK Bio-Korea) (s/c AZ)",
+    "pt": "SK Bioscience Co. Ltd (SK Bio-Korea) (s/c AZ)",
+    "es": "SK Bioscience Co. Ltd (SK Bio-Korea) (s/c AZ)"
+  },
+  "Suppliesproducer": {
+    "en": "Bavarian Nordic A/S",
+    "fr": "Bavarian Nordic A/S",
+    "pt": "Bavarian Nordic A/S",
+    "es": "Bavarian Nordic A/S"
+  },
+  "Diluentproducer": {
+    "en": "Generic",
+    "fr": "Generic",
+    "pt": "Generic",
+    "es": "Generic"
+  },
+  "VaccinecommercialName": {
+    "en": "ChAdOx1-S",
+    "fr": "ChAdOx1-S",
+    "pt": "ChAdOx1-S",
+    "es": "ChAdOx1-S"
+  },
+   "SuppliescommercialName": {
+    "en": "COVID-C",
+    "fr": "COVID-C",
+    "pt": "COVID-C",
+    "es": "COVID-C"
+  },
+   "DiluentcommercialName": {
+     "en":"COVID-B",
+    "fr": "COVID-B",
+    "pt": "COVID-B",
+    "es": "COVID-B"
+  },
+  "Vaccineformulation": {
+    "en": "Liquid: ready to use",
+    "fr": "Liquid: ready to use",
+    "pt": "Liquid: ready to use",
+    "es": "Liquid: ready to use"
+  },
+   "Suppliesformulation": {
+    "en": "Liquid: ready to use",
+    "fr": "Liquid: ready to use",
+    "pt": "Liquid: ready to use",
+    "es": "Liquid: ready to use"
+  },
+   "Diluentformulation": {
+    "en": "Lyophilised active to be reconstituted with diluent",
+    "fr": "Lyophilised active to be reconstituted with diluent",
+    "pt": "Lyophilised active to be reconstituted with diluent",
+    "es": "Lyophilised active to be reconstituted with diluent"
+  },
+  "Vaccinepresentation": {
+    "en": "10",
+    "fr": "10",
+    "pt": "10",
+    "es": "10"
+  },
+  "Suppliespresentation": {
+    "en": "100",
+    "fr": "100",
+    "pt": "100",
+    "es": "100"
+  },
+  "Diluentpresentation": {
+    "en": "10",
+    "fr": "10",
+    "pt": "10",
+    "es": "10"
+  },
+  "vvmStage": {
+    "en": "0.None",
+    "fr": "0.Aucun",
+    "pt": "0. Nenhum",
+    "es": "0.None"
+  },
+  "quantity": {
+    "en": "1000",
+    "fr": "1000",
+    "pt": "1000",
+    "es": "1000"
+  },
+  "routineOrSia": {
+    "en": "Routine",
+    "fr": "Routine",
+    "pt": "Rotina",
+    "es": "روتيني"
+  },
+  "Suppliesorigin": {
+      "en": "Denmark",
+    "fr": "Danemark",
+    "pt": "Dinamarca",
+    "es": "الدنمارك"
+  },
+   "Vaccineorigin": {
+   "en": "USA",
+    "fr": "Etats-Unis",
+    "pt": "Estados Unidos",
+    "es": "الولايات المتحدة الأمريكية"
+  },
+   "Diluentorigin": {
+     "en": "India",
+    "fr": "Inde",
+    "pt": "Índia",
+    "es": "الهند"
+  },
+  "freezeIndicator": {
+    "en": "Ok",
+    "fr": "Ok",
+    "pt": "Ok",
+    "es": "Ok"
+  },
+  "storageLocation": {
+    "en": "m416",
+    "fr": "m416",
+    "pt": "m416",
+    "es": "m416"
+  }
+}
