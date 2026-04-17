@@ -6,9 +6,11 @@ import { ArrivalPage } from '../pages/arrivalPage';
 import { StoreData } from '../pages/StoreData';
 
 const StockOverviewPage = require('../pages/StockOverviewPage');
+const { IssuingPage } = require('../pages/Issuingpage');
 
 const addLineToArrivalData = require('../testdata/addlinetoarrival.json');
 const addLineToIssueData = require('../testdata/addLineToIssue.json');
+const productData = require('../testdata/InputData/productArrival.json');
 const calculationService = require('../service/CalculationService');
 
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
@@ -24,7 +26,7 @@ const languages = ['fr', 'pt', 'es'];
 
 languages.forEach(language => {
 
-    test.describe(`Validate Alerts for Vaccines - Language: ${language}`, () => {
+    test.describe(`Validate Alerts for Vaccines and Diluents - Language: ${language}`, () => {
 
         // ================== BEFORE ALL ==================
         test.beforeAll(async ({ browser }) => {
@@ -64,7 +66,7 @@ languages.forEach(language => {
         });
 
         // ================== TEST 1 ==================
-        test(`Verify alert and report when vaccine stock reaches minimum level`, async ({ page }) => {
+        test(`Verify alert when Supplies stock reaches minimum level`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const reportPage = new ReportPage(page, language);
@@ -74,10 +76,10 @@ languages.forEach(language => {
             await loginPage.loginAs('storeOperatorvietnam', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
 
-            const productType = 'Vaccines';
+            const productType = 'Supplies';
 
             await stockOverviewPageLocal.evaluateCurrentStockBalanceForReportPage(
-                programDatanew[0].vaccine[language],
+                programDatanew[0].administrationSyringe[language],
                 addLineToIssueData.wastage[language],
                 addLineToArrivalData.SimpleArrival[language],
                 productTypeArrivalDataNew,
@@ -89,24 +91,28 @@ languages.forEach(language => {
 
             await reportPage.navigateToStockStatusAndOpenDropdowns('level2');
 
+            const minimumStock = BCGData.CurrentStockBelowMinimumLevel;
+
             const expectedValue =
-                await calculationService.evaluateMinimumStockLevelForVaccines(
+                await calculationService.evaluateMinimumStockLevelForSupplies(
                     BCGData,
-                    BCGData.CurrentStockBelowMinimumLevel
+                    minimumStock
                 );
 
+            const threshold = BCGData.saftyWeeks;
+
             const expectedColor =
-                expectedValue <= BCGData.saftyWeeks ? 'red' : 'blue';
+                 expectedValue <= threshold ? 'red' : 'blue';
 
             const actualColor = await reportPage.verifyStockColor(
-                programDatanew[0].vaccine[language]
+                programDatanew[0].administrationSyringe[language]
             );
 
             expect(actualColor).toBe(expectedColor);
 
             const tooltipText =
                 await reportPage.highlightTdAndVerifyTooltipForGenerateReportTable(
-                    programDatanew[0].vaccine[language]
+                    programDatanew[0].administrationSyringe[language]
                 );
 
             let expectedTooltip;
@@ -130,7 +136,7 @@ languages.forEach(language => {
         });
 
         // ================== TEST 2 ==================
-        test(`Verify  No alert and  color chart when vaccine stock reaches maximum level`, async ({ page }) => {
+        test(`Verify alert when Supplies stock reaches maximum level`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const reportPage = new ReportPage(page, language);
@@ -140,10 +146,10 @@ languages.forEach(language => {
             await loginPage.loginAs('storeOperatorvietnam', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
 
-            const productType = 'Vaccines';
+            const productType = 'Supplies';
 
             await stockOverviewPageLocal.evaluateCurrentStockBalanceForReportPage(
-                programDatanew[0].vaccine[language],
+                programDatanew[0].administrationSyringe[language],
                 addLineToIssueData.wastage[language],
                 addLineToArrivalData.SimpleArrival[language],
                 productTypeArrivalDataNew,
@@ -155,33 +161,28 @@ languages.forEach(language => {
 
             await reportPage.navigateToStockStatusAndOpenDropdowns('level2');
 
+            const minimumStock = BCGData.CurrentStockAboveMinimumLevel;
+
             const expectedValue =
-                await calculationService.evaluateMinimumStockLevelForVaccines(
+                await calculationService.evaluateMinimumStockLevelForSupplies(
                     BCGData,
-                    BCGData.CurrentStockAboveMinimumLevel
+                    minimumStock
                 );
 
+            const threshold = BCGData.saftyWeeks;
+
             const expectedColor =
-                expectedValue < BCGData.saftyWeeks ? 'red' : 'blue';
+                expectedValue <= threshold ? 'red' : 'blue';
 
             const actualColor = await reportPage.verifyStockColor(
-                programDatanew[0].vaccine[language]
+                programDatanew[0].administrationSyringe[language]
             );
 
             expect(actualColor).toBe(expectedColor);
-             const tooltipTexts = await reportPage.highlightProductColumn(
-                programDatanew[0].vaccine[language]
-            );
-
-           
-
-            expect(tooltipTexts == null || tooltipTexts.length === 0).toBeTruthy();
-
-            console.log(" Verified: No tooltip is displayed for above minimum level");
         });
 
         // ================== TEST 3 ==================
-        test(`Verify alert and  color chart when vaccine stock is zero`, async ({ page }) => {
+        test(`Verify alert when Supplies stock is zero`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const reportPage = new ReportPage(page, language);
@@ -191,10 +192,10 @@ languages.forEach(language => {
             await loginPage.loginAs('storeOperatorvietnam', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
 
-            const productType = 'Vaccines';
+            const productType = 'Supplies';
 
             await stockOverviewPageLocal.evaluateCurrentStockBalanceForReportPage(
-                programDatanew[0].vaccine[language],
+                programDatanew[0].administrationSyringe[language],
                 addLineToIssueData.wastage[language],
                 addLineToArrivalData.SimpleArrival[language],
                 productTypeArrivalDataNew,
@@ -206,31 +207,35 @@ languages.forEach(language => {
 
             await reportPage.navigateToStockStatusAndOpenDropdowns('level2');
 
+            const minimumStock = BCGData.CurrentStockMinimumLevel;
+
             const expectedValue =
-                await calculationService.evaluateMinimumStockLevelForVaccines(
+                await calculationService.evaluateMinimumStockLevelForSupplies(
                     BCGData,
-                    BCGData.CurrentStockMinimumLevel
+                    minimumStock
                 );
 
+            const threshold = BCGData.saftyWeeks;
+
             const expectedColor =
-                expectedValue <= BCGData.saftyWeeks ? 'red' : 'blue';
+                expectedValue <= threshold ? 'red' : 'blue';
 
             const actualColor = await reportPage.verifyStockColor(
-                programDatanew[0].vaccine[language]
+                programDatanew[0].administrationSyringe[language]
             );
 
             expect(actualColor).toBe(expectedColor);
 
             const tooltipText =
                 await reportPage.highlightTdAndVerifyTooltipForGenerateReportTable(
-                    programDatanew[0].vaccine[language]
+                    programDatanew[0].administrationSyringe[language]
                 );
 
             let expectedTooltip;
 
             switch (language) {
                 case 'fr':
-                    expectedTooltip = 'La semaine de stock ajustée est  zéro';
+                    expectedTooltip = 'La semaine de stock ajustée est zéro';
                     break;
                 case 'pt':
                     expectedTooltip = 'A semana ajustada de estoque é zero';

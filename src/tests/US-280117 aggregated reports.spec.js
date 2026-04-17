@@ -23,7 +23,7 @@ const productTypeArrivalDataNew = require('../testdata/InputData/productTypeArri
 const productTypeIssueDataNew = require('../testdata/InputData/productTypeNewIssue.json');
 const { ReportPage } = require('../pages/reportPage');
 
-const languages = ['es'];
+const languages = ['fr'];
 // const languages = ['en'];
 
 languages.forEach(language => {
@@ -48,7 +48,7 @@ languages.forEach(language => {
                 await loginPage.loginAs('countryAdminVietnam', language);
                 await homePage.verifyMenus();
 
-                await programmePage.deleteAllProgrammeData();
+             
                 await programmePage.highlightAndClickAdd();
                 await programmePage.fillPopupForm(programDatanew, language);
 
@@ -173,7 +173,7 @@ languages.forEach(language => {
 
             switch (language) {
                 case 'fr':
-                    expectedTooltip = 'La semaine de stock ajustée est zérLes semaines de stock ajustées pour ce produit sont inférieures au niveau minimum'
+                    expectedTooltip = 'Les semaines de stock ajustées pour ce produit sont inférieures au niveau minimum'
                     break;
                 case 'pt':
                     expectedTooltip = 'As semanas de stock ajustadas para este produto são inferiores ao nível mínimo'
@@ -288,6 +288,122 @@ languages.forEach(language => {
             expect(tooltipTexts == null || tooltipTexts.length === 0).toBeTruthy();
 
             console.log(" Verified: No tooltip is displayed for above minimum level");
+        });
+
+            test(`Aggregated reports for vaccines below minimum level when stock is zero`, async ({ page }) => {
+
+            const stockOverviewPageLocal = new StockOverviewPage(page, language);
+            const reportPage = new ReportPage(page, language);
+            const loginPage = new LoginPage(page);
+            const storeSetupPage = new StoreData(page, language);
+            const homePage = new HomePage(page);
+
+            // ----------- Substore 1 -----------
+            await loginPage.loginAs('storeOperatorvietnam', language);
+            await storeSetupPage.selectStore(programmeData[0].subStore1[language]);
+
+            let stockOverviewPage = new StockOverviewPage(page, language);
+
+            await stockOverviewPageLocal.addEquipmentForStoreOperator();
+            await stockOverviewPage.navigateTostockOverviewpage();
+
+            const productType = 'Vaccines';
+
+            await stockOverviewPageLocal.evaluateCurrentStockBalanceForReportPage(
+                programDatanew[0].vaccine[language],
+                addLineToIssueData.wastage[language],
+                addLineToArrivalData.SimpleArrival[language],
+                productTypeArrivalDataNew,
+                productTypeIssueDataNew,
+                productType,
+                language,
+                BCGData.CurrentStockMinimumLevel
+            );
+
+            await homePage.logout();
+
+            // ----------- Substore 2 -----------
+            await loginPage.loginAs('storeOperatorvietnam', language);
+            await storeSetupPage.selectStore(programmeData[0].subStore2[language]);
+
+            stockOverviewPage = new StockOverviewPage(page, language);
+
+            await stockOverviewPageLocal.addEquipmentForStoreOperator();
+            await stockOverviewPage.navigateTostockOverviewpage();
+
+            await stockOverviewPageLocal.evaluateCurrentStockBalanceForReportPage(
+                programDatanew[0].vaccine[language],
+                addLineToIssueData.wastage[language],
+                addLineToArrivalData.SimpleArrival[language],
+                productTypeArrivalDataNew,
+                productTypeIssueDataNew,
+                productType,
+                language,
+                BCGData.CurrentStockMinimumLevel
+            );
+
+            await homePage.logout();
+
+            // ----------- Main Store -----------
+            await loginPage.loginAs('storeOperatorvietnam', language);
+            await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
+
+            stockOverviewPage = new StockOverviewPage(page, language);
+
+            await stockOverviewPageLocal.addEquipmentForStoreOperator();
+            await stockOverviewPage.navigateTostockOverviewpage();
+
+            await stockOverviewPageLocal.evaluateCurrentStockBalanceForReportPage(
+                programDatanew[0].vaccine[language],
+                addLineToIssueData.wastage[language],
+                addLineToArrivalData.SimpleArrival[language],
+                productTypeArrivalDataNew,
+                productTypeIssueDataNew,
+                productType,
+                language,
+                BCGData.CurrentStockMinimumLevel
+            );
+
+            // ----------- Navigate to Report -----------
+              await reportPage.navigateToStockStatusAndOpenDropdowns('level2', {
+                includeSubstore: true
+            });
+
+            // ----------- Extract Tooltips -----------
+            const tooltipTexts = await reportPage.highlightProductColumn(
+                programDatanew[0].vaccine[language]
+            );
+
+            // ----------- Expected Tooltip -----------
+            let expectedTooltip;
+
+             switch (language) {
+                case 'fr':
+                    expectedTooltip = 'La semaine de stock ajustée est  zéro';
+                    break;
+                case 'pt':
+                    expectedTooltip = 'A semana ajustada de estoque é zero';
+                    break;
+                case 'es':
+                    expectedTooltip = 'الأسبوع المعدل للمخزون هو صفر';
+                    break;
+                default:
+                    expectedTooltip = 'The adjusted week of stock is zero';
+            }
+
+
+            // ----------- Assertions -----------
+
+            // Ensure tooltips exist
+            expect(tooltipTexts).toBeTruthy();
+            expect(tooltipTexts.length).toBeGreaterThan(0);
+
+            // Validate each tooltip
+            for (const tooltipText of tooltipTexts) {
+                expect(tooltipText).toBeTruthy();
+                expect(tooltipText.trim()).toContain(expectedTooltip);
+            }
+
         });
 
         test(`Aggregated reports for Supplies  minimum level`, async ({ page }) => {

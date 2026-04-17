@@ -43,10 +43,10 @@
       "es": "10"
     },
     "administrationSyringe": {
-      "en": "ADS_0.1ml",
-      "fr": "ADS_0.1ml",
-      "pt": "ADS_0.1ml",
-      "es": "ADS_0.1ml"
+      "en": "ADS_0.05ml",
+      "fr": "ADS_0.05ml",
+      "pt": "ADS_0.05ml",
+      "es": "ADS_0.05ml"
     },
     "syringes": {
       "en": "RUPF_Sdilution_2ml",

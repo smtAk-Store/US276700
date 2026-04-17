@@ -106,8 +106,7 @@ includeSubstoreCheckbox = () =>
   }
 
 
-async verifyStockColor(vaccineName) {
-
+async verifyStockColor(productName) {
   const rows = this.page.locator('.bc-row-parent');
   const count = await rows.count();
 
@@ -121,37 +120,40 @@ async verifyStockColor(vaccineName) {
 
     console.log(`➡️ Checking row ${i}: ${trimmedName}`);
 
-    if (trimmedName === vaccineName) {
+    if (trimmedName === productName) {
+      console.log(`✅ Match found: ${productName}`);
 
-      console.log(`✅ Match found for vaccine: ${vaccineName}`);
+      // 👉 IMPORTANT: pick ONLY ONE bar element
+      const colorBar = row.locator('[class*="bc-fillbar"]').first();
 
-      const colorBar = row.locator('[class*="bc-fillbar"]');
+      await colorBar.waitFor({ state: 'attached' });
+
       const classAttr = await colorBar.getAttribute('class');
+      console.log(`🎨 Class attribute: ${classAttr}`);
 
-      console.log(`🎨 Raw class attribute: ${classAttr}`);
-
-      let color;
-
-      if (classAttr.includes('bc-fillbar-red')) {
-        color = 'red';
-      } else if (classAttr.includes('bc-fillbar-green')) {
-        color = 'green';
-      } else {
-        throw new Error(`❌ Unknown color class: ${classAttr}`);
+      if (!classAttr) {
+        throw new Error(`❌ No class found on fillbar`);
       }
 
-      console.log(`🟢 FINAL RETURN COLOR: ${color}`);
+      if (classAttr.includes('bc-fillbar-red')) {
+        console.log(`🟥 FINAL COLOR: red`);
+        return 'red';
+      }
 
-      return color;
+      if (classAttr.includes('bc-fillbar-blue')) {
+        console.log(`🟦 FINAL COLOR: blue`);
+        return 'blue';
+      }
+
+      throw new Error(`❌ Unknown color class: ${classAttr}`);
     }
   }
 
-  throw new Error(`❌ Vaccine not found: ${vaccineName}`);
+  throw new Error(`❌ Product not found: ${productName}`);
 }
 async highlightProductColumn(productName) {
 
-    await this.page.waitForTimeout(15000);
-   
+    await this.page.waitForTimeout(1500);
 
     if (!productName) {
         console.log("❌ No product name provided");
@@ -160,27 +162,23 @@ async highlightProductColumn(productName) {
 
     console.log(`🔍 Highlighting & verifying column: "${productName}"`);
 
-    // 1. Highlight Product Header
-    const productHeader = this.page.locator('thead th')
-        .filter({ hasText: productName })
-        .first();
-
-    await productHeader.evaluate(el => {
-        el.style.border = "4px solid red";
-        el.style.backgroundColor = "yellow";
-        el.style.fontWeight = "bold";
-    });
-
-    // 2. Find column index
+    // =========================
+    // 1. FIND START COLUMN (FIXED)
+    // =========================
     const startCol = await this.page.evaluate((prod) => {
-        const ths = Array.from(document.querySelectorAll('thead th'));
-        let col = 0;
+        const ths = Array.from(document.querySelectorAll('thead tr:first-child th'));
+
+        let colIndex = 0;
 
         for (const th of ths) {
-            if (th.textContent.trim().includes(prod)) {
-                return col + 1; // 1-based index
+            const text = th.textContent.trim();
+            const colSpan = parseInt(th.getAttribute('colspan') || '1', 10);
+
+            if (text.includes(prod)) {
+                return colIndex + 1; // 1-based index for tbody
             }
-            col++;
+
+            colIndex += colSpan;
         }
 
         return -1;
@@ -191,12 +189,16 @@ async highlightProductColumn(productName) {
         return [];
     }
 
+    console.log(`✅ Product "${productName}" starts at column: ${startCol}`);
+
+    // =========================
+    // 2. ROW LOOP
+    // =========================
     const rows = this.page.locator('tbody tr');
     const rowCount = await rows.count();
 
     let tooltips = [];
 
-    // 3. Loop all rows
     for (let i = 0; i < rowCount; i++) {
 
         const row = rows.nth(i);
@@ -208,7 +210,9 @@ async highlightProductColumn(productName) {
         const dosesCell = row.locator(`td:nth-child(${startCol})`);
         const weeksCell = row.locator(`td:nth-child(${startCol + 1})`);
 
-        // 4. Highlight cells
+        // =========================
+        // 3. HIGHLIGHT CELLS
+        // =========================
         await dosesCell.evaluate(el => {
             el.style.backgroundColor = "#fff3cd";
             el.style.border = "3px solid red";
@@ -219,24 +223,29 @@ async highlightProductColumn(productName) {
             el.style.border = "3px solid red";
         });
 
-        // 5. Extract values
+        // =========================
+        // 4. READ VALUES
+        // =========================
         const dosesValue = (await dosesCell.textContent() || '').trim();
         const weeksValue = (await weeksCell.textContent() || '').trim();
 
         console.log(`Row ${i} → Doses: ${dosesValue}, Weeks: ${weeksValue}`);
 
-        // 6. REAL TOOLTIP CHECK (IMPORTANT FIX)
+        // =========================
+        // 5. TOOLTIP CHECK (Weeks only)
+        // =========================
         const tooltipLocator = weeksCell.locator('.current-stock-bal-tooltip');
-
         const count = await tooltipLocator.count();
 
         if (count > 0) {
 
             const firstTooltip = tooltipLocator.first();
 
-            const isVisible = await firstTooltip.isVisible();
+            const visibility = await firstTooltip.evaluate(el =>
+                getComputedStyle(el).visibility
+            );
 
-            if (isVisible) {
+            if (visibility === 'visible') {
                 const tooltipText = await firstTooltip.getAttribute('data-tooltip');
 
                 if (tooltipText && tooltipText.trim() !== '') {
@@ -244,7 +253,7 @@ async highlightProductColumn(productName) {
                     tooltips.push(tooltipText.trim());
                 }
             } else {
-                console.log(`⚠️ Row ${i} tooltip exists but not visible`);
+                console.log(`⚠️ Row ${i} tooltip exists but hidden`);
             }
 
         } else {
@@ -254,7 +263,7 @@ async highlightProductColumn(productName) {
 
     console.log(`✅ Completed for "${productName}"`);
 
-    await this.page.waitForTimeout(1500);
+    await this.page.waitForTimeout(1000);
 
     return tooltips;
 }

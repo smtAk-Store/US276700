@@ -57,6 +57,7 @@ class StockOverviewPage {
 
 
   async validateZeroStockBalance(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
+     await this.page.waitForTimeout(6000);
     let existingStock = await this.fetchValueFromTable(value);
 
     if (existingStock && existingStock.numericValue > 0) {

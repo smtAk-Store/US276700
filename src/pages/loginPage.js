@@ -41,51 +41,51 @@ export class LoginPage {
   }
 
   async selectLanguage(language) {
-    const langCode = language.toLowerCase();
+  const langCode = language.toLowerCase();
 
-    console.log(`🌐 Selecting language: ${langCode}`);
+  console.log(`🌐 Selecting language: ${langCode}`);
 
-    await this.page.waitForLoadState('domcontentloaded');
+  await this.page.waitForLoadState('domcontentloaded');
 
-    // 1. Click the language dropdown to open it (the one showing "English")
-    const languageDropdown = this.page.locator('button:has-text("English"), [role="button"]:has-text("English")')
-      .or(this.page.getByRole('button').filter({ hasText: /English|Français|Español|Português/i }));
+  // ✅ Always works (no text dependency)
+  const languageDropdown = this.page.locator(
+    'div[role="button"][aria-haspopup="listbox"]'
+  ).first();
 
-    await languageDropdown.waitFor({ state: 'visible', timeout: 15000 });
-    await languageDropdown.click({ force: true });
+  await languageDropdown.waitFor({ state: 'visible', timeout: 15000 });
+  await languageDropdown.click();
 
-    // Small wait for the menu to open
-    await this.page.waitForTimeout(800);
+  // small wait
+  await this.page.waitForTimeout(500);
 
-    // 2. Now click the desired language option from the opened menu
-    let optionLocator;
-
-    switch (langCode) {
-      case 'fr':
-      case 'french':
-        optionLocator = this.page.getByRole('option', { name: /french|français/i });
-        break;
-      case 'es':
-      case 'spanish':
-         optionLocator = this.page.getByRole('option', { name: /العربية/i });
-        break;
-      case 'pt':
-      case 'portuguese':
-        optionLocator = this.page.getByRole('option', { name: /portuguese|português/i });
-        break;
-      case 'en':
-      case 'english':
-      default:
-        optionLocator = this.page.getByRole('option', { name: /english/i });
-        break;
-    }
-
-    await optionLocator.waitFor({ state: 'visible', timeout: 10000 });
-    await optionLocator.click();
-
-    // Wait a bit for language to apply (if it changes UI text)
-    await this.page.waitForTimeout(1500);
-
-    console.log(`✅ Language set to ${langCode}`);
+  // ✅ Map language (es → ar)
+  let value;
+  switch (langCode) {
+    case 'fr':
+      value = 'fr';
+      break;
+    case 'pt':
+      value = 'pt';
+      break;
+    case 'es':
+      value = 'ar'; // Spanish mapped to Arabic
+      break;
+    case 'en':
+    default:
+      value = 'en';
+      break;
   }
+
+  // ✅ Use stable attribute (THIS FIXES EVERYTHING)
+  const option = this.page.locator(
+    `li[role="option"][data-value="${value}"]`
+  );
+
+  await option.waitFor({ state: 'visible', timeout: 10000 });
+  await option.click();
+
+  await this.page.waitForTimeout(1500);
+
+  console.log(`✅ Language set to ${langCode}`);
+}
 }
