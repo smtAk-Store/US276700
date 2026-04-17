@@ -169,6 +169,55 @@ class TableComponent extends BaseComponent {
 
     await this.page.screenshot({ path: `success-row-verified-${Date.now()}.png` });
   }
+  async deleteAllRecords() {
+    await this.page.waitForTimeout(8000);
+
+    console.log('🟢 deleteAllRecords ENTERED');
+
+    let i = 0;
+
+    while (i++ < 50) {
+
+        const deleteBtn = this.page.locator('button:has(svg path[d*="M6 19"])');
+        const deleteCount = await deleteBtn.count();
+
+        const nextBtn = this.page.locator('span[title="Next Page"] button');
+        const nextCount = await nextBtn.count();
+
+        console.log(`Loop ${i} - delete: ${deleteCount}, next: ${nextCount}`);
+
+        // ✅ CASE 1: DELETE EXISTS
+        if (deleteCount > 0) {
+
+            await deleteBtn.first().click();
+            await this.page.waitForTimeout(2000);
+
+            await this.page.locator('button:has-text("Yes")').click();
+            await this.page.waitForTimeout(4000);
+
+            continue;
+        }
+
+        // ✅ CASE 2: NO DELETE + NO NEXT → EMPTY TABLE
+        if (deleteCount === 0 && nextCount === 0) {
+            console.log('✅ No items found to delete (table already empty)');
+            return;
+        }
+
+        // ✅ CASE 3: NO DELETE BUT NEXT EXISTS → PAGINATE
+        const isDisabled = await nextBtn.isDisabled().catch(() => true);
+
+        if (isDisabled) {
+            console.log('✅ No more pages - deletion complete');
+            return;
+        }
+
+        await nextBtn.click();
+        await this.page.waitForTimeout(2000);
+    }
+
+    throw new Error('Loop safety exit triggered (too many iterations)');
+}
 }
 
 module.exports = { TableComponent };

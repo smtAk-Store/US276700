@@ -8,6 +8,7 @@ const { ArrivalPage } = require('./arrivalPage');
 const productTypeArrivalData = require('../testdata/InputData/addProductTypeArrival.json');
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
 import { ConfirmationDialogPage } from '../pages/ConfirmationDialogPage';
+const { TableComponent } = require('../components/TableComponent');
 
 class StockOverviewPage {
   constructor(page, language) {
@@ -19,6 +20,8 @@ class StockOverviewPage {
     const [product] = productIssuingTab;
     this.productType = page.locator('#productType');
     this.product = page.locator('#product');
+      this.table = new TableComponent(page);
+      
     // this.data = testData.SimpleArrival;
 
   }
@@ -38,8 +41,48 @@ class StockOverviewPage {
   async navigateTostockOverviewpage() {
     await this.menuItem().nth(0).click();
   }
+async clearAllData() {
+   console.log('🔥 clearAllData ENTERED');
+        await this.table.deleteAllRecords(); // 👈 call here
+    }
 
+async waitForNoError(timeout = 3000) {
+    const interval = 300;
+    const startTime = Date.now();
 
+    while (Date.now() - startTime < timeout) {
+
+        const errorCount = await this.page
+            .locator('p.Mui-error')
+            .count();
+
+        if (errorCount === 0) {
+            return true; // no error → success
+        }
+
+        await new Promise(resolve => setTimeout(resolve, interval));
+    }
+
+    return false;
+}
+async clickSaveWithRetry() {
+    const maxAttempts = 3;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+
+        await this.saveButton().click();
+
+        const isSuccess = await this.waitForNoError(3000);
+
+        if (isSuccess) {
+            return true;
+        }
+
+        console.log(`Save attempt ${attempt} failed, retrying...`);
+    }
+
+    throw new Error('Save failed after 3 attempts due to validation errors');
+}
   async evaluateCurrentStockBalance(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
     console.log(productTypeArrivalData, 'product arrival data ');
 
@@ -180,7 +223,7 @@ class StockOverviewPage {
     if (this.lastFoundNumericValue) {
       await this.quantity().fill(`${this.lastFoundNumericValue}`);
     }
-    await this.saveButton().click();
+    await this.clickSaveWithRetry();
   }
   async highlightTdAndVerifyTooltip(value) {
     const row = this.page.locator('tbody tr')
