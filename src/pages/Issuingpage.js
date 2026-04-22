@@ -30,18 +30,24 @@ class IssuingPage {
 async fillIssuingFormCRROnly(data) {
 
   console.log('Full data received:', JSON.stringify(data, null, 2));
-  console.log( data.issueType,'   issue type ####');
-  
-  // Translate receipt type if needed
-  const receiptTypeText = translate(this.language, "issueType", data.issueType);
-console.log( receiptTypeText,'   receipient Text ####');
-  // Select Receipt Type
-  await this.form.selectDropdown(this.issueTypeDropdown(), receiptTypeText);
+  console.log(data.issueType, 'issue type ####');
 
+  const receiptTypeText = translate(this.language, "issueType", data.issueType);
+  console.log(receiptTypeText, 'recipient Text ####');
+
+  await this.form.selectDropdown(this.issueTypeDropdown(), receiptTypeText);
   await this.selectRecipientStore(data.sendingStore);
 
-  // Submit Form
+  // ✅ Just read existing date
+  const issuingDate = await this.page
+    .locator('input[name="issuingDate"]')
+    .inputValue();
+
+  console.log('Issuing Date:', issuingDate);
+
   await this.submitButton().click();
+
+  return issuingDate;  // ✅ return it for later use
 }
  async addProductToIssuingTabPopup(productData, language = 'en') {
 await this.form.selectDropdown(this.productType, productData.productType[language]);

@@ -7,6 +7,7 @@ const productData = require('../testdata/InputData/productArrival.json');
 const { ArrivalPage } = require('./arrivalPage');
 const productTypeArrivalData = require('../testdata/InputData/addProductTypeArrival.json');
 const { ArrivalProductDialogPage } = require('../pages/arrivalProductDialoguePage');
+import { log } from 'node:console';
 import { ConfirmationDialogPage } from '../pages/ConfirmationDialogPage';
 const { TableComponent } = require('../components/TableComponent');
 
@@ -20,11 +21,25 @@ class StockOverviewPage {
     const [product] = productIssuingTab;
     this.productType = page.locator('#productType');
     this.product = page.locator('#product');
-      this.table = new TableComponent(page);
-      
+    this.table = new TableComponent(page);
+    this.issuingTab = () => this.page.locator('span[role="menuitem"]').nth(3);
+    // 📌 Locators
+    this.statusRow = page.locator('tbody tr');
+    this.statusCell = this.statusRow.first().locator('td').nth(4);
+    this.statusBadge = this.statusCell.locator('span');
+
+    this.filterDropdown = page.locator('.MuiSelect-root').first();
+    this.filterOptions = page.locator('li[role="option"]');
+    this.finalizeButton = this.page
+      .locator('div.MuiGrid-container.MuiGrid-justify-xs-flex-end > div.MuiGrid-item > button')
+      .last();
+    this.confirmationDialog = new ConfirmationDialogPage(page);
     // this.data = testData.SimpleArrival;
 
   }
+  editButton = () => this.page.locator(
+    'button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])'
+  );
   menuItem = () => this.page.locator("//span[contains(@class,'MuiMenuItem-root')]");
   quantity = () => this.page.locator('input[name="dosesOrUnit"]');
   batchNumber = () => this.page.locator("//div[@id='batch' and @role='button']");
@@ -41,48 +56,48 @@ class StockOverviewPage {
   async navigateTostockOverviewpage() {
     await this.menuItem().nth(0).click();
   }
-async clearAllData() {
-   console.log('🔥 clearAllData ENTERED');
-        await this.table.deleteAllRecords(); // 👈 call here
-    }
+  async clearAllData() {
+    console.log('🔥 clearAllData ENTERED');
+    await this.table.deleteAllRecords(); // 👈 call here
+  }
 
-async waitForNoError(timeout = 3000) {
+  async waitForNoError(timeout = 3000) {
     const interval = 300;
     const startTime = Date.now();
 
     while (Date.now() - startTime < timeout) {
 
-        const errorCount = await this.page
-            .locator('p.Mui-error')
-            .count();
+      const errorCount = await this.page
+        .locator('p.Mui-error')
+        .count();
 
-        if (errorCount === 0) {
-            return true; // no error → success
-        }
+      if (errorCount === 0) {
+        return true; // no error → success
+      }
 
-        await new Promise(resolve => setTimeout(resolve, interval));
+      await new Promise(resolve => setTimeout(resolve, interval));
     }
 
     return false;
-}
-async clickSaveWithRetry() {
+  }
+  async clickSaveWithRetry() {
     const maxAttempts = 3;
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
 
-        await this.saveButton().click();
+      await this.saveButton().click();
 
-        const isSuccess = await this.waitForNoError(3000);
+      const isSuccess = await this.waitForNoError(3000);
 
-        if (isSuccess) {
-            return true;
-        }
+      if (isSuccess) {
+        return true;
+      }
 
-        console.log(`Save attempt ${attempt} failed, retrying...`);
+      console.log(`Save attempt ${attempt} failed, retrying...`);
     }
 
     throw new Error('Save failed after 3 attempts due to validation errors');
-}
+  }
   async evaluateCurrentStockBalance(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
     console.log(productTypeArrivalData, 'product arrival data ');
 
@@ -100,7 +115,7 @@ async clickSaveWithRetry() {
 
 
   async validateZeroStockBalance(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
-     await this.page.waitForTimeout(6000);
+    await this.page.waitForTimeout(6000);
     let existingStock = await this.fetchValueFromTable(value);
 
     if (existingStock && existingStock.numericValue > 0) {
@@ -179,13 +194,13 @@ async clickSaveWithRetry() {
     await this.arrivalPage.openArrivalForm();
     await this.page.waitForTimeout(3000);
     await this.arrivalPage.fillArrivalFormCRROnly(addLineToArrivalData);
-      const dialog = new ArrivalProductDialogPage(this.page);
+    const dialog = new ArrivalProductDialogPage(this.page);
     await dialog.addProductToArrival(productTypeArrivalData, language, productType, newArrivalQuantity);
     await this.arrivalPage.waitForLoadingToFinish();
-     await this.arrivalPage.clickFinalizeVerifyPopup();
+    await this.arrivalPage.clickFinalizeVerifyPopup();
     await this.arrivalPage.confirmationDialog.clickConfirm();
     await this.arrivalPage.verifyFinalizeSuccessMessage();
- await this.navigateTostockOverviewpage()
+    await this.navigateTostockOverviewpage()
   }
 
 
@@ -256,7 +271,7 @@ async clickSaveWithRetry() {
 
     console.log(` Tooltip for "${value}":`, tooltipText);
 
-   await this.page.waitForTimeout(15000);
+    await this.page.waitForTimeout(15000);
 
     return tooltipText;
   }
@@ -318,7 +333,7 @@ async clickSaveWithRetry() {
 
 
   }
- async addEquipmentForStoreOperator() {
+  async addEquipmentForStoreOperator() {
     console.log("=== addEquipmentForStoreOperator STARTED ===");
 
     await this.equipmentTAb().click();
@@ -339,7 +354,7 @@ async clickSaveWithRetry() {
     const equipmentName = productData?.[0]?.equipmentname?.[language];
 
     if (!equipmentName) {
-        throw new Error(`Equipment name not found for language: ${language}`);
+      throw new Error(`Equipment name not found for language: ${language}`);
     }
 
     console.log(`Filling equipment name: "${equipmentName}"`);
@@ -352,28 +367,195 @@ async clickSaveWithRetry() {
     await this.page.waitForLoadState('networkidle');
 
     // Check if "already exists" message appears
-  const alreadyExists = await this.page
-  .locator('.check-error .msg')
-  .filter({
-    hasText: /exists|existe|existe|موجود|existe/i
-  })
-  .first()
-  .isVisible()
-  .catch(() => false);
+    const alreadyExists = await this.page
+      .locator('.check-error .msg')
+      .filter({
+        hasText: /exists|existe|existe|موجود|existe/i
+      })
+      .first()
+      .isVisible()
+      .catch(() => false);
 
     if (alreadyExists) {
-        console.log(`✅ Equipment "${equipmentName}" already exists. Skipping.`);
-        await this.closeButton().click();
+      console.log(`✅ Equipment "${equipmentName}" already exists. Skipping.`);
+      await this.closeButton().click();
     } else {
-        console.log(`✅ Equipment "${equipmentName}" created successfully.`);
+      console.log(`✅ Equipment "${equipmentName}" created successfully.`);
     }
 
     console.log("=== addEquipmentForStoreOperator COMPLETED ===");
-    
 
+
+  }
+  async verifyTheColorOfDraftAndCompletedFilters(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity, dropdownvalue) {
+    await this.page.waitForTimeout(12000);
+    const existingStock = await this.fetchValueFromTable(value);
+    let issueDate;
+    if (existingStock && existingStock.numericValue > 0) {
+      console.log(`"${value}" -> Stock available → issuing`);
+      issueDate = await this.confirmDraftAndCompleteColorScheme(
+        addLineToIssueData,
+        productTypeIssueData,
+        productType,
+        language,
+        dropdownvalue
+      );
+
+    } else {
+      await this.performArrival(addLineToArrivalData, productTypeArrivalData, productType, language, newArrivalQuantity);
+      await this.navigateTostockOverviewpage();
+      await this.fetchValueFromTable(value);
+      issueDate = await this.confirmDraftAndCompleteColorScheme(
+        addLineToIssueData,
+        productTypeIssueData,
+        productType,
+        language,
+        dropdownvalue
+      );
+    }
+    return issueDate;
+  }
+  async confirmDraftAndCompleteColorScheme(
+  addLineToIssueData,
+  productTypeIssueData,
+  productType,
+  language,
+  dropdownKey
+) {
+
+  await this.issuingPage.openIssuingForm();
+
+  const issueDate =
+    await this.issuingPage.fillIssuingFormCRROnly(addLineToIssueData);
+
+  await this.addAllProductsFromJson(
+    productTypeIssueData,
+    productType,
+    language
+  );
+
+  console.log('dropdownKey:', dropdownKey);
+  console.log('type:', typeof dropdownKey);
+
+  if (dropdownKey === 'Draft') {
+    await this.navigateTostockOverviewpage();
+    await this.issuingTab().click();
+  } else {
+    await this.issuingPage.clickFinalizeVerifyPopupinIssuingTab();
+  }
+
+  return issueDate;
 }
 
-  
+ async applyFilter(filterName, issueDate) {
+
+  const dateFilter = this.page.locator('input[type="search"]').first();
+
+  const formattedDate = this.formatIssueDate(issueDate);
+
+  console.log('Formatted Date:', formattedDate);
+
+  await dateFilter.click();
+  await dateFilter.fill('');
+  await dateFilter.type(formattedDate, { delay: 50 });
+  await this.page.keyboard.press('Enter');
+
+  await this.page.waitForTimeout(1000);
+
+  await this.filterDropdown.click();
+
+  await this.filterOptions
+    .filter({ hasText: filterName })
+    .click();
+
+  await this.page.keyboard.press('Escape');
+}
+ formatIssueDate(dateStr) {
+  const [day] = dateStr.split('-');
+  return day;
+}
+
+  async getStatusDataByFilter(expectedStatus) {
+
+    const badge = this.page.locator(
+      `tbody tr td[value="${expectedStatus}"] span`
+    ).first();
+
+    await badge.waitFor({ state: 'visible', timeout: 10000 });
+
+    const text = (await badge.innerText()).trim();
+
+    const color = await badge.evaluate(el =>
+      getComputedStyle(el).backgroundColor
+    );
+
+    console.log(`Status: ${text}, Color: ${color}`);
+
+    if (color === "rgb(76, 175, 80)") {
+      console.log("color is green");
+    } else if (color === "rgb(255, 193, 7)") {
+      console.log("color is yellow");
+    } else {
+      console.log("unknown color:", color);
+    }
+
+    return { text, color };
+  }
+  async verifyTheColorBeforeAndAfterFinalize() {
+
+    // 🔹 FIRST ROW
+    const row = this.page
+      .locator('tbody tr.MuiTableRow-root[index]')
+      .first();
+
+    const statusBadge = row.locator('td:nth-of-type(5) span');
+
+    await statusBadge.waitFor({ state: 'visible', timeout: 10000 });
+
+    // 🔹 BEFORE FINALIZE (DRAFT)
+    const draftText = (await statusBadge.innerText()).trim();
+
+    const draftColor = await statusBadge.evaluate(el =>
+      getComputedStyle(el).backgroundColor
+    );
+
+    console.log(`Before Finalize → Status: ${draftText}, Color: ${draftColor}`);
+
+    // 🔹 OPEN EDIT
+   await row
+  .locator('button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])')
+  .first()
+  .click();
+
+    await this.page.waitForTimeout(10000);
+    await this.finalizeButton.waitFor({ state: 'visible' });
+    await expect(this.finalizeButton).toBeEnabled();
+    await this.finalizeButton.click();
+
+    // 🔹 WAIT FOR UI UPDATE
+    await this.page.waitForTimeout(10000);
+
+    // 🔹 RE-CAPTURE SAME ROW AFTER FINALIZE
+    const updatedStatusBadge = row.locator('td:nth-of-type(5) span');
+
+    await updatedStatusBadge.waitFor({ state: 'visible', timeout: 10000 });
+
+    const completeText = (await updatedStatusBadge.innerText()).trim();
+
+    const completeColor = await updatedStatusBadge.evaluate(el =>
+      getComputedStyle(el).backgroundColor
+    );
+
+    console.log(`After Finalize → Status: ${completeText}, Color: ${completeColor}`);
+
+    // 🔹 RETURN BOTH VALUES
+    return {
+      draftText,
+      draftColor,
+      completeText,
+      completeColor
+    };
+  }
 }
 
 module.exports = StockOverviewPage;

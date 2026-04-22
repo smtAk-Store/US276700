@@ -1,0 +1,14 @@
+ {
+  "Draft": {
+    "en": "Draft",
+    "fr": "Brouillon",
+    "pt": "Versão preliminar",
+    "es": "مسودة"
+  },
+  "Complete": {
+    "en": "Complete",
+    "fr": "terminée",
+    "pt": "Concluído",
+    "es": "مكتمل"
+  }
+}

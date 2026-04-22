@@ -169,54 +169,60 @@ class TableComponent extends BaseComponent {
 
     await this.page.screenshot({ path: `success-row-verified-${Date.now()}.png` });
   }
-  async deleteAllRecords() {
-    await this.page.waitForTimeout(8000);
+async deleteAllRecords() {
+    await this.page.waitForTimeout(6000);
 
     console.log('🟢 deleteAllRecords ENTERED');
 
-    let i = 0;
+    const deleteBtn = this.page.locator('button:has(svg path[d*="M6 19"])');
+    const nextBtn = this.page.locator('span[title="Next Page"] button');
 
-    while (i++ < 50) {
+    let iteration = 0;
 
-        const deleteBtn = this.page.locator('button:has(svg path[d*="M6 19"])');
+    while (iteration++ < 50) {
+
+        // 🔄 ALWAYS re-evaluate DOM fresh each loop
         const deleteCount = await deleteBtn.count();
-
-        const nextBtn = this.page.locator('span[title="Next Page"] button');
         const nextCount = await nextBtn.count();
 
-        console.log(`Loop ${i} - delete: ${deleteCount}, next: ${nextCount}`);
+        console.log(`Loop ${iteration} - delete: ${deleteCount}, next: ${nextCount}`);
 
-        // ✅ CASE 1: DELETE EXISTS
+        // ✅ CASE 1: NOTHING EXISTS → EXIT IMMEDIATELY
+        if (deleteCount === 0 && nextCount === 0) {
+            console.log('✅ No delete & no next — exiting immediately');
+            return;
+        }
+
+        // ✅ CASE 2: DELETE EXISTS → DO DELETE
         if (deleteCount > 0) {
 
             await deleteBtn.first().click();
-            await this.page.waitForTimeout(2000);
-
             await this.page.locator('button:has-text("Yes")').click();
-            await this.page.waitForTimeout(4000);
 
+            // 🔄 after action → immediately recheck loop
             continue;
         }
 
-        // ✅ CASE 2: NO DELETE + NO NEXT → EMPTY TABLE
-        if (deleteCount === 0 && nextCount === 0) {
-            console.log('✅ No items found to delete (table already empty)');
-            return;
+        // ✅ CASE 3: ONLY NEXT EXISTS → PAGINATE
+        if (nextCount > 0) {
+
+            const isDisabled = await nextBtn.isDisabled().catch(() => true);
+
+            if (isDisabled) {
+                console.log('✅ Next disabled — done');
+                return;
+            }
+
+            await nextBtn.first().click();
+            continue;
         }
 
-        // ✅ CASE 3: NO DELETE BUT NEXT EXISTS → PAGINATE
-        const isDisabled = await nextBtn.isDisabled().catch(() => true);
-
-        if (isDisabled) {
-            console.log('✅ No more pages - deletion complete');
-            return;
-        }
-
-        await nextBtn.click();
-        await this.page.waitForTimeout(2000);
+        // 🛑 fallback safety (should rarely hit)
+        console.log('⚠️ No actionable elements found — breaking');
+        return;
     }
 
-    throw new Error('Loop safety exit triggered (too many iterations)');
+    throw new Error('Loop safety exit triggered');
 }
 }
 

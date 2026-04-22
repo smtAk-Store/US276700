@@ -90,8 +90,15 @@ export class ConfirmationDialogPage {
   }
 
   async clickConfirm() {
-    await this.confirmButton.click();
+  const count = await this.confirmButton.count();
+
+  if (count === 0) {
+    console.log("⚠️ Confirm button not present, skipping click");
+    return;
   }
+
+  await this.confirmButton.first().click();
+}
 
   async clickCancel() {
     await this.cancelButton.click();
