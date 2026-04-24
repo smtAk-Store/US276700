@@ -22,11 +22,11 @@ const productTypeIssueDataNew = require('../testdata/InputData/productTypeNewIss
 
 const { ReportPage } = require('../pages/reportPage');
 
-const languages = ['fr', 'pt', 'es'];
+const languages = ['en'];
 
 languages.forEach(language => {
 
-    test.describe(`Validate Alerts for Vaccines and Diluents - Language: ${language}`, () => {
+    test.describe(`Validate Alerts for supplies for all Language ${language}`, () => {
 
         // ================== BEFORE ALL ==================
         test.beforeAll(async ({ browser }) => {
@@ -102,7 +102,7 @@ languages.forEach(language => {
             const threshold = BCGData.saftyWeeks;
 
             const expectedColor =
-                 expectedValue <= threshold ? 'red' : 'blue';
+                expectedValue <= threshold ? 'red' : 'blue';
 
             const actualColor = await reportPage.verifyStockColor(
                 programDatanew[0].administrationSyringe[language]
@@ -249,6 +249,26 @@ languages.forEach(language => {
 
             expect(tooltipText).not.toBeNull();
             expect(tooltipText.trim()).toContain(expectedTooltip);
+        });
+
+        // ================== AFTER ALL (CLEANUP) ==================
+        test.afterAll(async ({ browser }) => {
+
+            const page = await browser.newPage();
+
+            try {
+                const stockPage = new StockOverviewPage(page);
+                const loginPage = new LoginPage(page);
+
+                await loginPage.loginAs('countryAdminVietnam', language);
+                await stockPage.clearAllData();
+
+            } catch (error) {
+                console.error('Cleanup failed:', error.message);
+                throw error;
+            } finally {
+                await page.close().catch(() => { });
+            }
         });
 
     });

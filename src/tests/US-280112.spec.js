@@ -99,7 +99,7 @@ languages.forEach(language => {
       const productType = 'Vaccines';
       await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].vaccine[language],
         addLineToIssueData.wastage[language],
-        addLineToArrivalData,
+         addLineToArrivalData.SimpleArrival[language],
         productTypeArrivalData,
         productTypeIssueData,
         productType,
@@ -146,7 +146,7 @@ languages.forEach(language => {
       const productType = 'Vaccines';
       await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].vaccine[language],
         addLineToIssueData.wastage[language],
-        addLineToArrivalData,
+         addLineToArrivalData.SimpleArrival[language],
         productTypeArrivalData,
         productTypeIssueData,
         productType,
@@ -170,7 +170,7 @@ languages.forEach(language => {
       await stockOverviewPage.validateZeroStockBalance(
         programmeData[0].vaccine[language],
         addLineToIssueData.wastage[language],
-        addLineToArrivalData,
+         addLineToArrivalData.SimpleArrival[language],
         productTypeArrivalData,
         productTypeIssueData,
         productType,
@@ -214,7 +214,7 @@ languages.forEach(language => {
       const productType = 'Diluents';
       await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].dilution[language],
         addLineToIssueData.wastage[language],
-        addLineToArrivalData,
+         addLineToArrivalData.SimpleArrival[language],
         productTypeArrivalData,
         productTypeIssueData,
         productType,
@@ -261,7 +261,7 @@ languages.forEach(language => {
       const productType = 'Diluents';
       await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].dilution[language],
         addLineToIssueData.wastage[language],
-        addLineToArrivalData,
+         addLineToArrivalData.SimpleArrival[language],
         productTypeArrivalData,
         productTypeIssueData,
         productType,
@@ -286,7 +286,7 @@ languages.forEach(language => {
       await stockOverviewPage.validateZeroStockBalance(
         programmeData[0].dilution[language],
         addLineToIssueData.wastage[language],
-        addLineToArrivalData,
+         addLineToArrivalData.SimpleArrival[language],
         productTypeArrivalData,
         productTypeIssueData,
         productType,

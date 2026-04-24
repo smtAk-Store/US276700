@@ -57,8 +57,8 @@ class StockOverviewPage {
     await this.menuItem().nth(0).click();
   }
   async clearAllData() {
-    console.log('🔥 clearAllData ENTERED');
-    await this.table.deleteAllRecords(); // 👈 call here
+    
+    await this.table.deleteAllRecords();
   }
 
   async waitForNoError(timeout = 3000) {
@@ -72,7 +72,7 @@ class StockOverviewPage {
         .count();
 
       if (errorCount === 0) {
-        return true; // no error → success
+        return true;
       }
 
       await new Promise(resolve => setTimeout(resolve, interval));
@@ -324,12 +324,6 @@ class StockOverviewPage {
     await this.navigateTostockOverviewpage();
     await this.highlightTdAndVerifyTooltip(value);
 
-    //      await reportPage.highlightTdAndVerifyTooltipForGenerateReportTable(value);
-    //     await reportPage.verifyStockColor(
-    //   value,
-    //   BCGData,
-    //   BCGData.CurrentStockBelowMinimumLevel
-    // );
 
 
   }
@@ -346,7 +340,7 @@ class StockOverviewPage {
     await this.form.selectOptionByIndex('equipmentTypeId', 1);
     await this.form.selectOptionByIndex('statusId', 1);
 
-    // Simple language handling - using fallback only for now
+
     const language = this.language || 'en';
 
     console.log('Using language:', language);
@@ -366,7 +360,7 @@ class StockOverviewPage {
 
     await this.page.waitForLoadState('networkidle');
 
-    // Check if "already exists" message appears
+
     const alreadyExists = await this.page
       .locator('.check-error .msg')
       .filter({
@@ -377,10 +371,10 @@ class StockOverviewPage {
       .catch(() => false);
 
     if (alreadyExists) {
-      console.log(`✅ Equipment "${equipmentName}" already exists. Skipping.`);
+      console.log(` Equipment "${equipmentName}" already exists. Skipping.`);
       await this.closeButton().click();
     } else {
-      console.log(`✅ Equipment "${equipmentName}" created successfully.`);
+      console.log(` Equipment "${equipmentName}" created successfully.`);
     }
 
     console.log("=== addEquipmentForStoreOperator COMPLETED ===");
@@ -416,64 +410,64 @@ class StockOverviewPage {
     return issueDate;
   }
   async confirmDraftAndCompleteColorScheme(
-  addLineToIssueData,
-  productTypeIssueData,
-  productType,
-  language,
-  dropdownKey
-) {
-
-  await this.issuingPage.openIssuingForm();
-
-  const issueDate =
-    await this.issuingPage.fillIssuingFormCRROnly(addLineToIssueData);
-
-  await this.addAllProductsFromJson(
+    addLineToIssueData,
     productTypeIssueData,
     productType,
-    language
-  );
+    language,
+    dropdownKey
+  ) {
 
-  console.log('dropdownKey:', dropdownKey);
-  console.log('type:', typeof dropdownKey);
+    await this.issuingPage.openIssuingForm();
 
-  if (dropdownKey === 'Draft') {
-    await this.navigateTostockOverviewpage();
-    await this.issuingTab().click();
-  } else {
-    await this.issuingPage.clickFinalizeVerifyPopupinIssuingTab();
+    const issueDate =
+      await this.issuingPage.fillIssuingFormCRROnly(addLineToIssueData);
+
+    await this.addAllProductsFromJson(
+      productTypeIssueData,
+      productType,
+      language
+    );
+
+    console.log('dropdownKey:', dropdownKey);
+    console.log('type:', typeof dropdownKey);
+
+    if (dropdownKey === 'Draft') {
+      await this.navigateTostockOverviewpage();
+      await this.issuingTab().click();
+    } else {
+      await this.issuingPage.clickFinalizeVerifyPopupinIssuingTab();
+    }
+
+    return issueDate;
   }
 
-  return issueDate;
-}
+  async applyFilter(filterName, issueDate) {
 
- async applyFilter(filterName, issueDate) {
+    const dateFilter = this.page.locator('input[type="search"]').first();
 
-  const dateFilter = this.page.locator('input[type="search"]').first();
+    const formattedDate = this.formatIssueDate(issueDate);
 
-  const formattedDate = this.formatIssueDate(issueDate);
+    console.log('Formatted Date:', formattedDate);
 
-  console.log('Formatted Date:', formattedDate);
+    await dateFilter.click();
+    await dateFilter.fill('');
+    await dateFilter.type(formattedDate, { delay: 50 });
+    await this.page.keyboard.press('Enter');
 
-  await dateFilter.click();
-  await dateFilter.fill('');
-  await dateFilter.type(formattedDate, { delay: 50 });
-  await this.page.keyboard.press('Enter');
+    await this.page.waitForTimeout(1000);
 
-  await this.page.waitForTimeout(1000);
+    await this.filterDropdown.click();
 
-  await this.filterDropdown.click();
+    await this.filterOptions
+      .filter({ hasText: filterName })
+      .click();
 
-  await this.filterOptions
-    .filter({ hasText: filterName })
-    .click();
-
-  await this.page.keyboard.press('Escape');
-}
- formatIssueDate(dateStr) {
-  const [day] = dateStr.split('-');
-  return day;
-}
+    await this.page.keyboard.press('Escape');
+  }
+  formatIssueDate(dateStr) {
+    const [day] = dateStr.split('-');
+    return day;
+  }
 
   async getStatusDataByFilter(expectedStatus) {
 
@@ -503,7 +497,6 @@ class StockOverviewPage {
   }
   async verifyTheColorBeforeAndAfterFinalize() {
 
-    // 🔹 FIRST ROW
     const row = this.page
       .locator('tbody tr.MuiTableRow-root[index]')
       .first();
@@ -512,7 +505,7 @@ class StockOverviewPage {
 
     await statusBadge.waitFor({ state: 'visible', timeout: 10000 });
 
-    // 🔹 BEFORE FINALIZE (DRAFT)
+
     const draftText = (await statusBadge.innerText()).trim();
 
     const draftColor = await statusBadge.evaluate(el =>
@@ -521,21 +514,20 @@ class StockOverviewPage {
 
     console.log(`Before Finalize → Status: ${draftText}, Color: ${draftColor}`);
 
-    // 🔹 OPEN EDIT
-   await row
-  .locator('button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])')
-  .first()
-  .click();
+
+    await row
+      .locator('button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])')
+      .first()
+      .click();
 
     await this.page.waitForTimeout(10000);
     await this.finalizeButton.waitFor({ state: 'visible' });
     await expect(this.finalizeButton).toBeEnabled();
     await this.finalizeButton.click();
 
-    // 🔹 WAIT FOR UI UPDATE
+
     await this.page.waitForTimeout(10000);
 
-    // 🔹 RE-CAPTURE SAME ROW AFTER FINALIZE
     const updatedStatusBadge = row.locator('td:nth-of-type(5) span');
 
     await updatedStatusBadge.waitFor({ state: 'visible', timeout: 10000 });
@@ -548,7 +540,6 @@ class StockOverviewPage {
 
     console.log(`After Finalize → Status: ${completeText}, Color: ${completeColor}`);
 
-    // 🔹 RETURN BOTH VALUES
     return {
       draftText,
       draftColor,

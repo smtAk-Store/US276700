@@ -23,6 +23,11 @@
      "storeOperatorvietnam": {
       "email": "vietnamstoreoperator@yopmail.com",
       "password": "Azhar#123"
+    },
+     "sdAdmin": {
+      "email": "storeoperator03@gmail.com",
+      "password": "Azhar#123"
     }
+
   }
 }

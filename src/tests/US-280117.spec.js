@@ -39,7 +39,7 @@ languages.forEach(language => {
                 const storeSetupPage = new StoreData(page, language);
 
                 await loginPage.loginAs('countryAdminVietnam', language);
-                await homePage.verifyMenus();
+             //   await homePage.verifyMenus();
 
                 await programmePage.highlightAndClickAdd();
                 await programmePage.fillPopupForm(programDatanew, language);

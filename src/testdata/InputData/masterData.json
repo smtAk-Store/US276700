@@ -1,0 +1,14 @@
+{
+  "productNameAdministrator": "Test Product supply administrator",
+   "productNameDilution": "Test Product supply Dilution",
+   "productNameothers": " others",
+  "designationEn": "Test Product",
+  "presentation": 10,
+  "packedVol": 10,
+  "packedWeight": 10,
+  "pricePerUnit": 10,
+  "freightPercentage": 10,
+   "productTypeAdministration": "Safe Injection Equipment (Administration)",
+    "productTypeDilution": "Safe Injection Equipment (Dilution)",
+     "productTypeOthers": "Safe Injection Equipment (Others)"
+}

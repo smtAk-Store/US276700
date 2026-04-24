@@ -9,7 +9,28 @@ class ProgrammeData {
     this.page = page;
     this.form = new FormComponent(page);
     this.language = language;
+     this.addButtonroutineVaccinations = this.page
+
+  .locator("//button[contains(@class,'MuiButton-containedPrimary')]")
+  .nth(0);
+  this.closeButton = this.page.locator('button[aria-label="close"]');
+   this.addButtonsupplementaryVaccinations = this.page
+  .locator("//button[contains(@class,'MuiButton-containedPrimary')]")
+  .nth(1);
+   this.addButtonotherVaccinations = this.page
+  .locator("//button[contains(@class,'MuiButton-containedPrimary')]")
+  .nth(2);
+  this.routineVaccinations = page
+  .locator("div.MuiGrid-root span.sc-fbkhIv")
+  .nth(0);
+  this.supplyVaccinations = page
+  .locator("div.MuiGrid-root span.sc-fbkhIv")
+  .nth(1);
+  this.otherVaccinations = page
+  .locator("div.MuiGrid-root span.sc-fbkhIv")
+  .nth(2);
   }
+  
   programmeDataMenu = () =>
     this.page.locator("//span[contains(@class,'MuiMenuItem-root') and contains(@class,'active-menu-item')]");
   addButton = () =>
@@ -32,6 +53,7 @@ class ProgrammeData {
   safetyStockInput = () => this.page.locator('input[name="safetyStock"]');
   leadTimeInput = () => this.page.locator('input[name="leadTime"]');
   saveButton = () => this.page.locator('button.MuiButton-containedPrimary[type="submit"]');
+  //button[contains(@class,'MuiButton-containedPrimary')]
 
 
   async highlightAndClickAdd() {
@@ -80,6 +102,72 @@ class ProgrammeData {
         if (data.leadTime) await this.form.fillInput(this.leadTimeInput(), data.leadTime[language]);
     }
      await this.saveButton().click();
+}
+async createRoutineVaccination(productName, dropdownLocator) {
+
+  await this.routineVaccinations.scrollIntoViewIfNeeded();
+
+  await this.routineVaccinations.evaluate(el => {
+    el.style.border = "3px solid red";
+    el.style.background = "yellow";
+  });
+
+  await this.addButtonroutineVaccinations.click();
+
+  const selectedValue = await this.form.selectDropdown(
+    dropdownLocator(),
+    productName
+  );
+
+  console.log(" The created  supply appearead in Routine Vaccinations :", selectedValue);
+
+  return selectedValue;
+}
+async createSupplyVaccination(productName, dropdownLocator) {
+
+if (await this.closeButton.count() > 0) {
+  await this.closeButton.first().click();
+}
+  await this.supplyVaccinations.scrollIntoViewIfNeeded();
+
+  await this.supplyVaccinations.evaluate(el => {
+    el.style.border = "3px solid red";
+    el.style.background = "yellow";
+  });
+
+  await this.addButtonsupplementaryVaccinations.click();
+
+  const selectedValue = await this.form.selectDropdown(
+    dropdownLocator(),
+    productName
+  );
+
+  console.log(" The created  supply appearead in Supplymentary Vaccinations :", selectedValue);
+
+  return selectedValue;
+}
+async createOtherVaccination(productName, dropdownLocator) {
+
+if (await this.closeButton.count() > 0) {
+  await this.closeButton.first().click();
+}
+  await this.otherVaccinations.scrollIntoViewIfNeeded();
+
+  await this.otherVaccinations.evaluate(el => {
+    el.style.border = "3px solid red";
+    el.style.background = "yellow";
+  });
+
+  await this.addButtonotherVaccinations.click();
+
+  const selectedValue = await this.form.selectDropdown(
+    dropdownLocator(),
+    productName
+  );
+
+  console.log(" The created  supply appearead in other Vaccinations :", selectedValue);
+
+  return selectedValue;
 }
 }
 

@@ -242,15 +242,30 @@ async fillInputs(data, by = 'name') {
 
   // Material UI dropdown
 async selectDropdown(locator, value) {
+
   await locator.click();
-    await this.page.waitForTimeout(300);
+  await this.page.waitForTimeout(300);
 
   const option = this.page
     .locator('li[role="option"]')
     .filter({ hasText: value })
     .first();
 
+  await option.evaluate(el => {
+    el.style.border = "3px solid red";
+    el.style.background = "yellow";
+  });
+  const text = await option.textContent();
+
+  console.log("New Supply Added:", text?.trim());
+
   await option.click();
+
+  // get actual selected text
+  
+
+  // return text instead of locator
+  return text?.trim();
 }
 
   // React Select dropdown

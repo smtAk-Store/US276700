@@ -107,7 +107,7 @@ languages.forEach(language => {
       
       await stockOverviewPage.evaluateCurrentStockBalance(programmeData[0].administrationSyringe[language],
          addLineToIssueData.wastage[language],
-        addLineToArrivalData,
+       addLineToArrivalData.SimpleArrival[language],
         productTypeArrivalData,
         productTypeIssueData,
         productType,
@@ -156,7 +156,7 @@ languages.forEach(language => {
 
     await stockOverviewPage.evaluateCurrentStockBalance( programmeData[0].administrationSyringe[language],
           addLineToIssueData.wastage[language],
-        addLineToArrivalData,
+         addLineToArrivalData.SimpleArrival[language],
         productTypeArrivalData,
         productTypeIssueData,
         productType,
