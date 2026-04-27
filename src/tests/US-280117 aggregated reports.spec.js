@@ -23,8 +23,8 @@ const productTypeArrivalDataNew = require('../testdata/InputData/productTypeArri
 const productTypeIssueDataNew = require('../testdata/InputData/productTypeNewIssue.json');
 const { ReportPage } = require('../pages/reportPage');
 
-const languages = ['fr'];
-// const languages = ['en'];
+// const languages = ['fr'];
+ const languages = ['en'];
 
 languages.forEach(language => {
 
@@ -45,12 +45,12 @@ languages.forEach(language => {
                 const arrivalPage = new ArrivalPage(page, language);
                 const storeSetupPage = new StoreData(page, language);
 
-                await loginPage.loginAs('countryAdminVietnam', language);
+                await loginPage.loginAs('syriaCountryAdmin', language);
                 await homePage.verifyMenus();
 
              
-                await programmePage.highlightAndClickAdd();
-                await programmePage.fillPopupForm(programDatanew, language);
+                // await programmePage.highlightAndClickAdd();
+                // await programmePage.fillPopupForm(programDatanew, language);
 
                 await arrivalPage.waitForLoadingToFinish();
 
@@ -93,8 +93,8 @@ languages.forEach(language => {
             const homePage = new HomePage(page);
 
             // ----------- Substore 1 -----------
-            await loginPage.loginAs('storeOperatorvietnam', language);
-            await storeSetupPage.selectStore(programmeData[0].subStore1[language]);
+            // await loginPage.loginAs('syriaStoreOperator', language);
+            // await storeSetupPage.selectStore(programmeData[0].subStore1[language]);
 
             let stockOverviewPage = new StockOverviewPage(page, language);
 
@@ -117,7 +117,7 @@ languages.forEach(language => {
             await homePage.logout();
 
             // ----------- Substore 2 -----------
-            await loginPage.loginAs('storeOperatorvietnam', language);
+            await loginPage.loginAs('syriaStoreOperator', language);
             await storeSetupPage.selectStore(programmeData[0].subStore2[language]);
 
             stockOverviewPage = new StockOverviewPage(page, language);
@@ -139,7 +139,7 @@ languages.forEach(language => {
             await homePage.logout();
 
             // ----------- Main Store -----------
-            await loginPage.loginAs('storeOperatorvietnam', language);
+            await loginPage.loginAs('syriaStoreOperator', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
 
             stockOverviewPage = new StockOverviewPage(page, language);

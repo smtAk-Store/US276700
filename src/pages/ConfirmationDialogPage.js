@@ -73,7 +73,7 @@ export class ConfirmationDialogPage {
     el.style.backgroundColor = 'yellow';
   });
 
-  await this.page.waitForTimeout(1000);
+ // await this.page.waitForTimeout(1000);
 }
 
   async verifyDeleteConfirmationPopup() {

@@ -115,7 +115,7 @@ class StockOverviewPage {
 
 
   async validateZeroStockBalance(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
-    await this.page.waitForTimeout(6000);
+   // await this.page.waitForTimeout(6000);
     let existingStock = await this.fetchValueFromTable(value);
 
     if (existingStock && existingStock.numericValue > 0) {
@@ -126,9 +126,9 @@ class StockOverviewPage {
       await this.fetchValueFromTable(value);
       await this.issueExistingStock(addLineToIssueData, productTypeIssueData, productType, language);
     }
-    await this.page.waitForTimeout(800);
+  //  await this.page.waitForTimeout(800);
     await this.navigateTostockOverviewpage();
-    await this.page.waitForTimeout(800);
+   // await this.page.waitForTimeout(800);
     await this.highlightTdAndVerifyTooltip(value);
   }
 
@@ -192,7 +192,7 @@ class StockOverviewPage {
     console.log(' arrival ProductType data in performArrival', productTypeArrivalData);
     console.log('  ProductType data in performArrival', productType);
     await this.arrivalPage.openArrivalForm();
-    await this.page.waitForTimeout(3000);
+    //await this.page.waitForTimeout(3000);
     await this.arrivalPage.fillArrivalFormCRROnly(addLineToArrivalData);
     const dialog = new ArrivalProductDialogPage(this.page);
     await dialog.addProductToArrival(productTypeArrivalData, language, productType, newArrivalQuantity);
@@ -228,7 +228,7 @@ class StockOverviewPage {
       await this.form.selectDropdown(this.productType, productTypeValue);
 
     }
-    await this.page.waitForTimeout(2000);
+    //await this.page.waitForTimeout(2000);
     if (this.lastFoundValue) {
       await this.form.selectDropdown(this.product, this.lastFoundValue);
     }
@@ -271,7 +271,7 @@ class StockOverviewPage {
 
     console.log(` Tooltip for "${value}":`, tooltipText);
 
-    await this.page.waitForTimeout(15000);
+    //await this.page.waitForTimeout(15000);
 
     return tooltipText;
   }
@@ -300,7 +300,7 @@ class StockOverviewPage {
 
     const tooltipIcon = targetTd.locator('[data-tooltip]').first();
     const tooltipCount = await tooltipIcon.count();
-    await this.page.waitForTimeout(15000);
+    //await this.page.waitForTimeout(15000);
 
     if (tooltipCount > 0) {
       console.error(`FAIL: Tooltip icon found for "${value}" but expected none`);
@@ -312,8 +312,11 @@ class StockOverviewPage {
   }
 
   async evaluateCurrentStockBalanceForReportPage(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
-
-    await this.page.waitForTimeout(12000);
+    const row = this.page.locator('tbody tr')
+  .filter({ hasText: value })
+  .first();
+   await expect(row).toBeVisible();
+    //await this.page.waitForTimeout(12000);
     const existingStock = await this.fetchValueFromTable(value);
     console.log(value, 'product arrival data ');
     console.log(existingStock, 'product arrival data ');
@@ -382,7 +385,7 @@ class StockOverviewPage {
 
   }
   async verifyTheColorOfDraftAndCompletedFilters(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity, dropdownvalue) {
-    await this.page.waitForTimeout(12000);
+    //await this.page.waitForTimeout(12000);
     const existingStock = await this.fetchValueFromTable(value);
     let issueDate;
     if (existingStock && existingStock.numericValue > 0) {
@@ -454,7 +457,7 @@ class StockOverviewPage {
     await dateFilter.type(formattedDate, { delay: 50 });
     await this.page.keyboard.press('Enter');
 
-    await this.page.waitForTimeout(1000);
+   // await this.page.waitForTimeout(1000);
 
     await this.filterDropdown.click();
 
@@ -520,13 +523,13 @@ class StockOverviewPage {
       .first()
       .click();
 
-    await this.page.waitForTimeout(10000);
+    //await this.page.waitForTimeout(10000);
     await this.finalizeButton.waitFor({ state: 'visible' });
     await expect(this.finalizeButton).toBeEnabled();
     await this.finalizeButton.click();
 
 
-    await this.page.waitForTimeout(10000);
+    //await this.page.waitForTimeout(10000);
 
     const updatedStatusBadge = row.locator('td:nth-of-type(5) span');
 

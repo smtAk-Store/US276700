@@ -118,7 +118,7 @@ export class ArrivalProductDialogPage {
     }
 
     try {
-      await dropdownLocator.waitFor({ state: 'visible', timeout: 5000 });
+     // await dropdownLocator.waitFor({ state: 'visible', timeout: 5000 });
       await dropdownLocator.click();
 
       const option = this.page.locator('li[role="option"]')
@@ -130,15 +130,15 @@ export class ArrivalProductDialogPage {
         return;
       }
 
-      await option.waitFor({ state: 'visible', timeout: 5000 });
+      //await option.waitFor({ state: 'visible', timeout: 5000 });
       await option.click();
 
-      console.log(`✅ Selected: "${optionText}"`);
+      console.log(` Selected: "${optionText}"`);
 
-      await this.page.waitForTimeout(300);
+   //   await this.page.waitForTimeout(300);
 
     } catch (err) {
-      console.log(`⏭️ Skipping "${optionText}" due to error: ${err.message}`);
+      console.log(` Skipping "${optionText}" due to error: ${err.message}`);
     }
   };
 

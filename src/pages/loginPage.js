@@ -52,11 +52,11 @@ export class LoginPage {
     'div[role="button"][aria-haspopup="listbox"]'
   ).first();
 
-  await languageDropdown.waitFor({ state: 'visible', timeout: 15000 });
+ // await languageDropdown.waitFor({ state: 'visible', timeout: 15000 });
   await languageDropdown.click();
 
   // small wait
-  await this.page.waitForTimeout(500);
+  //await this.page.waitForTimeout(500);
 
   // ✅ Map language (es → ar)
   let value;
@@ -81,11 +81,11 @@ export class LoginPage {
     `li[role="option"][data-value="${value}"]`
   );
 
-  await option.waitFor({ state: 'visible', timeout: 10000 });
+ // await option.waitFor({ state: 'visible', timeout: 10000 });
   await option.click();
 
-  await this.page.waitForTimeout(1500);
+  //await this.page.waitForTimeout(1500);
 
-  console.log(`✅ Language set to ${langCode}`);
+  console.log(` Language set to ${langCode}`);
 }
 }

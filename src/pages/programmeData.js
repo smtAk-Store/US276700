@@ -64,7 +64,7 @@ class ProgrammeData {
     }, await this.programmeDataMenu().elementHandle());
 
     // Small pause to see highlight (optional)
-    await this.page.waitForTimeout(500);
+    //await this.page.waitForTimeout(500);
 
     // Click the Add button
     await this.addButton().click();

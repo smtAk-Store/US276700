@@ -85,16 +85,16 @@
       "es": "LEVEL2MAINSTORE"
     },
     "subStore1": {
-      "en": "substore1",
-      "fr": "substore1",
-      "pt": "substore1",
-      "es": "substore1"
+      "en": "level2storenamesyria",
+      "fr": "level2storenamesyria",
+      "pt": "level2storenamesyria",
+      "es": "level2storenamesyria"
     },
     "subStore2": {
-      "en": "substore2",
-      "fr": "substore2",
-      "pt": "substore2",
-      "es": "substore2"
+      "en": "level2storename2syria",
+      "fr": "level2storename2syria",
+      "pt": "level2storename2syria",
+      "es": "level2storename2syria"
     }
   }
 ]

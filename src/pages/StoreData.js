@@ -214,7 +214,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
   async enterTheStockLevelAndLeadTimeInStockParameters(levelKey) {
 
     await this.stockParametersTab().click();
-    await this.page.waitForTimeout(5000);
+    //await this.page.waitForTimeout(5000);
     const Value = StoreHierarchyData.levels[levelKey][this.language];
 
     const row = this.page.locator('tbody tr')
@@ -246,7 +246,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
   async enterTheVaccineCoverageTabFilterByStoreNamesFillAlltheValuesFORAllElements(storeKey) {
 
     await this.vaccineCoverageTab().click();
-    await this.page.waitForTimeout(3000);
+    //await this.page.waitForTimeout(3000);
 
     const Value = StoreHierarchyData.storeNames[storeKey][this.language];
 
@@ -266,7 +266,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
     await row.locator('button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])').click();
     console.log(` Find the Row Filling all vaccineInputs for : ${Value}`);
 
-    await this.page.waitForTimeout(2000);
+    //await this.page.waitForTimeout(2000);
     const allVaccineInputs = this.page.locator('input[name^="vaccine"]');
 
     const count = await allVaccineInputs.count();
@@ -287,7 +287,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
   async enterVaccineCoverageForSubStore(subStoreKey) {
 
     await this.vaccineCoverageTab().click();
-    await this.page.waitForTimeout(3000);
+   // await this.page.waitForTimeout(3000);
 
     const value = StoreHierarchyData.substore[subStoreKey][this.language];
 
@@ -312,7 +312,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
 
     console.log(`Find the Row Filling all vaccineInputs for SUBSTORE: ${value}`);
 
-    await this.page.waitForTimeout(2000);
+   // await this.page.waitForTimeout(2000);
 
     const allVaccineInputs = this.page.locator('input[name^="vaccine"]');
 
@@ -344,7 +344,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
   async enterThePopulationDemographicsTabFilterByStoreNamesFillTotalPopulationAndAdultPopulation(storeKey) {
 
     await this.populationDemographicsTab().click();
-    await this.page.waitForTimeout(3000);
+   // await this.page.waitForTimeout(3000);
 
     const Value = StoreHierarchyData.storeNames[storeKey][this.language];
 
@@ -364,10 +364,10 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
     await row.locator('button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])').click();
     console.log(`Giving the count to : ${Value}`);
 
-    await this.page.waitForTimeout(2000);
+   // await this.page.waitForTimeout(2000);
     await this.form.fillIntegerInput(this.totalPopulation(), BCGData.total_population);
     await this.form.fillIntegerInput(this.adultPopulation(), BCGData.adult_population);
-    await this.page.waitForTimeout(800);
+    //await this.page.waitForTimeout(800);
     await this.saveButton().click();
   }
 
@@ -376,7 +376,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
     await this.stockParametersTab().click();
     console.log(' Clicked on Stock Parameters tab');
 
-    await this.page.waitForTimeout(10000);
+    //await this.page.waitForTimeout(10000);
     await this.page.waitForLoadState('networkidle', { timeout: 40000 }).catch(() => { });
 
 
@@ -398,7 +398,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
     await editBtnInRow.scrollIntoViewIfNeeded();
     await editBtnInRow.click();
 
-    await this.page.waitForTimeout(10000);
+    //await this.page.waitForTimeout(10000);
     await this.page.waitForLoadState('networkidle', { timeout: 40000 }).catch(() => { });
 
 
@@ -440,7 +440,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
  async enterPopulationDemographicsForSubStore(subStoreKey) {
 
     await this.populationDemographicsTab().click();
-    await this.page.waitForTimeout(3000);
+    //await this.page.waitForTimeout(3000);
 
     const value = StoreHierarchyData.substore[subStoreKey][this.language];
 
@@ -465,12 +465,12 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
 
     console.log(`Giving the count to substore: ${value}`);
 
-    await this.page.waitForTimeout(2000);
+   // await this.page.waitForTimeout(2000);
 
     await this.form.fillIntegerInput(this.totalPopulation(), BCGData.total_population);
     await this.form.fillIntegerInput(this.adultPopulation(), BCGData.adult_population);
 
-    await this.page.waitForTimeout(800);
+   // await this.page.waitForTimeout(800);
     await this.saveButton().click();
 }
 }

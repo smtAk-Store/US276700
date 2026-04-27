@@ -18,7 +18,7 @@ class FormComponent extends BaseComponent {
     await trigger.hover({ timeout: 3000 }).catch(() => { });
     await trigger.click({ force: true });
 
-    await this.page.waitForTimeout(600);
+    //await this.page.waitForTimeout(600);
 
     const menu = this.page.locator(
       '[role="listbox"], [role="menu"], .MuiMenu-paper, .MuiPopover-root, .MuiPaper-root, div[style*="position: fixed"][style*="z-index"]'
@@ -27,7 +27,7 @@ class FormComponent extends BaseComponent {
     await menu.waitFor({ state: 'visible', timeout: 15000 }).catch(async () => {
       await trigger.focus();
       await this.page.keyboard.press('ArrowDown');
-      await this.page.waitForTimeout(800);
+     // await this.page.waitForTimeout(800);
     });
 
     let optionLocator = menu.getByText(option.trim());
@@ -73,7 +73,7 @@ class FormComponent extends BaseComponent {
 
   // Click label first
   await labelLocator.click({ force: true }).catch(() => {});
-  await this.page.waitForTimeout(400);
+ // await this.page.waitForTimeout(400);
 
   // Target inner dropdown trigger
   let control = labelLocator
@@ -96,14 +96,14 @@ class FormComponent extends BaseComponent {
   // Open dropdown
   await control.hover({ timeout: 3000 }).catch(() => {});
   await control.click({ force: true });
-  await this.page.waitForTimeout(800);
+  //await this.page.waitForTimeout(800);
 
   // Keyboard fallback
   if (await this.page.locator('[role="listbox"], .MuiPopover-root').count() === 0) {
     console.log('[DEBUG] Click may have failed → keyboard fallback');
     await control.focus();
     await this.page.keyboard.press('ArrowDown');
-    await this.page.waitForTimeout(800);
+   // await this.page.waitForTimeout(800);
   }
 
   await this.page.screenshot({ path: `debug-menu-open-${Date.now()}.png` });
@@ -114,7 +114,7 @@ class FormComponent extends BaseComponent {
   if (await optionLocator.count() === 0) {
     console.log('[DEBUG] Option not visible → typing to filter');
     await control.type(optionText, { delay: 100 });
-    await this.page.waitForTimeout(1200);
+    //await this.page.waitForTimeout(1200);
     optionLocator = this.page.getByText(optionText.trim(), { exact: false });
   }
 
@@ -156,7 +156,7 @@ async selectDropdownByPlaceholder(index, option) {
   await placeholder.hover({ timeout: 5000 }).catch(() => {});
   await placeholder.click({ force: true, timeout: 10000 });
 
-  await this.page.waitForTimeout(1000); // longer wait for portal
+  //await this.page.waitForTimeout(1000); // longer wait for portal
 
   // Screenshot to verify open
   await this.page.screenshot({ path: `debug-dropdown-open-${index}-${Date.now()}.png` });
@@ -169,11 +169,11 @@ async selectDropdownByPlaceholder(index, option) {
   while (attempts < 15 && (await optionLocator.count() === 0 || !(await optionLocator.isVisible()))) {
     attempts++;
     console.log(`[DEBUG] Option "${option}" not visible yet - attempt ${attempts}/15`);
-    await this.page.waitForTimeout(500);
+    //await this.page.waitForTimeout(500);
 
     // Type to force filter/load (very common in these dropdowns)
     await placeholder.type(option.charAt(0), { delay: 100 }); // type first letter
-    await this.page.waitForTimeout(400);
+    //await this.page.waitForTimeout(400);
   }
 
   if (await optionLocator.count() === 0 || !(await optionLocator.isVisible())) {
@@ -244,7 +244,7 @@ async fillInputs(data, by = 'name') {
 async selectDropdown(locator, value) {
 
   await locator.click();
-  await this.page.waitForTimeout(300);
+  //await this.page.waitForTimeout(300);
 
   const option = this.page
     .locator('li[role="option"]')
@@ -287,12 +287,12 @@ async selectDropdown(locator, value) {
     });
 
     // Small buffer for RTL languages like Arabic
-    await this.page.waitForTimeout(300);
+   // await this.page.waitForTimeout(300);
 
     // Select option by index
     await this.page.locator('li[role="option"]').nth(index).click();
 
-    console.log(`✅ Option at index ${index} selected for dropdown: ${dropdownId}`);
+    console.log(` Option at index ${index} selected for dropdown: ${dropdownId}`);
   }
 async selectReactSelectByIndex(inputLocator, indexes = [0]) {
 
@@ -303,7 +303,6 @@ async selectReactSelectByIndex(inputLocator, indexes = [0]) {
 
     const index = indexes[i];
 
-    // 🔥 use inputLocator (fixes "declared but never used")
     if (i === 0) {
       await inputLocator.first().click({ force: true });
     } else {
@@ -315,18 +314,18 @@ async selectReactSelectByIndex(inputLocator, indexes = [0]) {
     const count = await options.count();
 
     if (count === 0) {
-      throw new Error('❌ No dropdown options found');
+      throw new Error(' No dropdown options found');
     }
 
     if (index >= count) {
-      throw new Error(`❌ Index ${index} out of range. Total: ${count}`);
+      throw new Error(` Index ${index} out of range. Total: ${count}`);
     }
 
     await options.nth(index).click();
 
-    console.log(`✅ Selected option index ${index}`);
+    console.log(` Selected option index ${index}`);
 
-    await this.page.waitForTimeout(300);
+    //await this.page.waitForTimeout(300);
   }
 }
 }

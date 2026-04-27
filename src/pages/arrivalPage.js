@@ -255,7 +255,7 @@ async verifyArrivalInTable(expectedData) {
     }, color);
 
     // Wait for duration using the Page object from this class
-    await this.page.waitForTimeout(duration);
+  //  await this.page.waitForTimeout(duration);
 
     // Remove highlight
     await locator.evaluate(el => {
@@ -304,7 +304,7 @@ async verifyFinalizeSuccessMessage() {
     await this.smtFilterInput.press('Enter'); 
 
     // Optionally wait for filtered results to appear
-    await this.page.waitForTimeout(500);
+  //  await this.page.waitForTimeout(500);
 }
 async highlightSecondRowCells() {
     await this.secondTD().evaluate(td => td.style.backgroundColor = 'yellow');

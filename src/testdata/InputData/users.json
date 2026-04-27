@@ -27,6 +27,14 @@
      "sdAdmin": {
       "email": "storeoperator03@gmail.com",
       "password": "Azhar#123"
+    },
+     "syriaCountryAdmin": {
+      "email": "newsyriacountryadmin@yopmail.com",
+      "password": "Azhar#123"
+    },
+     "syriaStoreOperator": {
+      "email": "newsyriastoreoperator@yopmail.com",
+      "password": "Azhar#123"
     }
 
   }

@@ -32,7 +32,7 @@ includeSubstoreCheckbox = () =>
 
   // Click Stock Status tab
   await this.stockStatusTab().click();
-  await this.page.waitForTimeout(8000);
+  //await this.page.waitForTimeout(8000);
 
   await this.form.selectDropdown(
     this.storeLevelDropdown(),
@@ -46,20 +46,20 @@ includeSubstoreCheckbox = () =>
      [0,1
 ] );
 
-  // ✅ OPTIONAL: include substore
+  
   if (includeSubstore) {
-    await this.page.waitForTimeout(500);
+   // await this.page.waitForTimeout(500);
 
-    // 👉 your locator for "Include Substore"
+    
     await this.includeSubstoreCheckbox().click();
 
-    console.log('✅ Include Substore selected');
+    console.log(' Include Substore selected');
   }
 
-  await this.page.waitForTimeout(500);
+  //await this.page.waitForTimeout(500);
   await this.generateReportButton().click();
 
-  await this.page.waitForTimeout(500);
+  //await this.page.waitForTimeout(500);
 
 
 }
@@ -76,20 +76,20 @@ includeSubstoreCheckbox = () =>
 
       if (productValue === vaccineName) {
 
-        // 🟡 highlight full row
+        
         await row.evaluate(el => {
           el.style.background = 'yellow';
         });
 
-      await this.page.waitForTimeout(15000);
-        // 🟢 highlight 5th column
+      //await this.page.waitForTimeout(15000);
+     
         const td5 = row.locator('td:nth-child(5)');
         await td5.evaluate(el => {
           el.style.background = 'green';
           el.style.color = 'white';
           el.style.fontWeight = 'bold';
         });
-       await this.page.waitForTimeout(15000);
+       //await this.page.waitForTimeout(15000);
 
         // 🔍 tooltip check (if exists on td or inner span)
         const tooltipElement = td5.locator('[data-tooltip]').first();
@@ -102,15 +102,21 @@ includeSubstoreCheckbox = () =>
       }
     }
 
-    throw new Error(`❌ Vaccine not found: ${vaccineName}`);
+    throw new Error(` Vaccine not found: ${vaccineName}`);
   }
 
 
 async verifyStockColor(productName) {
+const row = this.page.locator('tbody tr')
+  .filter({ hasText: productName })
+  .first();
+   await expect(row).toBeVisible();
+  // await this.page.locator('tbody tr').first().waitFor();
+   await this.page.waitForLoadState('networkidle');
   const rows = this.page.locator('.bc-row-parent');
   const count = await rows.count();
 
-  console.log(`🔍 Total rows found: ${count}`);
+  console.log(` Total rows found: ${count}`);
 
   for (let i = 0; i < count; i++) {
     const row = rows.nth(i);
@@ -153,7 +159,7 @@ async verifyStockColor(productName) {
 }
 async highlightProductColumn(productName) {
 
-    await this.page.waitForTimeout(1500);
+    //await this.page.waitForTimeout(15000);
 
     if (!productName) {
         console.log("❌ No product name provided");
@@ -189,7 +195,7 @@ async highlightProductColumn(productName) {
         return [];
     }
 
-    console.log(`✅ Product "${productName}" starts at column: ${startCol}`);
+    console.log(` Product "${productName}" starts at column: ${startCol}`);
 
     // =========================
     // 2. ROW LOOP
@@ -249,21 +255,21 @@ async highlightProductColumn(productName) {
                 const tooltipText = await firstTooltip.getAttribute('data-tooltip');
 
                 if (tooltipText && tooltipText.trim() !== '') {
-                    console.log(`✅ Row ${i} Tooltip: "${tooltipText}"`);
+                    console.log(` Row ${i} Tooltip: "${tooltipText}"`);
                     tooltips.push(tooltipText.trim());
                 }
             } else {
-                console.log(`⚠️ Row ${i} tooltip exists but hidden`);
+                console.log(`Row ${i} tooltip exists but hidden`);
             }
 
         } else {
-            console.log(`⚠️ Row ${i} No tooltip element found`);
+            console.log(` Row ${i} No tooltip element found`);
         }
     }
 
-    console.log(`✅ Completed for "${productName}"`);
+    console.log(` Completed for "${productName}"`);
 
-    await this.page.waitForTimeout(1000);
+    //await this.page.waitForTimeout(1000);
 
     return tooltips;
 }

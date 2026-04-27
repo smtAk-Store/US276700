@@ -24,7 +24,7 @@ class TableComponent extends BaseComponent {
     await row.waitFor({ state: 'visible', timeout }).catch(async () => {
       // Try scrolling to bottom if paginated
       await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await this.page.waitForTimeout(1000);
+      //await this.page.waitForTimeout(1000);
     });
 
     // Check if row exists
@@ -80,7 +80,7 @@ class TableComponent extends BaseComponent {
     // Optional: Refresh table if needed
     await this.page.locator('button', { hasText: /refresh/i }).click().catch(() => { });
 
-    await this.page.waitForTimeout(2000); // wait for refresh
+   // await this.page.waitForTimeout(2000); // wait for refresh
 
     await this.verifyUserInTable(email, expected);
   }
@@ -93,7 +93,7 @@ class TableComponent extends BaseComponent {
 
     await searchInput.waitFor({ state: 'visible', timeout: 10000 });
     await searchInput.fill(email);
-    await this.page.waitForTimeout(1500); // wait for table filter
+    //await this.page.waitForTimeout(1500); // wait for table filter
 
     await this.verifyUserInTable(email, expected);
   }
@@ -121,7 +121,7 @@ class TableComponent extends BaseComponent {
     await row.waitFor({ state: 'visible', timeout }).catch(async () => {
       console.log('[DEBUG] Row not visible initially — scrolling table');
       await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await this.page.waitForTimeout(1500);
+     // await this.page.waitForTimeout(1500);
       await row.waitFor({ state: 'visible', timeout: timeout / 2 });
     });
 
@@ -170,9 +170,9 @@ class TableComponent extends BaseComponent {
     await this.page.screenshot({ path: `success-row-verified-${Date.now()}.png` });
   }
 async deleteAllRecords() {
-    await this.page.waitForTimeout(6000);
+   // await this.page.waitForTimeout(6000);
 
-    console.log('🟢 deleteAllRecords ENTERED');
+    console.log(' deleteAllRecords ENTERED');
 
     const deleteBtn = this.page.locator('button:has(svg path[d*="M6 19"])');
     const nextBtn = this.page.locator('span[title="Next Page"] button');

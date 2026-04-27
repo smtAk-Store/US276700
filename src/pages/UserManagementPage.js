@@ -59,7 +59,7 @@ async verifyUserRowInTable(userData, timeout = 60000) {
     if (await searchInput.count() > 0) {
       console.log('[DEBUG] Found search input - using filter');
       await searchInput.fill(email.trim());
-      await this.page.waitForTimeout(2000); // wait for filter
+     // await this.page.waitForTimeout(2000); // wait for filter
     } else {
       console.log('[DEBUG] No search input found - falling back to full scan');
     }
@@ -76,7 +76,7 @@ async verifyUserRowInTable(userData, timeout = 60000) {
         const tbody = document.querySelector('table tbody') || document.body;
         tbody.scrollTop = 0;
       });
-      await this.page.waitForTimeout(2000);
+      //await this.page.waitForTimeout(2000);
       await row.waitFor({ state: 'visible', timeout: timeout / 2 });
     });
 
