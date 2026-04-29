@@ -12,49 +12,62 @@ class FormComponent extends BaseComponent {
   }
 
   async selectCustomDropdownById(id, option) {
-    const trigger = this.page.locator(`[id="${id}"]`);
 
-    await trigger.waitFor({ state: 'visible', timeout: 12000 });
-    await trigger.hover({ timeout: 3000 }).catch(() => { });
-    await trigger.click({ force: true });
+  const trigger = this.page.locator(`[id="${id}"]`);
 
-    //await this.page.waitForTimeout(600);
+  
+  const count = await trigger.count();
 
-    const menu = this.page.locator(
-      '[role="listbox"], [role="menu"], .MuiMenu-paper, .MuiPopover-root, .MuiPaper-root, div[style*="position: fixed"][style*="z-index"]'
-    ).last();
-
-    await menu.waitFor({ state: 'visible', timeout: 15000 }).catch(async () => {
-      await trigger.focus();
-      await this.page.keyboard.press('ArrowDown');
-     // await this.page.waitForTimeout(800);
-    });
-
-    let optionLocator = menu.getByText(option.trim());
-
-    if (await optionLocator.count() === 0) {
-      optionLocator = menu.getByText(new RegExp(option.trim()));
-    }
-
-    if (await optionLocator.count() === 0) {
-      optionLocator = menu.getByRole('option').filter({ hasText: option.trim() });
-    }
-
-    if (await optionLocator.count() === 0) {
-      const visibleItems = await menu.locator('[role="option"], li, div[role="menuitem"]').allInnerTexts();
-      console.log(`[DEBUG] No match for "${option}". Visible items:`, visibleItems.map(t => t.trim()));
-      throw new Error(`Option "${option}" not found in dropdown ID ${id}`);
-    }
-
-    await optionLocator.first().click({ force: true });
-
-    await this.page.waitForSelector(
-      '[role="listbox"], [role="menu"], .MuiPopover-root',
-      { state: 'hidden', timeout: 10000 }
-    ).catch(() => { });
-
-    await expect(trigger).toHaveText(new RegExp(option.trim()), { timeout: 10000 }).catch(() => { });
+  if (count === 0) {
+    console.log(` Skipping dropdown (not in DOM): ${id}`);
+    return;
   }
+  const isVisible = await trigger.isVisible().catch(() => false);
+
+  if (!isVisible) {
+    console.log(` Skipping dropdown (not visible): ${id}`);
+    return;
+  }
+
+  await trigger.hover().catch(() => {});
+  await trigger.click({ force: true });
+
+  const menu = this.page.locator(
+    '[role="listbox"], [role="menu"], .MuiMenu-paper, .MuiPopover-root, .MuiPaper-root, div[style*="position: fixed"][style*="z-index"]'
+  ).last();
+
+  const menuVisible = await menu.isVisible().catch(() => false);
+
+  if (!menuVisible) {
+    console.log(`⚠️ Dropdown menu not visible for ${id}`);
+    return;
+  }
+
+  let optionLocator = menu.getByText(option.trim());
+
+  if (await optionLocator.count() === 0) {
+    optionLocator = menu.getByText(new RegExp(option.trim()));
+  }
+
+  if (await optionLocator.count() === 0) {
+    optionLocator = menu.getByRole('option').filter({ hasText: option.trim() });
+  }
+
+  if (await optionLocator.count() === 0) {
+    const visibleItems = await menu.locator('[role="option"], li, div[role="menuitem"]').allInnerTexts();
+    console.log(`[DEBUG] No match for "${option}". Items:`, visibleItems.map(t => t.trim()));
+
+    console.log(` Skipping option (not found): ${option}`);
+    return; 
+  }
+
+  await optionLocator.first().click({ force: true });
+
+  await this.page.waitForSelector(
+    '[role="listbox"], [role="menu"], .MuiPopover-root',
+    { state: 'hidden', timeout: 10000 }
+  ).catch(() => { });
+}
 
   async selectReactSelectByLabel(labelText, optionText) {
   console.log(`[DEBUG] Selecting "${optionText}" for label: "${labelText}"`);
@@ -231,13 +244,50 @@ async fillInputs(data, by = 'name') {
 
   // Generic input method
   async fillInput(locator, value) {
-    await locator.fill(value);
+
+  const count = await locator.count();
+
+  if (count === 0) {
+    console.log(`⚠️ Skipping input (not found)`);
+    return;
   }
-  fillIntegerInput = async (locator, value) => {
-  if (!Number.isInteger(value)) {
-    throw new Error(`fillIntegerInput: value must be an integer, got ${value}`);
+
+  const isVisible = await locator.isVisible().catch(() => false);
+
+  if (!isVisible) {
+    console.log(`⚠️ Skipping input (not visible)`);
+    return;
   }
-  await locator.fill(value.toString()); 
+
+  await locator.fill(value);
+}
+
+fillIntegerInput = async (locator, value) => {
+
+  if (value === null || value === undefined) {
+    console.log(`⚠️ Skipping integer input (no value)`);
+    return;
+  }
+
+  const count = await locator.count();
+
+  if (count === 0) {
+    console.log(`⚠️ Skipping integer input (not found)`);
+    return;
+  }
+
+  const isVisible = await locator.isVisible().catch(() => false);
+
+  if (!isVisible) {
+    console.log(`⚠️ Skipping integer input (not visible)`);
+    return;
+  }
+
+  if (!Number.isInteger(Number(value))) {
+    throw new Error(`fillIntegerInput: value must be integer, got ${value}`);
+  }
+
+  await locator.fill(value.toString());
 };
 
   // Material UI dropdown

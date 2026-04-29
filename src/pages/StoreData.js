@@ -214,7 +214,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
   async enterTheStockLevelAndLeadTimeInStockParameters(levelKey) {
 
     await this.stockParametersTab().click();
-    //await this.page.waitForTimeout(5000);
+    await this.page.waitForTimeout(3000);
     const Value = StoreHierarchyData.levels[levelKey][this.language];
 
     const row = this.page.locator('tbody tr')
@@ -246,7 +246,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
   async enterTheVaccineCoverageTabFilterByStoreNamesFillAlltheValuesFORAllElements(storeKey) {
 
     await this.vaccineCoverageTab().click();
-    //await this.page.waitForTimeout(3000);
+    await this.page.waitForTimeout(3000);
 
     const Value = StoreHierarchyData.storeNames[storeKey][this.language];
 
@@ -287,7 +287,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
   async enterVaccineCoverageForSubStore(subStoreKey) {
 
     await this.vaccineCoverageTab().click();
-   // await this.page.waitForTimeout(3000);
+    await this.page.waitForTimeout(3000);
 
     const value = StoreHierarchyData.substore[subStoreKey][this.language];
 
@@ -341,36 +341,48 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
 
     await this.saveButton().click();
 }
-  async enterThePopulationDemographicsTabFilterByStoreNamesFillTotalPopulationAndAdultPopulation(storeKey) {
+ async enterThePopulationDemographicsTabFilterByStoreNamesFillTotalPopulationAndAdultPopulation(storeKey) {
 
-    await this.populationDemographicsTab().click();
-   // await this.page.waitForTimeout(3000);
+  await this.populationDemographicsTab().click();
 
-    const Value = StoreHierarchyData.storeNames[storeKey][this.language];
+  const Value = StoreHierarchyData.storeNames[storeKey][this.language];
 
-    const row = this.page.locator('tbody tr')
-      .filter({ has: this.page.locator(`td[value="${Value}"]`) })
-      .first();
+  const row = this.page.locator('tbody tr')
+    .filter({ has: this.page.locator(`td[value="${Value}"]`) })
+    .first();
 
-    if (!(await row.count())) {
-      throw new Error(`Row not found for store: ${Value}`);
-    }
-    await row.scrollIntoViewIfNeeded();
-    await this.page.evaluate((el) => {
-      el.style.backgroundColor = '#fff3cd';
-      el.style.border = '2px solid #ffc107';
-    }, await row.elementHandle());
-
-    await row.locator('button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])').click();
-    console.log(`Giving the count to : ${Value}`);
-
-   // await this.page.waitForTimeout(2000);
-    await this.form.fillIntegerInput(this.totalPopulation(), BCGData.total_population);
-    await this.form.fillIntegerInput(this.adultPopulation(), BCGData.adult_population);
-    //await this.page.waitForTimeout(800);
-    await this.saveButton().click();
+  const rowCount = await row.count();
+  if (!rowCount) {
+    throw new Error(`Row not found for store: ${Value}`);
   }
 
+  await row.scrollIntoViewIfNeeded();
+
+  await this.page.evaluate((el) => {
+    el.style.backgroundColor = '#fff3cd';
+    el.style.border = '2px solid #ffc107';
+  }, await row.elementHandle());
+
+  const editBtn = row.locator(
+    'button[title="Edit"], button[title="Modifier"], button[title="Editar"], button:has(svg[class*="arRotate270"])'
+  );
+
+  await editBtn.waitFor({ state: 'visible' });
+  await editBtn.click();
+
+  console.log(`Giving the count to : ${Value}`);
+
+  // ✅ WAIT FOR FORM FIELDS INSTEAD OF SLEEP
+  await this.totalPopulation().waitFor({ state: 'visible' });
+  await this.adultPopulation().waitFor({ state: 'visible' });
+
+  await this.form.fillIntegerInput(this.totalPopulation(), BCGData.total_population);
+  await this.form.fillIntegerInput(this.adultPopulation(), BCGData.adult_population);
+
+  // ✅ wait for save button to be enabled (important in React/MUI apps)
+  await this.saveButton().waitFor({ state: 'visible' });
+  await this.saveButton().click();
+}
 
   async fillStockParametersAndClickDocument() {
     await this.stockParametersTab().click();

@@ -7,10 +7,10 @@
     "es": "C19-AZ ChAdOx1-S"
     },
     "formulation": {
-       "en": "Lyophilised : reconstituted with excipient diluent",
-    "fr": "Lyophilised : reconstituted with excipient diluent",
-    "pt": "Lyophilised : reconstituted with excipient diluent",
-    "es": "Lyophilised : reconstituted with excipient diluent"
+       "en": "Liquid: ready to use",
+    "fr": "Liquid: ready to use",
+    "pt": "Liquid: ready to use",
+    "es": "Liquid: ready to use"
     },
     "dosesTarget": {
       "en": "2",
@@ -71,6 +71,12 @@
       "fr": "4",
       "pt": "4",
       "es": "4"
+    },
+     "noOfRounds": {
+      "en": "2",
+      "fr": "2",
+      "pt": "2",
+      "es": "2"
     },
     "store": {
       "en": "CRR",

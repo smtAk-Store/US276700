@@ -53,9 +53,14 @@ class ProgrammeData {
   safetyStockInput = () => this.page.locator('input[name="safetyStock"]');
   leadTimeInput = () => this.page.locator('input[name="leadTime"]');
   saveButton = () => this.page.locator('button.MuiButton-containedPrimary[type="submit"]');
+  cancelbutton = () => this.page.locator("//button[@aria-label='close']");
+  noOfRounds = () => this.page.locator('input[name="noOfRounds"]')
   //button[contains(@class,'MuiButton-containedPrimary')]
 
+ async clickCancelButton() {
 
+  await this.cancelbutton().click();
+ }
   async highlightAndClickAdd() {
     // Highlight the active tab (optional visual effect)
     await this.page.evaluate((el) => {
@@ -66,42 +71,129 @@ class ProgrammeData {
     // Small pause to see highlight (optional)
     //await this.page.waitForTimeout(500);
 
-    // Click the Add button
     await this.addButton().click();
+    
   }
-   async fillPopupForm(dataArray, language = 'en') {
-    for (const data of dataArray) {
-        // Dropdowns
-        if (data.vaccine) {
-            await this.form.selectCustomDropdownById('vaccineNameId', data.vaccine[language]);
-        }
-        if (data.formulation) {
+   async highlightAndClickAddSupplyVaccinations() {
+    // Highlight the active tab (optional visual effect)
+    await this.page.evaluate((el) => {
+      el.style.border = '2px solid orange';
+      el.style.backgroundColor = '#fff8e1';
+    }, await this.programmeDataMenu().elementHandle());
 
-          await this.form.selectOptionByIndex('formulation',1);
-          //  await this.form.selectCustomDropdownById('formulation', data.formulation[language]);
-        }
-        if (data.targetGroup) {
-           // await this.form.selectCustomDropdownById('targetGroupId', data.targetGroup[language]);
-            await this.form.selectOptionByIndex('targetGroupId',2);
-        }
-        if (data.presentation) {
-            await this.form.selectCustomDropdownById('presentation', data.presentation[language]);
-        }
-        if (data.administrationSyringe) {
-            await this.form.selectCustomDropdownById('administrationSyringeId', data.administrationSyringe[language]);
-        }
-        if (data.syringes) {
-            await this.form.selectCustomDropdownById('syringesId', data.syringes[language]);
-        }
+    // Small pause to see highlight (optional)
+    //await this.page.waitForTimeout(500);
 
-        // Text/Number Inputs
-        if (data.dosesTarget) await this.form.fillInput(this.dosesTargetInput(), data.dosesTarget[language]);
-        if (data.coverageExpected) await this.form.fillInput(this.coverageExpectedInput(), data.coverageExpected[language]);
-        if (data.wastageRates) await this.form.fillInput(this.wastageRatesInput(), data.wastageRates[language]);
-        if (data.safetyStock) await this.form.fillInput(this.safetyStockInput(), data.safetyStock[language]);
-        if (data.leadTime) await this.form.fillInput(this.leadTimeInput(), data.leadTime[language]);
+    await this.addButtonsupplementaryVaccinations.click();
+   
+  }
+  async fillPopupForm(dataArray, language = 'en') {
+
+  for (const data of dataArray) {
+
+    // =========================
+    // DROPDOWNS
+    // =========================
+
+    if (data.vaccine?.[language]) {
+      await this.form.selectCustomDropdownById(
+        'vaccineNameId',
+        data.vaccine[language]
+      );
     }
-     await this.saveButton().click();
+
+    if (data.formulation?.[language]) {
+      await this.form.selectCustomDropdownById(
+        'formulation',
+        data.formulation[language]
+      );
+    } else {
+      await this.form.selectOptionByIndex('formulation', 1);
+    }
+
+    if (data.targetGroup?.[language]) {
+      await this.form.selectCustomDropdownById(
+        'targetGroupId',
+        data.targetGroup[language]
+      );
+    } else {
+      await this.form.selectOptionByIndex('targetGroupId', 2);
+    }
+
+    if (data.presentation?.[language]) {
+      await this.form.selectCustomDropdownById(
+        'presentation',
+        data.presentation[language]
+      );
+    }
+
+    if (data.administrationSyringe?.[language]) {
+      await this.form.selectCustomDropdownById(
+        'administrationSyringeId',
+        data.administrationSyringe[language]
+      );
+    }
+
+    if (data.syringes?.[language]) {
+      await this.form.selectCustomDropdownById(
+        'syringesId',
+        data.syringes[language]
+      );
+    }
+
+    // =========================
+    // TEXT INPUTS
+    // =========================
+
+    if (data.dosesTarget?.[language]) {
+      await this.form.fillInput(
+        this.dosesTargetInput(),
+        data.dosesTarget[language]
+      );
+    }
+
+    if (data.coverageExpected?.[language]) {
+      await this.form.fillInput(
+        this.coverageExpectedInput(),
+        data.coverageExpected[language]
+      );
+    }
+
+    if (data.wastageRates?.[language]) {
+      await this.form.fillInput(
+        this.wastageRatesInput(),
+        data.wastageRates[language]
+      );
+    }
+
+    if (data.safetyStock?.[language]) {
+      await this.form.fillInput(
+        this.safetyStockInput(),
+        data.safetyStock[language]
+      );
+    }
+
+    if (data.leadTime?.[language]) {
+      await this.form.fillInput(
+        this.leadTimeInput(),
+        data.leadTime[language]
+      );
+    }
+
+    // =========================
+    // NEW FIELD: noOfRounds
+    // =========================
+
+    if (data.noOfRounds?.[language]) {
+      await this.form.fillInput(
+        this.noOfRounds(),
+        data.noOfRounds[language]
+      );
+    }
+  }
+
+  // ✅ submit at end
+  await this.saveButton().click();
 }
 async createRoutineVaccination(productName, dropdownLocator) {
 
