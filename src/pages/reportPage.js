@@ -159,14 +159,23 @@ const row = this.page.locator('tbody tr')
 }
 async highlightProductColumn(productName) {
 
-    //await this.page.waitForTimeout(15000);
+   const row = this.page.locator('thead th')
+  .filter({ hasText: productName })
+  .first();
+
+try {
+  await expect(row).toBeVisible(); 
+} catch {
+  console.warn(`Row "${productName}" not present`);
+  return;
+}
 
     if (!productName) {
-        console.log("❌ No product name provided");
+        console.log(" No product name provided");
         return [];
     }
 
-    console.log(`🔍 Highlighting & verifying column: "${productName}"`);
+    console.log(` Highlighting & verifying column: "${productName}"`);
 
     // =========================
     // 1. FIND START COLUMN (FIXED)

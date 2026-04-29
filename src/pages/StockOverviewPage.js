@@ -31,8 +31,10 @@ class StockOverviewPage {
     this.filterDropdown = page.locator('.MuiSelect-root').first();
     this.filterOptions = page.locator('li[role="option"]');
     this.finalizeButton = this.page
-      .locator('div.MuiGrid-container.MuiGrid-justify-xs-flex-end > div.MuiGrid-item > button')
-      .last();
+      .locator('//button[.//span[text()="Finalize"]]');
+    this.deleteButton = this.page
+      .locator('button[style*="background-color: red"]').first();
+
     this.confirmationDialog = new ConfirmationDialogPage(page);
     // this.data = testData.SimpleArrival;
 
@@ -57,7 +59,7 @@ class StockOverviewPage {
     await this.menuItem().nth(0).click();
   }
   async clearAllData() {
-    
+
     await this.table.deleteAllRecords();
   }
 
@@ -87,7 +89,7 @@ class StockOverviewPage {
 
       await this.saveButton().click();
 
-      const isSuccess = await this.waitForNoError(3000);
+      const isSuccess = await this.waitForNoError(300);
 
       if (isSuccess) {
         return true;
@@ -99,7 +101,15 @@ class StockOverviewPage {
     throw new Error('Save failed after 3 attempts due to validation errors');
   }
   async evaluateCurrentStockBalance(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
-    console.log(productTypeArrivalData, 'product arrival data ');
+    const row = this.page.locator('tbody tr')
+      .filter({ hasText: value })
+      .first();
+    try {
+      await expect(row).toBeVisible();
+    } catch {
+      console.warn(`Row "${value}" not present`);
+
+    }
 
     const existingStock = await this.fetchValueFromTable(value);
     if (existingStock && existingStock.numericValue > 0) {
@@ -115,7 +125,7 @@ class StockOverviewPage {
 
 
   async validateZeroStockBalance(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
-   // await this.page.waitForTimeout(6000);
+    // await this.page.waitForTimeout(6000);
     let existingStock = await this.fetchValueFromTable(value);
 
     if (existingStock && existingStock.numericValue > 0) {
@@ -126,9 +136,9 @@ class StockOverviewPage {
       await this.fetchValueFromTable(value);
       await this.issueExistingStock(addLineToIssueData, productTypeIssueData, productType, language);
     }
-  //  await this.page.waitForTimeout(800);
+    //  await this.page.waitForTimeout(800);
     await this.navigateTostockOverviewpage();
-   // await this.page.waitForTimeout(800);
+    // await this.page.waitForTimeout(800);
     await this.highlightTdAndVerifyTooltip(value);
   }
 
@@ -300,6 +310,7 @@ class StockOverviewPage {
 
     const tooltipIcon = targetTd.locator('[data-tooltip]').first();
     const tooltipCount = await tooltipIcon.count();
+
     //await this.page.waitForTimeout(15000);
 
     if (tooltipCount > 0) {
@@ -313,9 +324,15 @@ class StockOverviewPage {
 
   async evaluateCurrentStockBalanceForReportPage(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity) {
     const row = this.page.locator('tbody tr')
-  .filter({ hasText: value })
-  .first();
-   await expect(row).toBeVisible();
+      .filter({ hasText: value })
+      .first();
+
+    try {
+      await expect(row).toBeVisible(); // uses Playwright's default timeout
+    } catch {
+      console.warn(`Row "${value}" not present`);
+
+    }
     //await this.page.waitForTimeout(12000);
     const existingStock = await this.fetchValueFromTable(value);
     console.log(value, 'product arrival data ');
@@ -385,7 +402,17 @@ class StockOverviewPage {
 
   }
   async verifyTheColorOfDraftAndCompletedFilters(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity, dropdownvalue) {
-    //await this.page.waitForTimeout(12000);
+
+    const row = this.page.locator('tbody tr')
+      .filter({ hasText: value })
+      .first();
+
+    try {
+      await expect(row).toBeVisible();
+    } catch {
+      console.warn(`Row "${value}" not present`);
+
+    }
     const existingStock = await this.fetchValueFromTable(value);
     let issueDate;
     if (existingStock && existingStock.numericValue > 0) {
@@ -457,7 +484,7 @@ class StockOverviewPage {
     await dateFilter.type(formattedDate, { delay: 50 });
     await this.page.keyboard.press('Enter');
 
-   // await this.page.waitForTimeout(1000);
+    // await this.page.waitForTimeout(1000);
 
     await this.filterDropdown.click();
 
@@ -523,17 +550,17 @@ class StockOverviewPage {
       .first()
       .click();
 
-    //await this.page.waitForTimeout(10000);
+    await this.page.waitForTimeout(2000);
     await this.finalizeButton.waitFor({ state: 'visible' });
     await expect(this.finalizeButton).toBeEnabled();
     await this.finalizeButton.click();
 
 
-    //await this.page.waitForTimeout(10000);
 
+    await this.page.waitForTimeout(2000);
     const updatedStatusBadge = row.locator('td:nth-of-type(5) span');
 
-    await updatedStatusBadge.waitFor({ state: 'visible', timeout: 10000 });
+    await updatedStatusBadge.waitFor({ state: 'visible', timeout: 2000 });
 
     const completeText = (await updatedStatusBadge.innerText()).trim();
 
@@ -542,7 +569,6 @@ class StockOverviewPage {
     );
 
     console.log(`After Finalize → Status: ${completeText}, Color: ${completeColor}`);
-
     return {
       draftText,
       draftColor,

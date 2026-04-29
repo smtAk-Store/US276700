@@ -164,9 +164,9 @@
     "es": "Ok"
   },
   "storageLocation": {
-    "en": "m416",
-      "fr": "m416",
-      "pt": "m416",
-      "es": "m416"
+     "en": "STORE ROOM",
+      "fr": "STORE ROOM",
+      "pt": "STORE ROOM",
+      "es": "STORE ROOM"
   }
 }

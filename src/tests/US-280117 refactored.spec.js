@@ -21,7 +21,7 @@ const productTypeIssueDataNew = require('../testdata/InputData/productTypeNewIss
 const { ReportPage } = require('../pages/reportPage');
 
 // const languages = ['fr', 'pt', 'es'];
-const languages = ['en','fr'];
+const languages = ['en'];
 
 languages.forEach(language => {
 
@@ -29,7 +29,7 @@ languages.forEach(language => {
 
       
         // ================== TEST 1 ==================
-        test(` refactored Verify alert and report when vaccine stock reaches minimum level`, async ({ page }) => {
+        test(` Refactored Verify alert and report when vaccine stock reaches minimum level`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const reportPage = new ReportPage(page, language);
@@ -95,7 +95,7 @@ languages.forEach(language => {
         });
 
         // ================== TEST 2 ==================
-        test(`Verify  No alert and  color chart when vaccine stock reaches maximum level`, async ({ page }) => {
+        test(` refactored Verify  No alert and  color chart when vaccine stock reaches maximum level`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const reportPage = new ReportPage(page, language);

@@ -41,8 +41,6 @@ this.deleteButton = this.page.locator(
 
  async openArrivalForm() {
   await this.arrivalTab().click();
-  //this.console.log("get me soon");
-
   await this.logNewArrivalButton().waitFor({ state: 'visible' });
   await this.logNewArrivalButton().click();
 }
@@ -127,16 +125,15 @@ async fillArrivalFormCRROnly(data) {
 
   
 async validateButtonEnabled() {
-  await this.page.waitForLoadState('networkidle'); 
+  // Wait until button becomes enabled (state-based, no delay)
+  await expect(this.finalizeButton).toBeEnabled({ timeout: 15000 });
 
-  // Highlight the element we are validating
+  // Highlight AFTER it's ready
   await this.finalizeButton.evaluate(el => {
     el.style.outline = '3px solid red';
-    el.style.transition = 'outline 0.3s ease-in-out';
   });
 
   await expect(this.finalizeButton).toBeVisible();
-  await expect(this.finalizeButton).toBeEnabled();
 }
 
 async waitForLoadingToFinish() {
@@ -226,14 +223,14 @@ await dropdownDiv.locator('xpath=..').click();
 async verifyDeleteSuccessMessage() {
   const toast = this.page.locator('[role="alert"]').last();
 
-  const expectedMessage = translate(this.language, 'messages', 'deleteSuccess');
+ const expectedMessage = translate(this.language, 'messages', 'DELETESUCCESS');
 
   // 1. Appear + correct text
   await expect(toast).toBeVisible({ timeout: 10000 });
   await expect(toast).toContainText(expectedMessage, { timeout: 10000 });
 
   // // 2. Wait for it to disappear (give it more time)
-  // await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
+   await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
 }
 
 async verifyArrivalInTable(expectedData) {
@@ -255,7 +252,7 @@ async verifyArrivalInTable(expectedData) {
     }, color);
 
     // Wait for duration using the Page object from this class
-  //  await this.page.waitForTimeout(duration);
+    await this.page.waitForTimeout(duration);
 
     // Remove highlight
     await locator.evaluate(el => {
@@ -273,21 +270,21 @@ async verifyArrivalInTable(expectedData) {
   const receiptCell = cells.nth(2);
   await highlightElement(receiptCell);
   const expectedType = translate(this.language, 'receiptType', receiptType);
-  log('Expected Receipt Type in Table:', expectedType);
+  console.log('Expected Receipt Type in Table:', expectedType);
   await expect(receiptCell).toHaveText(expectedType);
 }
 
 async verifyFinalizeSuccessMessage() {
   const toast = this.page.locator('[role="alert"]').last();
 
-  // const expectedMessage = translate(this.language, 'messages', 'finalizeSuccess');
+  const expectedMessage = translate(this.language, 'messages', 'FINALIZESUCCESS');
 
-  // // 1. Appear + correct text
-  // await expect(toast).toBeVisible({ timeout: 10000 });
-  // await expect(toast).toContainText(expectedMessage, { timeout: 10000 });
+  // 1. Appear + correct text
+  await expect(toast).toBeVisible({ timeout: 10000 });
+  await expect(toast).toContainText(expectedMessage, { timeout: 10000 });
 
-  // // 2. Wait for it to disappear (give it more time)
-  // await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
+  // 2. Wait for it to disappear (give it more time)
+  await expect(toast).toBeHidden({ timeout: 15000 });   // ← increased to 15s
 }
      async switchTabs() {    
         await this.srockOverviewtab().click();

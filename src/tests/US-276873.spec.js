@@ -22,7 +22,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
             const storeSetupPage = new StoreData(page, language);
-            await loginPage.loginAs('storeOperatorvietnam', language);
+            await loginPage.loginAs('syriaStoreOperator', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
             const productType = 'Supplies';
             const dropdownKey = 'Draft';
@@ -52,7 +52,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
             const storeSetupPage = new StoreData(page, language);
-            await loginPage.loginAs('storeOperatorvietnam', language);
+            await loginPage.loginAs('syriaStoreOperator', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
             const productType = 'Supplies';
             const dropdownKey = 'Complete';
@@ -82,7 +82,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
             const storeSetupPage = new StoreData(page, language);
-            await loginPage.loginAs('storeOperatorvietnam', language);
+            await loginPage.loginAs('syriaStoreOperator', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
             const productType = 'Supplies';
             const dropdownKey = 'Draft';
@@ -113,7 +113,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
             const storeSetupPage = new StoreData(page, language);
-            await loginPage.loginAs('storeOperatorvietnam', language);
+            await loginPage.loginAs('syriaStoreOperator', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
             const productType = 'Vaccines';
             const dropdownKey = 'Draft';
@@ -143,7 +143,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
             const storeSetupPage = new StoreData(page, language);
-            await loginPage.loginAs('storeOperatorvietnam', language);
+            await loginPage.loginAs('syriaStoreOperator', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
             const productType = 'Vaccines';
             const dropdownKey = 'Complete';
@@ -172,7 +172,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
             const storeSetupPage = new StoreData(page, language);
-            await loginPage.loginAs('storeOperatorvietnam', language);
+            await loginPage.loginAs('syriaStoreOperator', language);
             await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
             const productType = 'Vaccines';
             const dropdownKey = 'Draft';

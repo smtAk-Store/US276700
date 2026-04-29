@@ -4,6 +4,7 @@ const { FormComponent } = require('../components/FormComponent');
 const { log } = require('node:console');
 const { generateUniqueSMT ,getCurrentDate,verifyButtonEnabled} = require('../utils/reusableFunction');
 
+
 class IssuingPage {
   constructor(page, language) {
     this.page = page;                   
@@ -26,6 +27,43 @@ class IssuingPage {
   async openIssuingForm() {
     await this.issuingTab().click();
     await this.issueNewStockButton().click();
+  }
+   async waitForNoError(timeout = 3000) {
+    const interval = 300;
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeout) {
+
+      const errorCount = await this.page
+        .locator('p.Mui-error')
+        .count();
+
+      if (errorCount === 0) {
+        return true;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, interval));
+    }
+
+    return false;
+  }
+  async clickSaveWithRetry() {
+    const maxAttempts = 3;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+
+      await this.saveButton().click();
+
+      const isSuccess = await this.waitForNoError(300);
+
+      if (isSuccess) {
+        return true;
+      }
+
+      console.log(`Save attempt ${attempt} failed, retrying...`);
+    }
+
+    throw new Error('Save failed after 3 attempts due to validation errors');
   }
 async fillIssuingFormCRROnly(data) {
 
@@ -54,8 +92,8 @@ await this.form.selectDropdown(this.productType, productData.productType[languag
 await this.form.selectDropdown(this.product, productData.product[language]);
 await this.form.selectDropdown(this.batchNumber(),productData.batchNumber[language]);
 await this.quantity().fill(productData.quantity[language]);
-await this.form.selectDropdown(this.storeNameInput(),productData.storageLocation[language]);
-await this.saveButton().click();
+//await this.form.selectDropdown(this.storeNameInput(),productData.storageLocation[language]);
+await this.clickSaveWithRetry();
 }
 async clickFinalizeVerifyPopupinIssuingTab() {
   await this.finalizeButton.waitFor({ state: 'visible' });
@@ -72,8 +110,9 @@ async clickFinalizeVerifyPopupinIssuingTab() {
   //await this.confirmationDialog.verifyFinalizePopup();
 }
 async selectRecipientStore(value) {
-    const dropdown = this.page.locator('#recipientStore');
-    await dropdown.click(); 
-    await this.recipientStoreOption(value).click();
-}}
+  await this.page.locator('#recipientStore').click();
+  await this.page.keyboard.type(value);
+  await this.page.keyboard.press('Enter');
+}
+}
 module.exports = { IssuingPage };

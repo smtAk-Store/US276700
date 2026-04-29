@@ -21,8 +21,8 @@ function normalizeKey(value) {
 
 function translate(language, section, value) {
   const key = normalizeKey(value);
-  // return translation if exists, otherwise fallback to original value
-  return translations[language][section]?.[key] || value;
+
+  return translations?.[language]?.[section]?.[key] || value;
 }
 
 module.exports = { translate };

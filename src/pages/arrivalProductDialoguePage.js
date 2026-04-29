@@ -101,19 +101,19 @@ export class ArrivalProductDialogPage {
   const selectOption = async (dropdownLocator, optionText) => {
 
     if (!dropdownLocator) {
-      console.log("⏭️ Locator not provided, skipping");
+      console.log(" Locator not provided, skipping");
       return;
     }
 
     if (!(await dropdownLocator.count())) {
-      console.log(`⏭️ Dropdown not found for "${optionText}", skipping`);
+      console.log(`Dropdown not found for "${optionText}", skipping`);
       return;
     }
 
     const isDisabled = await dropdownLocator.isDisabled().catch(() => false);
 
     if (isDisabled) {
-      console.log(`⏭️ Dropdown disabled for "${optionText}", skipping`);
+      console.log(`⏭ Dropdown disabled for "${optionText}", skipping`);
       return;
     }
 

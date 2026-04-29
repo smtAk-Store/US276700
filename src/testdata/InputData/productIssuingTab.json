@@ -1,16 +1,16 @@
 [
 {
   "storageLocation": {
-      "en": "STORE ROOM",
-      "fr": "STORE ROOM",
-      "pt": "STORE ROOM",
-      "es": "STORE ROOM"
+      "en": "m416",
+      "fr": "m416",
+      "pt": "m416",
+      "es": "m416"
     },
     "batchNumber": {
       "en": "1335",
-      "fr": "BATCH123",
-      "pt": "BATCH123",
-      "es": "BATCH123"
+      "fr": "1335",
+      "pt": "1335",
+      "es": "1335"
     },
     "productType": {
     "en": "Vaccine",
@@ -19,16 +19,16 @@
     "es": "لقاح"
   },
   "product": {
-    "en": "COVID-C",
-    "fr": "COVID-C",
-    "pt": "COVID-C",
-    "es": "COVID-C"
+    "en": "BCG",
+    "fr": "BCG",
+    "pt": "BCG",
+    "es": "BCG"
   },
    "quantity": {
-      "en": "9",
-      "fr": "100",
-      "pt": "100",
-      "es": "100"
+      "en": "1000",
+      "fr": "1000",
+      "pt": "1000",
+      "es": "1000"
     }
 }
 ]
