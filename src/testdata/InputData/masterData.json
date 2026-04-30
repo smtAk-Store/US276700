@@ -1,14 +1,29 @@
 {
   "productNameAdministrator": "Test Product supply administrator",
    "productNameDilution": "Test Product supply Dilution",
-   "productNameothers": " others",
+   "productNameothers": " Test Product supply others",
   "designationEn": "Test Product",
   "presentation": 10,
   "packedVol": 10,
   "packedWeight": 10,
   "pricePerUnit": 10,
   "freightPercentage": 10,
-   "productTypeAdministration": "Safe Injection Equipment (Administration)",
-    "productTypeDilution": "Safe Injection Equipment (Dilution)",
-     "productTypeOthers": "Safe Injection Equipment (Others)"
+  "productTypeAdministration": {
+  "en": "Safe Injection Equipment (Administration)",
+  "fr": "Matériel d'injection sûr (Administration)",
+  "pt": "Safe Injection Equipment (Administration)",
+  "es": "Safe Injection Equipment (Administration)"
+},
+    "productTypeDilution": {
+  "en": "Safe Injection Equipment (Dilution)",
+  "fr": "Équipement d'injection sûr (dilution)",
+  "pt": "Safe Injection Equipment (Dilution)",
+  "es": "Safe Injection Equipment (Dilution)"
+},
+"productTypeOthers": {
+  "en": "Safe Injection Equipment (Others)",
+  "fr": "Équipement d'injection sûr (Autres)",
+  "pt": "Safe Injection Equipment (Others)",
+  "es": "Safe Injection Equipment (Others)"
+}
 }

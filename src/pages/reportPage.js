@@ -4,6 +4,7 @@ import StoreHierarchyData from '../testdata/InputData/StoreHierarchy.json';
 const { FormComponent } = require('../components/FormComponent');
 const calculationService = require('../service/CalculationService');
 
+
 class ReportPage {
   constructor(page, language) {
     this.page = page;
@@ -11,9 +12,15 @@ class ReportPage {
     this.language = language;
   }
   reportTab = () => this.page.locator('span[role="menuitem"]').nth(6);
+  reportTabInCA = () => this.page.locator('span[role="menuitem"]').nth(4);
   stockStatusTab = () => this.page.locator('[role="tab"]').nth(4);
+   iSCPerformance = () => this.page.locator('[role="tab"]').nth(6);
   storeLevelDropdown = () =>
     this.page.locator('[role="button"][aria-labelledby="storeLevel"]');
+  startDateInput = () =>
+  this.page.locator('input[name="startDate"][type="text"]');
+  endDateInput = () =>
+  this.page.locator('input[name="endDate"][type="text"]');
   storeDropdown = () =>
     this.page.locator('[role="button"][aria-labelledby="storeId"]');
   includeSecondaryCheckbox = () =>
@@ -22,6 +29,41 @@ class ReportPage {
     this.page.locator("//button[contains(@class,'MuiButton-containedPrimary')]");
 includeSubstoreCheckbox = () =>
   this.page.locator('input[name="isChildInclude"]');
+cceFunctionalityButton = () =>
+  this.page.locator('button:has(span.rptname)').nth(1);
+
+  async navigateTOReportsTabAndIscPerfomanceTab(){
+  await this.reportTab().click();
+  await this.page.waitForLoadState('networkidle');
+  await this.iSCPerformance().click();
+  }
+ async IscPerfomanceTabCceFunctionality(){
+  await this.cceFunctionalityButton().click();
+  await this.page.waitForLoadState('networkidle');
+  await this.page.pause();
+  }
+
+ async selectLevelsStorePeriodStartAndPeriodEndYear(levelKey,options = {}){
+   const { includeSubstore = false } = options;
+    await this.form.selectDropdown(this.storeLevelDropdown(), StoreHierarchyData.levels[levelKey][this.language] );
+    await this.form.selectOptionByIndex('storeId', 1);
+   await this.startDateInput().fill(this.getStartDateMinus3Months());
+  if (includeSubstore) { 
+    await this.includeSubstoreCheckbox().click();
+  }
+    await this.generateReportButton().click();
+ }
+ getStartDateMinus3Months() {
+  const date = new Date();
+
+  // subtract 3 months
+  date.setMonth(date.getMonth() - 3);
+
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${month}-${year}`;
+}
 
   async navigateToStockStatusAndOpenDropdowns(levelKey, options = {}) {
   const { includeSubstore = false } = options;
@@ -48,9 +90,7 @@ includeSubstoreCheckbox = () =>
 
   
   if (includeSubstore) {
-   // await this.page.waitForTimeout(500);
-
-    
+  
     await this.includeSubstoreCheckbox().click();
 
     console.log(' Include Substore selected');

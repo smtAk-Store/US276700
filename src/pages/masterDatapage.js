@@ -15,7 +15,9 @@ class MasterDataPage {
   .locator("//button[contains(@class,'MuiButton-containedPrimary')]")
   .nth(2);
       this.productTypeheader = this.page.locator("(//table[contains(@class,'arabic-list-table')])[11]//thead")
-        this.safeInjectionLiElements = this.page.locator("(//table[contains(@class,'arabic-list-table')])[11]//tbody//tr[contains(.,'Safe Injection Equipment')]")
+      this.safeInjectionLiElements = this.page.locator(
+  "(//table[contains(@class,'arabic-list-table')])[11]//tbody//tr[contains(.,'Safe Injection Equipment') or contains(.,'injection sûr')]"
+);
         this.productName = this.page.locator("//div[contains(@class,'MuiTextField-root')]//input[@name='name']");
         this.designationEn = this.page.locator("input[name='designation_en']");
         this.productType = this.page.locator("#productType");
@@ -57,24 +59,25 @@ class MasterDataPage {
     console.log(`Item ${i + 1}: ${text?.trim()}`);
   }
 }
-async fillMasterDataForm(masterData, productnames,productTypeValue) {
+async fillMasterDataForm(masterData, productnames, productTypeKey, language = 'en') {
 
   await this.suppliesTab.click();
   await this.addButton.click();
 
   await this.productName.fill(productnames);
   await this.designationEn.fill(productnames);
+
   await this.presentation.fill(String(masterData.presentation));
 
-  // fully parameterized dropdown
- await this.form.selectDropdown(this.productType, productTypeValue);
+  // ✅ language-based dropdown value
+  const productTypeValue = masterData[productTypeKey][language];
+  await this.form.selectDropdown(this.productType, productTypeValue);
 
   await this.packedVol.fill(String(masterData.packedVol));
   await this.packedWeight.fill(String(masterData.packedWeight));
-  //await this.page.waitForTimeout(800);
   await this.pricePerUnit.fill(String(masterData.pricePerUnit));
   await this.freightPercentage.fill(String(masterData.freightPercentage));
-  //await this.page.waitForTimeout(800);
+
   await this.submitButton.click();
 }
 }

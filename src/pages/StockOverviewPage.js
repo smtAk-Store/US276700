@@ -347,60 +347,56 @@ class StockOverviewPage {
 
 
   }
-  async addEquipmentForStoreOperator() {
-    console.log("=== addEquipmentForStoreOperator STARTED ===");
+ async addEquipmentForStoreOperator(equipmentNameKey) {
+  console.log("=== addEquipmentForStoreOperator STARTED ===");
 
-    await this.equipmentTAb().click();
+  await this.equipmentTAb().click();
 
-    await this.addButton().waitFor({ state: 'visible' });
-    await this.addButton().click();
+  await this.addButton().waitFor({ state: 'visible' });
+  await this.addButton().click();
 
-    await this.form.selectOptionByIndex('storageEquipmentId', 2);
-    await this.form.selectOptionByIndex('supplierId', 1);
-    await this.form.selectOptionByIndex('equipmentTypeId', 1);
-    await this.form.selectOptionByIndex('statusId', 1);
+  await this.form.selectOptionByIndex('storageEquipmentId', 2);
+  await this.form.selectOptionByIndex('supplierId', 1);
+  await this.form.selectOptionByIndex('equipmentTypeId', 1);
+  await this.form.selectOptionByIndex('statusId', 1);
 
+  const language = this.language || 'en';
+  console.log('Using language:', language);
 
-    const language = this.language || 'en';
+  // 👇 now passed dynamically from spec
+  const equipmentName = equipmentNameKey;
 
-    console.log('Using language:', language);
-
-    const equipmentName = productData?.[0]?.equipmentname?.[language];
-
-    if (!equipmentName) {
-      throw new Error(`Equipment name not found for language: ${language}`);
-    }
-
-    console.log(`Filling equipment name: "${equipmentName}"`);
-
-    await this.form.fillInput(this.equipmentNameInput(), equipmentName);
-
-    await this.saveButton().click();
-    console.log("Clicked Save button");
-
-    await this.page.waitForLoadState('networkidle');
-
-
-    const alreadyExists = await this.page
-      .locator('.check-error .msg')
-      .filter({
-        hasText: /exists|existe|existe|موجود|existe/i
-      })
-      .first()
-      .isVisible()
-      .catch(() => false);
-
-    if (alreadyExists) {
-      console.log(` Equipment "${equipmentName}" already exists. Skipping.`);
-      await this.closeButton().click();
-    } else {
-      console.log(` Equipment "${equipmentName}" created successfully.`);
-    }
-
-    console.log("=== addEquipmentForStoreOperator COMPLETED ===");
-
-
+  if (!equipmentName) {
+    throw new Error(`Equipment name is required`);
   }
+
+  console.log(`Filling equipment name: "${equipmentName}"`);
+
+  await this.form.fillInput(this.equipmentNameInput(), equipmentName);
+
+  await this.saveButton().click();
+  console.log("Clicked Save button");
+
+  await this.page.waitForLoadState('networkidle');
+
+  const alreadyExists = await this.page
+    .locator('.check-error .msg')
+    .filter({
+      hasText: /exists|existe|موجود/i
+    })
+    .first()
+    .isVisible()
+    .catch(() => false);
+
+  if (alreadyExists) {
+    console.log(`Equipment "${equipmentName}" already exists. Skipping.`);
+    await this.closeButton().click();
+  } else {
+    console.log(`Equipment "${equipmentName}" created successfully.`);
+  }
+
+  console.log("=== addEquipmentForStoreOperator COMPLETED ===");
+}
   async verifyTheColorOfDraftAndCompletedFilters(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity, dropdownvalue) {
 
     const row = this.page.locator('tbody tr')

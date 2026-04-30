@@ -17,7 +17,8 @@ const addLineToArrivalData = require('../testdata/addlinetoarrival.json');
 const addLineToIssueData = require('../testdata/addLineToIssue.json');
 const calculationService = require('../service/CalculationService');
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
-const languages = ['en'];
+ const languages = ['en','fr','pt','es'];
+//const languages = ['fr'];
 
 languages.forEach(language => {
 
@@ -35,11 +36,12 @@ languages.forEach(language => {
 
       await masterDataPage.openAndVerifySafeInjectionEquipment();
 
-      await masterDataPage.fillMasterDataForm(
-        masterData,
-        masterData.productNameAdministrator,
-        masterData.productTypeAdministration
-      );
+await masterDataPage.fillMasterDataForm(
+  masterData,
+  masterData.productNameAdministrator,
+  "productTypeAdministration",
+  language
+);
 
       await homePage.logout();
 
@@ -61,7 +63,7 @@ languages.forEach(language => {
 
       expect(result1?.replace(/[\u200E\u200F\u202A-\u202E]/g, '').trim())
         .toBe(masterData.productNameAdministrator);
-    });
+   });
 
     test('Add SafeInjection for Dilution and Validate Product Type', async ({ page }) => {
 
@@ -75,11 +77,12 @@ languages.forEach(language => {
 
       await masterDataPage.openAndVerifySafeInjectionEquipment();
 
-      await masterDataPage.fillMasterDataForm(
-        masterData,
-        masterData.productNameDilution,
-        masterData.productTypeDilution
-      );
+    await masterDataPage.fillMasterDataForm(
+  masterData,
+  masterData.productNameDilution,
+  "productTypeDilution",
+  language
+);
 
       await homePage.logout();
 
@@ -115,12 +118,12 @@ languages.forEach(language => {
 
       await masterDataPage.openAndVerifySafeInjectionEquipment();
 
-      await masterDataPage.fillMasterDataForm(
-        masterData,
-        masterData.productNameothers,
-        masterData.productTypeOthers
-      );
-
+     await masterDataPage.fillMasterDataForm(
+  masterData,
+  masterData.productNameothers,
+  "productTypeOthers",
+  language
+);
       await homePage.logout();
 
       await loginPage.loginAs('syriaCountryAdmin', language);
@@ -314,7 +317,7 @@ languages.forEach(language => {
 
       expect(tooltipText.trim()).toContain(expectedTooltip);
     
-    });
+     });
 
   });
 
