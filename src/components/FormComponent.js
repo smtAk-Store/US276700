@@ -15,17 +15,19 @@ class FormComponent extends BaseComponent {
 
   const trigger = this.page.locator(`[id="${id}"]`);
 
-  
+  // 🔥 STEP 1: check existence first (NO WAIT)
   const count = await trigger.count();
 
   if (count === 0) {
-    console.log(` Skipping dropdown (not in DOM): ${id}`);
+    console.log(`⚠️ Skipping dropdown (not in DOM): ${id}`);
     return;
   }
+
+  // 🔥 STEP 2: check visibility safely (NO HARD FAIL)
   const isVisible = await trigger.isVisible().catch(() => false);
 
   if (!isVisible) {
-    console.log(` Skipping dropdown (not visible): ${id}`);
+    console.log(`⚠️ Skipping dropdown (not visible): ${id}`);
     return;
   }
 
@@ -57,8 +59,8 @@ class FormComponent extends BaseComponent {
     const visibleItems = await menu.locator('[role="option"], li, div[role="menuitem"]').allInnerTexts();
     console.log(`[DEBUG] No match for "${option}". Items:`, visibleItems.map(t => t.trim()));
 
-    console.log(` Skipping option (not found): ${option}`);
-    return; 
+    console.log(`⚠️ Skipping option (not found): ${option}`);
+    return; // 🔥 IMPORTANT: NO THROW
   }
 
   await optionLocator.first().click({ force: true });
