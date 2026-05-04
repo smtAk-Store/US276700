@@ -1,10 +1,10 @@
 import { test } from '@playwright/test';
-import { LoginPage } from '../pages/loginPage';
-import { HomePage } from '../pages/homePage';
-import { UserManagementPage } from '../pages/UserManagementPage';
+import { LoginPage } from '../../pages/loginPage';
+import { HomePage } from '../../pages/homePage';
+import { UserManagementPage } from '../../pages/UserManagementPage';
 
-import { loginData } from '../testdata/loginData';
-import userData from '../testdata/createUser.json';
+import { loginData } from '../../testdata/loginData';
+import userData from '../../testdata/createUser.json';
 
 let userPage;
 

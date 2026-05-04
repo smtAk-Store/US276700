@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-const StockOverviewPage = require('../pages/StockOverviewPage');
-import { LoginPage } from '../pages/loginPage';
-import { HomePage } from '../pages/homePage';
+const StockOverviewPage = require('../../pages/StockOverviewPage');
+import { LoginPage } from '../../pages/loginPage';
+import { HomePage } from '../../pages/homePage';
 
 test('delete all records', async ({ page }) => {
 

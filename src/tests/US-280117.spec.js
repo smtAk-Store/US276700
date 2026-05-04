@@ -25,47 +25,11 @@ const languages = ['en'];
 
 languages.forEach(language => {
 
-    test.describe(`Verify the Alerts for Vaccines - Language: ${language}`, () => {
+    test.describe(` refactoredVerify the Alerts for Vaccines  - Language: ${language}`, () => {
 
-        // ================== BEFORE ALL ==================
-        test.beforeAll(async ({ browser }) => {
-
-            const page = await browser.newPage();
-
-            try {
-                const loginPage = new LoginPage(page);
-                const homePage = new HomePage(page);
-                const programmePage = new ProgrammeData(page, language);
-                const arrivalPage = new ArrivalPage(page, language);
-                const storeSetupPage = new StoreData(page, language);
-
-                await loginPage.loginAs('syriaCountryAdmin', language);
-             //   await homePage.verifyMenus();
-
-                // await programmePage.highlightAndClickAdd();
-                // await programmePage.fillPopupForm(programDatanew, language);
-
-                await arrivalPage.waitForLoadingToFinish();
-
-                await storeSetupPage.navigateToStoreHierarchy();
-                await storeSetupPage.addNewStoreInStoreHierarchy('level2', 'store2');
-
-                await storeSetupPage.enterThePopulationDemographicsTabFilterByStoreNamesFillTotalPopulationAndAdultPopulation('store2');
-                await storeSetupPage.enterTheVaccineCoverageTabFilterByStoreNamesFillAlltheValuesFORAllElements('store2');
-                await storeSetupPage.enterTheStockLevelAndLeadTimeInStockParameters('level2');
-
-               // await homePage.logout();
-
-            } catch (error) {
-                console.error('Setup failed:', error.message);
-                throw error;
-            } finally {
-                await page.close().catch(() => { });
-            }
-        });
 
         // ================== TEST 1 ==================
-        test(`Verify alert and report when vaccine stock reaches minimum level`, async ({ page }) => {
+        test(` Refactored Verify alert and report when vaccine stock reaches minimum level`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const reportPage = new ReportPage(page, language);
@@ -73,8 +37,8 @@ languages.forEach(language => {
             const storeSetupPage = new StoreData(page, language);
 
             await loginPage.loginAs('syriaStoreOperator', language);
-        //    await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
-
+            await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
+            //await stockOverviewPageLocal.addEquipmentForStoreOperator();
             const productType = 'Vaccines';
 
             await stockOverviewPageLocal.evaluateCurrentStockBalanceForReportPage(
@@ -131,7 +95,7 @@ languages.forEach(language => {
         });
 
         // ================== TEST 2 ==================
-        test(`Verify  No alert and  color chart when vaccine stock reaches maximum level`, async ({ page }) => {
+        test(` refactored Verify  No alert and  color chart when vaccine stock reaches maximum level`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const reportPage = new ReportPage(page, language);
@@ -170,11 +134,11 @@ languages.forEach(language => {
             );
 
             expect(actualColor).toBe(expectedColor);
-             const tooltipTexts = await reportPage.highlightProductColumn(
+            const tooltipTexts = await reportPage.highlightProductColumn(
                 programDatanew[0].vaccine[language]
             );
 
-           
+
 
             expect(tooltipTexts == null || tooltipTexts.length === 0).toBeTruthy();
 

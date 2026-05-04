@@ -17,7 +17,7 @@ const addLineToArrivalData = require('../testdata/addlinetoarrival.json');
 const addLineToIssueData = require('../testdata/addLineToIssue.json');
 const calculationService = require('../service/CalculationService');
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
- const languages = ['en','fr','pt','es'];
+const languages = ['en', 'fr', 'pt', 'es'];
 //const languages = ['fr'];
 
 languages.forEach(language => {
@@ -36,12 +36,12 @@ languages.forEach(language => {
 
       await masterDataPage.openAndVerifySafeInjectionEquipment();
 
-await masterDataPage.fillMasterDataForm(
-  masterData,
-  masterData.productNameAdministrator,
-  "productTypeAdministration",
-  language
-);
+      await masterDataPage.fillMasterDataForm(
+        masterData,
+        masterData.productNameAdministrator,
+        "productTypeAdministration",
+        language
+      );
 
       await homePage.logout();
 
@@ -63,7 +63,7 @@ await masterDataPage.fillMasterDataForm(
 
       expect(result1?.replace(/[\u200E\u200F\u202A-\u202E]/g, '').trim())
         .toBe(masterData.productNameAdministrator);
-   });
+    });
 
     test('Add SafeInjection for Dilution and Validate Product Type', async ({ page }) => {
 
@@ -77,12 +77,12 @@ await masterDataPage.fillMasterDataForm(
 
       await masterDataPage.openAndVerifySafeInjectionEquipment();
 
-    await masterDataPage.fillMasterDataForm(
-  masterData,
-  masterData.productNameDilution,
-  "productTypeDilution",
-  language
-);
+      await masterDataPage.fillMasterDataForm(
+        masterData,
+        masterData.productNameDilution,
+        "productTypeDilution",
+        language
+      );
 
       await homePage.logout();
 
@@ -118,12 +118,12 @@ await masterDataPage.fillMasterDataForm(
 
       await masterDataPage.openAndVerifySafeInjectionEquipment();
 
-     await masterDataPage.fillMasterDataForm(
-  masterData,
-  masterData.productNameothers,
-  "productTypeOthers",
-  language
-);
+      await masterDataPage.fillMasterDataForm(
+        masterData,
+        masterData.productNameothers,
+        "productTypeOthers",
+        language
+      );
       await homePage.logout();
 
       await loginPage.loginAs('syriaCountryAdmin', language);
@@ -138,9 +138,9 @@ await masterDataPage.fillMasterDataForm(
         .toBe(masterData.productNameothers.replace(/[\u200E\u200F\u202A-\u202E]/g, '').trim());
     });
 
-    test('Verify Alert for Supplies Vaccination', async ({ page }) => {
+    test('Verify Calculations for Supplies Vaccination', async ({ page }) => {
 
-  const loginPage = new LoginPage(page);
+      const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
       const masterDataPage = new MasterDataPage(page);
       const ProgrammeDatapage = new ProgrammeData(page, language);
@@ -148,41 +148,12 @@ await masterDataPage.fillMasterDataForm(
       const storeSetupPage = new StoreData(page, language);
       const arrivalPage = new ArrivalPage(page, language);
 
-      // await loginPage.loginAs('sdAdmin', language);
-      // await homePage.verifyMenus();
-
-      // await masterDataPage.openAndVerifySafeInjectionEquipment();
-
-      // await masterDataPage.fillMasterDataForm(
-      //   masterData,
-      //   masterData.productNameAdministrator,
-      //   masterData.productTypeAdministration
-      // );
-
-      // await homePage.logout();
-
-    //   await loginPage.loginAs('syriaCountryAdmin', language);
-    //   await homePage.verifyMenus();
-
-    //   const result = await ProgrammeDatapage.createSupplyVaccination(
-    //     masterData.productNameAdministrator,
-    //     ProgrammeDatapage.administrationSyringeDropdown 
-    //   );
-
-    //   expect(result?.replace(/[\u200E\u200F\u202A-\u202E]/g, '').trim())
-    //     .toBe(masterData.productNameAdministrator);
-
-    //   await ProgrammeDatapage.clickCancelButton();
-    //  await ProgrammeDatapage.highlightAndClickAddSupplyVaccinations();
-    //   await ProgrammeDatapage.fillPopupForm(programDatanew, language);
-    //   await homePage.logout();
-
       await loginPage.loginAs('syriaStoreOperator', language);
-       await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
+      await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
 
       const productType = 'Supplies';
 
-     await stockOverviewPage.evaluateCurrentStockBalance(
+      await stockOverviewPage.evaluateCurrentStockBalance(
         programDatanew[0].administrationSyringe[language],
         addLineToIssueData.wastage[language],
         addLineToArrivalData.SimpleArrival[language],
@@ -225,10 +196,10 @@ await masterDataPage.fillMasterDataForm(
       }
 
       expect(tooltipText.trim()).toContain(expectedTooltip);
-    
+
     });
 
-    test('Verify Alert for Routine Vaccination', async ({ page }) => {
+    test('Verify Calculations for Routine Vaccination', async ({ page }) => {
 
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
@@ -238,38 +209,8 @@ await masterDataPage.fillMasterDataForm(
       const storeSetupPage = new StoreData(page, language);
       const arrivalPage = new ArrivalPage(page, language);
 
-    //   await loginPage.loginAs('sdAdmin', language);
-    //   await homePage.verifyMenus();
-
-    //   await masterDataPage.openAndVerifySafeInjectionEquipment();
-
-    //   await masterDataPage.fillMasterDataForm(
-    //     masterData,
-    //     masterData.productNameAdministrator,
-    //     masterData.productTypeAdministration
-    //   );
-
-    //   await homePage.logout();
-
-    //   await loginPage.loginAs('syriaCountryAdmin', language);
-    //   await homePage.verifyMenus();
-
-    //   const result = await ProgrammeDatapage.createRoutineVaccination(
-    //     masterData.productNameAdministrator,
-    //     ProgrammeDatapage.administrationSyringeDropdown 
-    //   );
-
-    //   expect(result?.replace(/[\u200E\u200F\u202A-\u202E]/g, '').trim())
-    //     .toBe(masterData.productNameAdministrator);
-
-    //   await ProgrammeDatapage.clickCancelButton();
-    //  await ProgrammeDatapage.highlightAndClickAdd();
-
-    //   await ProgrammeDatapage.fillPopupForm(programDatanew, language);
-    //   await arrivalPage.waitForLoadingToFinish();
-    //   await homePage.logout();
       await loginPage.loginAs('syriaStoreOperator', language);
-       await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
+      await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
 
       const productType = 'Vaccines';
 
@@ -316,8 +257,8 @@ await masterDataPage.fillMasterDataForm(
       }
 
       expect(tooltipText.trim()).toContain(expectedTooltip);
-    
-     });
+
+    });
 
   });
 

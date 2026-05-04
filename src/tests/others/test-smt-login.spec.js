@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
-import { LoginPage } from '../pages/loginPage';
-import { HomePage } from '../pages/homePage';
-import { loginData } from '../testdata/loginData';
+import { LoginPage } from '../../pages/loginPage';
+import { HomePage } from '../../pages/homePage';
+import { loginData } from '../../testdata/loginData';
 
 test.describe('SMT Login & Logout', () => {
 

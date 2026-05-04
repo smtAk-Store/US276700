@@ -19,7 +19,12 @@ export class LoginPage {
   }
 
   async openApplication() {
-    await this.page.goto('/');
+ await this.page.goto('/', {
+        waitUntil: 'domcontentloaded',   
+        timeout: 45000                  
+    });
+
+    await this.page.waitForLoadState('domcontentloaded', { timeout: 30000 });
   }
 
   async login(email, password) {
