@@ -22,9 +22,6 @@ languages.forEach(language => {
     const subStore2 = programmeData[0].subStore2[language];
     const mainStore = programmeData[0].Mainstore[language];
 
-    // =========================
-    // SUB STORE 1
-    // =========================
     await loginPage.loginAs('syriaStoreOperator', language);
     await storeSetupPage.selectStore(subStore1);
 
@@ -42,9 +39,7 @@ languages.forEach(language => {
 
     await homePage.logout();
 
-    // =========================
-    // SUB STORE 2
-    // =========================
+
     await loginPage.loginAs('syriaStoreOperator', language);
     await storeSetupPage.selectStore(subStore2);
 
@@ -62,9 +57,6 @@ languages.forEach(language => {
 
     await homePage.logout();
 
-    // =========================
-    // MAIN STORE
-    // =========================
     await loginPage.loginAs('syriaStoreOperator', language);
     await storeSetupPage.selectStore(mainStore);
 
@@ -91,10 +83,6 @@ languages.forEach(language => {
       'statusNonFunctional',
       mainStore
     );
-
-    // =========================
-    // REPORT
-    // =========================
     await reportPage.navigateTOReportsTabAndIscPerfomanceTab();
 
     await reportPage.selectLevelsStorePeriodStartAndPeriodEndYear(
@@ -104,13 +92,9 @@ languages.forEach(language => {
 
     await reportPage.IscPerfomanceTabCceFunctionality();
     await reportPage.waitForFunctionalityToLoad();
+    const storeObject = stockOverviewPageLocal.getTheStoreObjectData();
 
-    // =========================
-    // ✅ ASSERTION (VALUE + COLOR)
-    // =========================
-    const storeMap = stockOverviewPageLocal.getStoreEquipmentMap();
-
-    for (const [storeName, equipments] of Object.entries(storeMap)) {
+    for (const [storeName, equipments] of Object.entries(storeObject)) {
 
       const expectedNonFunctional = Object.values(equipments)
         .filter(status => status === 'statusNonFunctional')
@@ -124,20 +108,12 @@ languages.forEach(language => {
       console.log(`Actual Count: ${result.value}`);
       console.log(`Actual Color: ${result.color}`);
 
-      // ✅ VALUE ASSERTION
       expect(result.value).toBe(expectedNonFunctional);
-
-      // ✅ COLOR ASSERTION
       const expectedColor = expectedNonFunctional > 0 ? 'red' : 'green';
       expect(result.color).toBe(expectedColor);
     }
-
-    // =========================
-    // ✅ PERCENTAGE ASSERTION
-    // =========================
     const expectedPercentage =
       await reportPage.calculateTheExpectedPercentageForAggregatedReports();
-
     const actualPercentage =
       await reportPage.expectedPercentageInUI();
 

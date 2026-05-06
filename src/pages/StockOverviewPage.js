@@ -381,10 +381,10 @@ class StockOverviewPage {
   await this.addButton().waitFor({ state: 'visible' });
   await this.addButton().click();
 
-  const language = this.language || 'en';
+  //const language = this.language || 'en';
 
   // 🔑 Resolve values from JSON
-  const equipmentName = this.testData?.[equipmentKey]?.[language];
+  const equipmentName = this.testData?.[equipmentKey]?.[this.language];
   if (!equipmentName) {
     throw new Error(`Equipment not found for key: ${equipmentKey}`);
   }
@@ -452,7 +452,7 @@ class StockOverviewPage {
   console.log("=== addEquipmentForStoreOperator COMPLETED ===");
 }
 
-getStoreEquipmentMap() {
+getTheStoreObjectData() {
   return this.storeEquipmentMap;
 }
   async verifyTheColorOfDraftAndCompletedFilters(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity, dropdownvalue) {
