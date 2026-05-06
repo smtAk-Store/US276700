@@ -22,7 +22,9 @@ const productTypeArrivalDataNew = require('../../testdata/InputData/productTypeA
 const productTypeIssueDataNew = require('../../testdata/InputData/productTypeNewIssue.json');
 
 const { ReportPage } = require('../../pages/reportPage');
+const languages = ['en'];
 
+languages.forEach(language => {
  test.describe(`Create test data for all Language ${language}`, () => {
 
 // ================== BEFORE ALL ==================verifyDialogHasText
@@ -75,4 +77,5 @@ const { ReportPage } = require('../../pages/reportPage');
                 await page.close().catch(() => { });
             }
         });
+    });
  });

@@ -12,10 +12,12 @@ import { ConfirmationDialogPage } from '../pages/ConfirmationDialogPage';
 const { TableComponent } = require('../components/TableComponent');
 
 class StockOverviewPage {
-  constructor(page, language) {
+  constructor(page, language,testData) {
     this.page = page;
     this.form = new FormComponent(page);
     this.language = language;
+    this.testData = testData;
+    this.storeEquipmentMap = {};
     this.issuingPage = new IssuingPage(page, language);
     this.arrivalPage = new ArrivalPage(page, language);
     const [product] = productIssuingTab;
@@ -347,55 +349,111 @@ class StockOverviewPage {
 
 
   }
- async addEquipmentForStoreOperator(equipmentNameKey) {
+  async clickCloseWithRetry(maxAttempts = 3) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      console.log(`Attempt ${attempt} to click close button`);
+
+      const closeBtn = this.closeButton();
+
+      await closeBtn.waitFor({ state: 'visible', timeout: 3000 });
+      await closeBtn.click();
+
+      // ✅ verify it's gone after click
+      await closeBtn.waitFor({ state: 'hidden', timeout: 3000 });
+
+      console.log('Close button clicked successfully');
+      return; // exit if success
+
+    } catch (err) {
+      console.log(`Attempt ${attempt} failed: ${err.message}`);
+
+      if (attempt === maxAttempts) {
+        throw new Error('Failed to click close button after retries');
+      }
+    }
+  }
+}
+ async addEquipmentForStoreOperator(equipmentKey, statusKey, storeName) {
   console.log("=== addEquipmentForStoreOperator STARTED ===");
 
   await this.equipmentTAb().click();
-
   await this.addButton().waitFor({ state: 'visible' });
   await this.addButton().click();
 
+  const language = this.language || 'en';
+
+  // 🔑 Resolve values from JSON
+  const equipmentName = this.testData?.[equipmentKey]?.[language];
+  if (!equipmentName) {
+    throw new Error(`Equipment not found for key: ${equipmentKey}`);
+  }
+
+  const statusLabel = this.testData?.[statusKey]?.[language];
+  if (!statusLabel) {
+    throw new Error(`Status not found for key: ${statusKey}`);
+  }
+
+  console.log(`Store: ${storeName}`);
+  console.log(`Equipment: ${equipmentName}`);
+  console.log(`Status: ${statusLabel}`);
+
+  // ============================
+  // ✅ STORE DATA IN OBJECT (NEW)
+  // ============================
+  if (!this.storeEquipmentMap) {
+    this.storeEquipmentMap = {};
+  }
+
+  if (!this.storeEquipmentMap[storeName]) {
+    this.storeEquipmentMap[storeName] = {};
+  }
+
+ this.storeEquipmentMap[storeName][equipmentName] = statusKey;
+
+  console.log('Current Store Map:', this.storeEquipmentMap);
+
+  // ============================
+  // UI ACTIONS
+  // ============================
   await this.form.selectOptionByIndex('storageEquipmentId', 2);
   await this.form.selectOptionByIndex('supplierId', 1);
   await this.form.selectOptionByIndex('equipmentTypeId', 1);
-  await this.form.selectOptionByIndex('statusId', 1);
-
-  const language = this.language || 'en';
-  console.log('Using language:', language);
-
-  // 👇 now passed dynamically from spec
-  const equipmentName = equipmentNameKey;
-
-  if (!equipmentName) {
-    throw new Error(`Equipment name is required`);
-  }
-
-  console.log(`Filling equipment name: "${equipmentName}"`);
-
   await this.form.fillInput(this.equipmentNameInput(), equipmentName);
+  await this.form.selectDropdown(this.statusDropdown(), statusLabel);
 
   await this.saveButton().click();
-  console.log("Clicked Save button");
 
-  await this.page.waitForLoadState('networkidle');
-
-  const alreadyExists = await this.page
+  // 🔍 Wait up to 1s for "already exists" message
+  const errorLocator = this.page
     .locator('.check-error .msg')
-    .filter({
-      hasText: /exists|existe|موجود/i
-    })
-    .first()
-    .isVisible()
-    .catch(() => false);
+    .filter({ hasText: /exists|existe|موجود/i })
+    .first();
 
+  let alreadyExists = false;
+
+  try {
+    await errorLocator.waitFor({ state: 'visible', timeout: 1000 });
+    alreadyExists = true;
+  } catch {
+    alreadyExists = false;
+  }
+
+  // Handle result
   if (alreadyExists) {
     console.log(`Equipment "${equipmentName}" already exists. Skipping.`);
-    await this.closeButton().click();
+    await this.clickCloseWithRetry(); // retry-safe close
   } else {
     console.log(`Equipment "${equipmentName}" created successfully.`);
   }
 
+  await this.page.waitForLoadState('networkidle');
+
   console.log("=== addEquipmentForStoreOperator COMPLETED ===");
+}
+
+getStoreEquipmentMap() {
+  return this.storeEquipmentMap;
 }
   async verifyTheColorOfDraftAndCompletedFilters(value, addLineToIssueData, addLineToArrivalData, productTypeArrivalData, productTypeIssueData, productType, language, newArrivalQuantity, dropdownvalue) {
 

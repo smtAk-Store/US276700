@@ -54,7 +54,7 @@
       "pt": "RUPF_Sdilution_1ml",
       "es": "RUPF_Sdilution_1ml"
     },
-     "dilution": {
+    "dilution": {
       "en": "dil_COVID-B",
       "fr": "dil_COVID-B",
       "pt": "dil_COVID-B",
@@ -95,6 +95,90 @@
       "fr": "level2storename2syria",
       "pt": "level2storename2syria",
       "es": "level2storename2syria"
+    },
+    "mainStoreEquipment1": {
+      "en": "Syria_MainStore Equipment 1",
+      "fr": "Syria_MainStore Equipment 1",
+      "pt": "Syria_MainStore Equipment 1",
+      "es": "Syria_MainStore Equipment 1"
+    },
+    "mainStoreEquipment2": {
+      "en": "Syria_MainStore Equipment 2",
+      "fr": "Syria_MainStore Equipment 2",
+      "pt": "Syria_MainStore Equipment 2",
+      "es": "Syria_MainStore Equipment 2"
+    },
+    "mainStoreEquipment3": {
+      "en": "Syria_MainStore Equipment 3",
+      "fr": "Syria_MainStore Equipment 3",
+      "pt": "Syria_MainStore Equipment 3",
+      "es": "Syria_MainStore Equipment 3"
+    },
+    "mainStoreEquipment4": {
+      "en": "Syria_MainStore Equipment 4",
+      "fr": "Syria_MainStore Equipment 4",
+      "pt": "Syria_MainStore Equipment 4",
+      "es": "Syria_MainStore Equipment 4"
+    },
+    "firstsubStoreSyriaEquipment1": {
+      "en": "Syria_substore1 Equipment 1",
+      "fr": "Syria_substore1 Equipment 1",
+      "pt": "Syria_substore1 Equipment 1",
+      "es": "Syria_substore1 Equipment 1"
+    },
+    "firstsubStoreSyriaEquipment2": {
+      "en": "Syria_substore1 Equipment 2",
+      "fr": "Syria_substore1 Equipment 2",
+      "pt": "Syria_substore1 Equipment 2",
+      "es": "Syria_substore1 Equipment 2"
+    },
+    "firstsubStoreSyriaEquipment3": {
+      "en": "Syria_substore1 Equipment 3",
+      "fr": "Syria_substore1 Equipment 3",
+      "pt": "Syria_substore1 Equipment 3",
+      "es": "Syria_substore1 Equipment 3"
+    },
+    "firstsubStoreSyriaEquipment4": {
+      "en": "Syria_substore1 Equipment 4",
+      "fr": "Syria_substore1 Equipment 4",
+      "pt": "Syria_substore1 Equipment 4",
+      "es": "Syria_substore1 Equipment 4"
+    },
+    "secondsubStoreSyriaEquipment1": {
+      "en": "Syria_substore2 Equipment 1",
+      "fr": "Syria_substore2 Equipment 1",
+      "pt": "Syria_substore2 Equipment 1",
+      "es": "Syria_substore2 Equipment 1"
+    },
+    "secondsubStoreSyriaEquipment2": {
+      "en": "Syria_substore2 Equipment 2",
+      "fr": "Syria_substore2 Equipment 2",
+      "pt": "Syria_substore2 Equipment 2",
+      "es": "Syria_substore2 Equipment 2"
+    },
+    "secondsubStoreSyriaEquipment3": {
+      "en": "Syria_substore2 Equipment 3",
+      "fr": "Syria_substore2 Equipment 3",
+      "pt": "Syria_substore2 Equipment 3",
+      "es": "Syria_substore2 Equipment 3"
+    },
+    "secondsubStoreSyriaEquipment4": {
+      "en": "Syria_substore2 Equipment 4",
+      "fr": "Syria_substore2 Equipment 4",
+      "pt": "Syria_substore2 Equipment 4",
+      "es": "Syria_substore2 Equipment 4"
+    },
+    "statusFunctional": {
+      "en": "Functional",
+      "fr": "Fonctionnel",
+      "pt": "Funcional",
+      "es": "يعمل"
+    },
+    "statusNonFunctional": {
+      "en": "Non Functional",
+      "fr": "Non fonctionnel",
+      "pt": "Não funcional",
+      "es": "لا يعمل"
     }
   }
 ]

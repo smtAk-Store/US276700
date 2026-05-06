@@ -6,10 +6,11 @@ const calculationService = require('../service/CalculationService');
 
 
 class ReportPage {
-  constructor(page, language) {
+  constructor(page, language,testData) {
     this.page = page;
     this.form = new FormComponent(page);
     this.language = language;
+    this.testData = testData;
   }
   reportTab = () => this.page.locator('span[role="menuitem"]').nth(6);
   reportTabInCA = () => this.page.locator('span[role="menuitem"]').nth(4);
@@ -40,7 +41,6 @@ cceFunctionalityButton = () =>
  async IscPerfomanceTabCceFunctionality(){
   await this.cceFunctionalityButton().click();
   await this.page.waitForLoadState('networkidle');
-  await this.page.pause();
   }
 
  async selectLevelsStorePeriodStartAndPeriodEndYear(levelKey,options = {}){
@@ -144,7 +144,44 @@ cceFunctionalityButton = () =>
 
     throw new Error(` Vaccine not found: ${vaccineName}`);
   }
+async getNonFunctionalCellDataByStore(storeName) {
 
+  const row = this.page.locator('tbody tr', {
+    has: this.page.locator('td:nth-child(2)', {
+      hasText: new RegExp(`^${storeName}$`)
+    })
+  }).first();
+
+  await row.waitFor({ state: 'visible' });
+
+  const lastCell = row.locator('td').last();
+
+  // ✅ get text
+  const text = await lastCell.textContent();
+  const value = parseInt(text?.trim() || '0', 10);
+
+  // ✅ get class (color)
+  const className = await lastCell.getAttribute('class');
+
+  let color = 'unknown';
+
+  if (className.includes('red-alram')) {
+    color = 'red';
+  } else if (className.includes('green-alram')) {
+    color = 'green';
+  } else if (className.includes('gray-alram')) {
+    color = 'gray';
+  }
+
+  // console.log(`Store: ${storeName}`);
+  // console.log(`Value: ${value}`);
+  // console.log(`Color: ${color}`);
+
+  return {
+    value,
+    color
+  };
+}
 
 async verifyStockColor(productName) {
 const row = this.page.locator('tbody tr')
@@ -321,6 +358,156 @@ try {
     //await this.page.waitForTimeout(1000);
 
     return tooltips;
+}
+async waitForFunctionalityToLoad() {
+  const cell = this.page.locator('tbody tr').first().locator('td').last();
+
+  await expect.poll(async () => {
+    const text = await cell.textContent();
+    return text?.trim();
+  }, {
+    timeout: 10000
+  }).not.toBe('');
+}
+async calculateFunctionalityPercentage() {
+  const rows = this.page.locator('tbody tr');
+  const rowCount = await rows.count();
+
+  let functional = 0;
+  let nonFunctional = 0;
+
+  for (let i = 1; i < rowCount - 1; i++) {
+    const row = rows.nth(i);
+    const lastCell = row.locator('td').last();
+
+    const color = await lastCell.evaluate(el =>
+      window.getComputedStyle(el).backgroundColor
+    );
+
+    if (color === 'rgb(167, 218, 111)') {
+      functional++;
+    } else if (color === 'rgb(237, 125, 57)') {
+      nonFunctional++;
+    }
+  }
+
+  const total = functional + nonFunctional;
+
+  if (total === 0) {
+    throw new Error('No equipment rows found');
+  }
+
+  const percentage = Math.round((functional / total) * 100);
+
+  console.log(`Functional: ${functional}`);
+  console.log(`Non-Functional: ${nonFunctional}`);
+  console.log(`Calculated %: ${percentage}`);
+
+  return percentage;
+}
+async getFunctionalityPercentageFromUI() {
+  const row = this.page.locator('tbody tr').first();
+  const lastCell = row.locator('td').last();
+
+  const text = await lastCell.textContent();
+
+  const percentage = parseInt(text.trim().replace('%', ''), 10);
+
+  console.log(`UI Percentage: ${percentage}`);
+
+  return percentage;
+}
+async findAndHighlightRowByName(equipmentKey) {
+  const language = this.language || 'en';
+
+  // 🔑 resolve key → actual name
+  const equipmentName = this.testData?.[equipmentKey]?.[language];
+
+  if (!equipmentName) {
+    throw new Error(`Equipment not found for key: ${equipmentKey}`);
+  }
+
+  const row = this.page.locator('tbody tr', {
+    has: this.page.locator('td:first-child', {
+      hasText: new RegExp(`^${equipmentName}$`)
+    })
+  }).first();
+
+  await expect(row).toBeVisible();
+  await row.scrollIntoViewIfNeeded();
+
+  await row.evaluate((el) => {
+    el.style.outline = '3px solid red';
+    el.style.outlineOffset = '-2px';
+    el.style.backgroundColor = 'rgba(255, 255, 0, 0.4)';
+  });
+
+  // ✅ latest month cell
+  const lastCell = row.locator('td').last();
+
+  const color = await lastCell.evaluate(el =>
+    window.getComputedStyle(el).backgroundColor
+  );
+
+  console.log(`Highlighted row: ${equipmentName}, Color: ${color}`);
+
+  return {
+    row,
+    color
+  };
+}
+async calculateTheExpectedPercentageForAggregatedReports() {
+
+  const rows = this.page.locator('tbody tr');
+  const rowCount = await rows.count();
+
+  let totalStores = 0;
+  let fullyFunctionalStores = 0;
+
+  // ❗ skip last row (percentage row)
+  for (let i = 0; i < rowCount - 1; i++) {
+
+    const row = rows.nth(i);
+
+    const lastCell = row.locator('td').last();
+
+    const className = await lastCell.getAttribute('class');
+
+    // count this as a store row
+    totalStores++;
+
+    if (className.includes('green-alram')) {
+      fullyFunctionalStores++;
+    }
+  }
+
+  if (totalStores === 0) {
+    throw new Error('No store rows found');
+  }
+
+  const percentage = Math.round(
+    (fullyFunctionalStores / totalStores) * 100
+  );
+
+  console.log(`Total Stores: ${totalStores}`);
+  console.log(`Fully Functional Stores: ${fullyFunctionalStores}`);
+  console.log(`Calculated %: ${percentage}`);
+
+  return percentage;
+}
+async expectedPercentageInUI() {
+
+  const lastRow = this.page.locator('tbody tr').last();
+
+  const lastCell = lastRow.locator('td').last();
+
+  const text = await lastCell.textContent();
+
+  const percentage = parseInt(text?.trim().replace('%', '') || '0', 10);
+
+  console.log(`UI %: ${percentage}`);
+
+  return percentage;
 }
 }
 
