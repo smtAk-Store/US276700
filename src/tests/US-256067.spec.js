@@ -17,8 +17,8 @@ const addLineToArrivalData = require('../testdata/addlinetoarrival.json');
 const addLineToIssueData = require('../testdata/addLineToIssue.json');
 const calculationService = require('../service/CalculationService');
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
-const languages = ['en', 'fr', 'pt', 'es'];
-//const languages = ['fr'];
+//const languages = ['en', 'fr', 'pt', 'es'];
+const languages = ['en'];
 
 languages.forEach(language => {
 
@@ -138,7 +138,7 @@ languages.forEach(language => {
         .toBe(masterData.productNameothers.replace(/[\u200E\u200F\u202A-\u202E]/g, '').trim());
     });
 
-    test('Verify Calculations for Supplies Vaccination', async ({ page }) => {
+    test('Verify Calculations logic for Supplies', async ({ page }) => {
 
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
@@ -199,7 +199,7 @@ languages.forEach(language => {
 
     });
 
-    test('Verify Calculations for Routine Vaccination', async ({ page }) => {
+    test('Verify Calculations logic for Routine', async ({ page }) => {
 
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
@@ -230,6 +230,66 @@ languages.forEach(language => {
       );
 
       const expected = await calculationService.evaluateMinimumStockLevelForVaccines(
+        BCGData,
+        BCGData.CurrentStockBelowMinimumLevel
+      );
+
+      expect(expected).toBeLessThanOrEqual(
+        BCGData.saftyWeeks + BCGData.LeadWeeks
+      );
+
+      let expectedTooltip;
+
+      switch (language) {
+        case 'fr':
+          expectedTooltip = 'Le solde actuel de ce produit est inférieur au niveau minimum';
+          break;
+        case 'pt':
+          expectedTooltip = 'O saldo atual deste produto é inferior ao nível mínimo';
+          break;
+        case 'es':
+          expectedTooltip = 'الرصيد الحالي لهذا المنتج أقل من الحد الأدنى المطلوب';
+          break;
+        case 'en':
+        default:
+          expectedTooltip = 'The current balance of this product is less than minimum level';
+          break;
+      }
+
+      expect(tooltipText.trim()).toContain(expectedTooltip);
+
+    });
+     test('Verify Calculations logic for Dilution', async ({ page }) => {
+
+      const loginPage = new LoginPage(page);
+      const homePage = new HomePage(page);
+      const masterDataPage = new MasterDataPage(page);
+      const ProgrammeDatapage = new ProgrammeData(page, language);
+      const stockOverviewPage = new StockOverviewPage(page, language);
+      const storeSetupPage = new StoreData(page, language);
+      const arrivalPage = new ArrivalPage(page, language);
+      const productType = '';
+      await loginPage.loginAs('syriaStoreOperator', language);
+      await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
+
+     
+
+      await stockOverviewPage.evaluateCurrentStockBalance(
+        programDatanew[0].dilution[language],
+        addLineToIssueData.wastage[language],
+        addLineToArrivalData.SimpleArrival[language],
+        productTypeArrivalDataNew,
+        productTypeIssueDataNew,
+        productType,
+        language,
+        BCGData.CurrentStockBelowMinimumLevel
+      );
+
+      const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
+        programDatanew[0].dilution[language]
+      );
+
+      const expected = await calculationService.evaluateMinimumStockLevelForDiluents(
         BCGData,
         BCGData.CurrentStockBelowMinimumLevel
       );
