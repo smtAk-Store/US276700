@@ -12,6 +12,8 @@ class ReportPage {
     this.language = language;
     this.testData = testData;
   }
+  pdfExportOption = () =>this.page.locator('li[role="menuitem"]').first();
+  exportButton = () =>this.page.locator('button[aria-controls="long-menu"]');
   reportTab = () => this.page.locator('span[role="menuitem"]').nth(6);
   reportTabInCA = () => this.page.locator('span[role="menuitem"]').nth(4);
   stockStatusTab = () => this.page.locator('[role="tab"]').nth(4);
@@ -523,6 +525,28 @@ async expectedPercentageInUI() {
   console.log(`UI %: ${percentage}`);
 
   return percentage;
+}
+async verifyExportOptionAndDownloadPdf() {
+
+  const downloadPromise =
+    this.page.waitForEvent('download');
+
+  await this.exportButton().click();
+
+  await this.pdfExportOption().click();
+
+  const download =
+    await downloadPromise;
+
+  const fileName =
+    download.suggestedFilename();
+
+  const filePath =
+    await download.path();
+
+  console.log(`Downloaded File: ${fileName}`);
+  expect(fileName).toContain('.pdf');
+  expect(filePath).toBeTruthy();
 }
 }
 

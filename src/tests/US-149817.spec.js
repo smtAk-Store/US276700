@@ -106,7 +106,27 @@ languages.forEach(language => {
             .toBe(expectedPercentage);
 
         });
+  test(`US-149817:TC-02:Verify pdf is downloaded and export [${language}]`,
+        async ({ page }) => {
 
+          const stockOverviewPageLocal = new StockOverviewPage(page, language, programmeData[0]);
+          const reportPage = new ReportPage(page, language, programmeData[0]);
+          const loginPage = new LoginPage(page);
+          const storeSetupPage = new StoreData(page, language);
+          const mainStore = programmeData[0].Mainstore[language];
+
+
+          await loginPage.loginAs('syriaStoreOperator', language);
+          await storeSetupPage.selectStore(mainStore);
+          await reportPage.navigateTOReportsTabAndIscPerfomanceTab();
+          await reportPage.selectLevelsStorePeriodStartAndPeriodEndYear(
+            'level2',
+            { includeSubstore: true }
+          );
+          await reportPage.IscPerfomanceTabCceFunctionality();
+          await reportPage.waitForFunctionalityToLoad();
+          await reportPage.verifyExportOptionAndDownloadPdf();
+          
     });
-
+  });
 });

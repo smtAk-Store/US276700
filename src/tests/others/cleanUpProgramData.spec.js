@@ -3,7 +3,7 @@ const StockOverviewPage = require('../../pages/StockOverviewPage');
 import { LoginPage } from '../../pages/loginPage';
 import { HomePage } from '../../pages/homePage';
 
-test('delete all records', async ({ page }) => {
+test('delete all records in country admin', async ({ page }) => {
 
     const stockPage = new StockOverviewPage(page);
     const loginPage = new LoginPage(page);
@@ -11,7 +11,12 @@ test('delete all records', async ({ page }) => {
 
     const language = 'en';
 
-    await loginPage.loginAs('countryAdminVietnam', language);
+    await loginPage.loginAs('syriaCountryAdmin', language);
 
     await stockPage.clearAllData();
 });
+ const noRecords = this.page.locator(`
+      //span[contains(text(),'Routine Vaccinations')]
+      /ancestor::div[contains(@class,'sc-kfzAmx')]
+      //td[text()='No records to display']
+    `);

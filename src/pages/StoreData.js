@@ -344,7 +344,7 @@ async addStoreWithSubStore(levelKey, storeKey, subLevelKey, subStoreKey) {
  async enterThePopulationDemographicsTabFilterByStoreNamesFillTotalPopulationAndAdultPopulation(storeKey) {
 
   await this.populationDemographicsTab().click();
-
+   await this.page.waitForTimeout(6000);
   const Value = StoreHierarchyData.storeNames[storeKey][this.language];
 
   const row = this.page.locator('tbody tr')
