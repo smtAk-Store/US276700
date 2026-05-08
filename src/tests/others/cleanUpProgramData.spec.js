@@ -15,8 +15,8 @@ test('delete all records in country admin', async ({ page }) => {
 
     await stockPage.clearAllData();
 });
- const noRecords = this.page.locator(`
-      //span[contains(text(),'Routine Vaccinations')]
-      /ancestor::div[contains(@class,'sc-kfzAmx')]
-      //td[text()='No records to display']
-    `);
+//  const noRecords = this.page.locator(`
+//       //span[contains(text(),'Routine Vaccinations')]
+//       /ancestor::div[contains(@class,'sc-kfzAmx')]
+//       //td[text()='No records to display']
+//     `);
