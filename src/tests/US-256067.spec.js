@@ -22,9 +22,9 @@ const languages = ['en'];
 
 languages.forEach(language => {
 
-  test.describe(`Vaccination Flow - ${language}`, () => {
+  test.describe(`@regression12 Vaccination Flow - ${language}`, () => {
 
-    test('Add SafeInjection for Administrator and Validate Product Type', async ({ page }) => {
+    test('US-256067:TC-01:Add SafeInjection for Administrator and Validate Product Type', async ({ page }) => {
 
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
@@ -65,7 +65,7 @@ languages.forEach(language => {
         .toBe(masterData.productNameAdministrator);
     });
 
-    test('Add SafeInjection for Dilution and Validate Product Type', async ({ page }) => {
+    test('US-256067:TC-02:Add SafeInjection for Dilution and Validate Product Type', async ({ page }) => {
 
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
@@ -106,7 +106,7 @@ languages.forEach(language => {
         .toBe(masterData.productNameDilution);
     });
 
-    test('Add  SafeInjection for Others and Validate Product Type', async ({ page }) => {
+    test('US-256067:TC-03 :Add  SafeInjection for Others and Validate Product Type', async ({ page }) => {
 
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
@@ -138,7 +138,7 @@ languages.forEach(language => {
         .toBe(masterData.productNameothers.replace(/[\u200E\u200F\u202A-\u202E]/g, '').trim());
     });
 
-    test('Verify Calculations logic for Supplies', async ({ page }) => {
+    test('US-256067:TC-04:Verify Calculations logic for Supplies and verify tooltip', async ({ page }) => {
 
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
@@ -199,7 +199,7 @@ languages.forEach(language => {
 
     });
 
-    test('Verify Calculations logic for Routine', async ({ page }) => {
+    test('US-256067:TC-05:Verify Calculations logic for Vaccines and verify tooltip', async ({ page }) => {
 
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
@@ -259,7 +259,7 @@ languages.forEach(language => {
       expect(tooltipText.trim()).toContain(expectedTooltip);
 
     });
-     test('Verify Calculations logic for Dilution', async ({ page }) => {
+     test('US-256067:TC-06:Verify Calculations logic for Dilution and verify tooltip', async ({ page }) => {
 
       const loginPage = new LoginPage(page);
       const homePage = new HomePage(page);
@@ -271,6 +271,7 @@ languages.forEach(language => {
       const productType = '';
       await loginPage.loginAs('syriaStoreOperator', language);
       await storeSetupPage.selectStore(programmeData[0].Mainstore[language]);
+
 
      
 

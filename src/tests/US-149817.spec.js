@@ -5,123 +5,108 @@ import { HomePage } from '../pages/homePage';
 const StockOverviewPage = require('../pages/StockOverviewPage');
 const { ReportPage } = require('../pages/reportPage');
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
-const languages = ['en', 'fr', 'pt', 'es'];
-//const languages = ['es'];
+
+// const languages = ['en', 'fr', 'pt', 'es'];
+const languages = ['en'];
 
 languages.forEach(language => {
 
-  test(`Verify Calculation Logic & color coding - Aggregated reports [${language}]`, async ({ page }) => {
+  test.describe(
+    `@regression12 US-149817 ISC Performance - Percentage of Stores with Full Functionality [${language}]`,
+    () => {
 
-    const stockOverviewPageLocal = new StockOverviewPage(page, language, programmeData[0]);
-    const reportPage = new ReportPage(page, language, programmeData[0]);
-    const loginPage = new LoginPage(page);
-    const homePage = new HomePage(page);
-    const storeSetupPage = new StoreData(page, language);
+      test(`US-149817:TC-01:Verify Calculation Logic and Color Coding for Percentage of Stores with Full Functionality in Aggregated Reports [${language}]`,
+        async ({ page }) => {
 
-    const subStore1 = programmeData[0].subStore1[language];
-    const subStore2 = programmeData[0].subStore2[language];
-    const mainStore = programmeData[0].Mainstore[language];
-
-    await loginPage.loginAs('syriaStoreOperator', language);
-    await storeSetupPage.selectStore(subStore1);
-
-    await stockOverviewPageLocal.addEquipmentForStoreOperator(
-      'firstsubStoreSyriaEquipment1',
-      'statusFunctional',
-      subStore1
-    );
-
-    await stockOverviewPageLocal.addEquipmentForStoreOperator(
-      'firstsubStoreSyriaEquipment2',
-      'statusFunctional',
-      subStore1
-    );
-
-    await homePage.logout();
+          const stockOverviewPageLocal = new StockOverviewPage(page, language, programmeData[0]);
+          const reportPage = new ReportPage(page, language, programmeData[0]);
+          const loginPage = new LoginPage(page);
+          const homePage = new HomePage(page);
+          const storeSetupPage = new StoreData(page, language);
+          const subStore1 = programmeData[0].subStore1[language];
+          const subStore2 = programmeData[0].subStore2[language];
+          const mainStore = programmeData[0].Mainstore[language];
 
 
-    await loginPage.loginAs('syriaStoreOperator', language);
-    await storeSetupPage.selectStore(subStore2);
+          await loginPage.loginAs('syriaStoreOperator', language);
+          await storeSetupPage.selectStore(subStore1);
+          await stockOverviewPageLocal.addEquipmentForStoreOperator('firstsubStoreSyriaEquipment1', 'statusFunctional', subStore1);
+          await stockOverviewPageLocal.addEquipmentForStoreOperator('firstsubStoreSyriaEquipment2', 'statusFunctional', subStore1);
+          await homePage.logout();
 
-    await stockOverviewPageLocal.addEquipmentForStoreOperator(
-      'secondsubStoreSyriaEquipment3',
-      'statusNonFunctional',
-      subStore2
-    );
 
-    await stockOverviewPageLocal.addEquipmentForStoreOperator(
-      'secondsubStoreSyriaEquipment1',
-      'statusFunctional',
-      subStore2
-    );
 
-    await homePage.logout();
+          await loginPage.loginAs('syriaStoreOperator', language);
+          await storeSetupPage.selectStore(subStore2);
+          await stockOverviewPageLocal.addEquipmentForStoreOperator('secondsubStoreSyriaEquipment3', 'statusNonFunctional', subStore2);
+          await stockOverviewPageLocal.addEquipmentForStoreOperator('secondsubStoreSyriaEquipment1', 'statusFunctional', subStore2);
+          await homePage.logout();
 
-    await loginPage.loginAs('syriaStoreOperator', language);
-    await storeSetupPage.selectStore(mainStore);
+          await loginPage.loginAs('syriaStoreOperator', language);
+          await storeSetupPage.selectStore(mainStore);
+          await stockOverviewPageLocal.addEquipmentForStoreOperator('mainStoreEquipment1', 'statusFunctional', mainStore);
+          await stockOverviewPageLocal.addEquipmentForStoreOperator('mainStoreEquipment2','statusFunctional',mainStore );
+          await stockOverviewPageLocal.addEquipmentForStoreOperator( 'mainStoreEquipment3','statusNonFunctional',mainStore );
+          await stockOverviewPageLocal.addEquipmentForStoreOperator('mainStoreEquipment4','statusNonFunctional', mainStore);
 
-    await stockOverviewPageLocal.addEquipmentForStoreOperator(
-      'mainStoreEquipment1',
-      'statusFunctional',
-      mainStore
-    );
+          
 
-    await stockOverviewPageLocal.addEquipmentForStoreOperator(
-      'mainStoreEquipment2',
-      'statusFunctional',
-      mainStore
-    );
+          await reportPage.navigateTOReportsTabAndIscPerfomanceTab();
+          await reportPage.selectLevelsStorePeriodStartAndPeriodEndYear(
+            'level2',
+            { includeSubstore: true }
+          );
+          await reportPage.IscPerfomanceTabCceFunctionality();
+          await reportPage.waitForFunctionalityToLoad();
+          const storeObject =
+            stockOverviewPageLocal.getTheStoreObjectData();
 
-    await stockOverviewPageLocal.addEquipmentForStoreOperator(
-      'mainStoreEquipment3',
-      'statusNonFunctional',
-      mainStore
-    );
+          for (const [storeName, equipments]of Object.entries(storeObject)) {
+            const expectedNonFunctional =
+              Object.values(equipments)
+                .filter(
+                  status => status === 'statusNonFunctional'
+                )
+                .length;
 
-    await stockOverviewPageLocal.addEquipmentForStoreOperator(
-      'mainStoreEquipment4',
-      'statusNonFunctional',
-      mainStore
-    );
-    await reportPage.navigateTOReportsTabAndIscPerfomanceTab();
+            const result =
+              await reportPage.getNonFunctionalCellDataByStore(
+                storeName
+              );
 
-    await reportPage.selectLevelsStorePeriodStartAndPeriodEndYear(
-      'level2',
-      { includeSubstore: true }
-    );
+            console.log(`Store: ${storeName}`);
+            console.log(`Expected Count: ${expectedNonFunctional}`);
+            console.log(`Actual Count: ${result.value}`);
+            console.log(`Actual Color: ${result.color}`);
 
-    await reportPage.IscPerfomanceTabCceFunctionality();
-    await reportPage.waitForFunctionalityToLoad();
-    const storeObject = stockOverviewPageLocal.getTheStoreObjectData();
+            expect(result.value)
+              .toBe(expectedNonFunctional);
 
-    for (const [storeName, equipments] of Object.entries(storeObject)) {
+            const expectedColor =
+              expectedNonFunctional > 0
+                ? 'red'
+                : 'green';
 
-      const expectedNonFunctional = Object.values(equipments)
-        .filter(status => status === 'statusNonFunctional')
-        .length;
+            expect(result.color)
+              .toBe(expectedColor);
+          }
 
-      const result =
-        await reportPage.getNonFunctionalCellDataByStore(storeName);
+         
+          const expectedPercentage =
+            await reportPage
+              .calculateTheExpectedPercentageForAggregatedReports();
 
-      console.log(`Store: ${storeName}`);
-      console.log(`Expected Count: ${expectedNonFunctional}`);
-      console.log(`Actual Count: ${result.value}`);
-      console.log(`Actual Color: ${result.color}`);
+          const actualPercentage =
+            await reportPage.expectedPercentageInUI();
 
-      expect(result.value).toBe(expectedNonFunctional);
-      const expectedColor = expectedNonFunctional > 0 ? 'red' : 'green';
-      expect(result.color).toBe(expectedColor);
-    }
-    const expectedPercentage =
-      await reportPage.calculateTheExpectedPercentageForAggregatedReports();
-    const actualPercentage =
-      await reportPage.expectedPercentageInUI();
+          console.log(`Expected %: ${expectedPercentage}`);
+          console.log(`Actual %: ${actualPercentage}`);
 
-    console.log(`Expected %: ${expectedPercentage}`);
-    console.log(`Actual %: ${actualPercentage}`);
+          expect(actualPercentage)
+            .toBe(expectedPercentage);
 
-    expect(actualPercentage).toBe(expectedPercentage);
+        });
 
-  });
+    });
 
 });

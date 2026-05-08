@@ -13,11 +13,11 @@ const programmeData = require('../testdata/InputData/ProgrammeData.json');
 import testData from '../testdata/InputData/draftandcomplete.json';
 
 const languages = ['en'];
-test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () => {
+test.describe('@regression12 Stock Overview - Draft/Complete Filter & Color Validation', () => {
 
     languages.forEach(language => {
 
-        test(`Draft filter and color coding for supplies (${language})`, async ({ page }) => {
+        test(` US-276873:TC-01 Verify Draft filter and color  its coding for supplies (${language})`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
@@ -47,7 +47,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             expect(data.color).toBe('rgb(255, 193, 7)');
         });
 
-        test(`Complete filter and color coding for supplies (${language})`, async ({ page }) => {
+        test(`US-276873:TC-02 : Verify Complete filter and color  its coding for supplies (${language})`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
@@ -77,7 +77,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             expect(data.color).toBe('rgb(76, 175, 80)');
         });
 
-        test(`Color before and after finalize for supplies (${language})`, async ({ page }) => {
+        test(`US-276873:TC-03 : Verify Color coding for before and after finalize for supplies (${language})`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
@@ -108,7 +108,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             expect(result.completeColor).toBe('rgb(76, 175, 80)');
         });
 
-        test(`Draft filter and color coding for vaccines (${language})`, async ({ page }) => {
+        test(` US-276873:TC-04 : Verify Draft filter and color its coding for vaccines (${language})`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
@@ -138,7 +138,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             expect(data.color).toBe('rgb(255, 193, 7)');
         });
 
-        test(`Complete filter and color coding for vaccines (${language})`, async ({ page }) => {
+        test(`US-276873:TC-05 :  Verify Complete filter and color its coding for vaccines (${language})`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);
@@ -167,7 +167,7 @@ test.describe('Stock Overview - Draft/Complete Filter & Color Validation', () =>
             expect(data.color).toBe('rgb(76, 175, 80)');
         });
 
-        test(`Color before and after finalize for vaccines (${language})`, async ({ page }) => {
+        test(` US-276873:TC-06 :Verify Color coding for before and after finalize for vaccines (${language})`, async ({ page }) => {
 
             const stockOverviewPageLocal = new StockOverviewPage(page);
             const loginPage = new LoginPage(page);

@@ -103,47 +103,62 @@ cceFunctionalityButton = () =>
 
 
 }
-  async highlightTdAndVerifyTooltipForGenerateReportTable(vaccineName) {
-    const rows = this.page.locator('tbody tr');
-    const rowCount = await rows.count();
+ async highlightTdAndVerifyTooltipForGenerateReportTable(vaccineName) {
 
-    for (let i = 0; i < rowCount; i++) {
-      const row = rows.nth(i);
+  // wait until actual data rows appear
+  await this.page.waitForFunction(() => {
 
-      // get product name from first column
-      const productCell = row.locator('td:nth-child(1)');
-      const productValue = (await productCell.getAttribute('value'))?.trim();
+    const rows = document.querySelectorAll('tbody tr');
 
-      if (productValue === vaccineName) {
+    return Array.from(rows).some(row =>
+      !row.innerText.includes('No records to display')
+    );
 
-        
-        await row.evaluate(el => {
-          el.style.background = 'yellow';
-        });
+  }, { timeout: 15000 });
 
-      //await this.page.waitForTimeout(15000);
-     
-        const td5 = row.locator('td:nth-child(5)');
-        await td5.evaluate(el => {
-          el.style.background = 'green';
-          el.style.color = 'white';
-          el.style.fontWeight = 'bold';
-        });
-       //await this.page.waitForTimeout(15000);
+  const rows = this.page.locator('tbody tr');
+  const rowCount = await rows.count();
 
-        // 🔍 tooltip check (if exists on td or inner span)
-        const tooltipElement = td5.locator('[data-tooltip]').first();
-        const tooltipText = await tooltipElement.getAttribute('data-tooltip');
+  for (let i = 0; i < rowCount; i++) {
 
-        console.log(`✅ Vaccine: ${vaccineName}`);
-        console.log(`🟢 Tooltip found : ${tooltipText || 'No tooltip found'}`);
+    const row = rows.nth(i);
 
-        return tooltipText;
-      }
+    const productCell = row.locator('td:nth-child(1)');
+
+    const productValue =
+      (await productCell.textContent())?.trim();
+
+    console.log(`Checking row: ${productValue}`);
+
+    if (productValue === vaccineName) {
+
+      await row.evaluate(el => {
+        el.style.background = 'yellow';
+      });
+
+      const td5 = row.locator('td:nth-child(5)');
+
+      await td5.evaluate(el => {
+        el.style.background = 'green';
+        el.style.color = 'white';
+        el.style.fontWeight = 'bold';
+      });
+
+      const tooltipElement =
+        td5.locator('[data-tooltip]').first();
+
+      const tooltipText =
+        await tooltipElement.getAttribute('data-tooltip');
+
+      console.log(`Vaccine: ${vaccineName}`);
+      console.log(`Tooltip found: ${tooltipText || 'No tooltip found'}`);
+
+      return tooltipText;
     }
-
-    throw new Error(` Vaccine not found: ${vaccineName}`);
   }
+
+  throw new Error(`Vaccine not found: ${vaccineName}`);
+}
 async getNonFunctionalCellDataByStore(storeName) {
 
   const row = this.page.locator('tbody tr', {
@@ -206,33 +221,33 @@ const row = this.page.locator('tbody tr')
     if (trimmedName === productName) {
       console.log(`✅ Match found: ${productName}`);
 
-      // 👉 IMPORTANT: pick ONLY ONE bar element
+    
       const colorBar = row.locator('[class*="bc-fillbar"]').first();
 
       await colorBar.waitFor({ state: 'attached' });
 
       const classAttr = await colorBar.getAttribute('class');
-      console.log(`🎨 Class attribute: ${classAttr}`);
+      console.log(` Class attribute: ${classAttr}`);
 
       if (!classAttr) {
-        throw new Error(`❌ No class found on fillbar`);
+        throw new Error(` No class found on fillbar`);
       }
 
       if (classAttr.includes('bc-fillbar-red')) {
-        console.log(`🟥 FINAL COLOR: red`);
+        console.log(` FINAL COLOR: red`);
         return 'red';
       }
 
       if (classAttr.includes('bc-fillbar-blue')) {
-        console.log(`🟦 FINAL COLOR: blue`);
+        console.log(` FINAL COLOR: blue`);
         return 'blue';
       }
 
-      throw new Error(`❌ Unknown color class: ${classAttr}`);
+      throw new Error(` Unknown color class: ${classAttr}`);
     }
   }
 
-  throw new Error(`❌ Product not found: ${productName}`);
+  throw new Error(` Product not found: ${productName}`);
 }
 async highlightProductColumn(productName) {
 

@@ -22,55 +22,11 @@ const languages = ['en'];
 
 languages.forEach(language => {
 
-  test.describe(` real reafctored Validate Alerts for Vaccines and Diluents - Language: ${language}`, () => {
+  test.describe(`@regression12 Vaccination Flow real reafctored Validate Alerts for Vaccines and Diluents - Language: ${language}`, () => {
 
     let stockOverviewPage;
 
-    // ================== RUNS ONLY ONCE ==================
-    test.beforeAll(async ({ browser }) => {
-      const page = await browser.newPage();
-      try {
-
-        const loginPage = new LoginPage(page);
-        const homePage = new HomePage(page);
-        const programmePage = new ProgrammeData(page, language);
-        const arrivalPage = new ArrivalPage(page, language);
-        const storeSetupPage = new StoreData(page, language);
-
-        await loginPage.loginAs('countryAdmin', language);
-        await homePage.verifyMenus();
-
-        console.log(`Navigated to base URL`);
-
-        await programmePage.highlightAndClickAdd();
-        await programmePage.fillPopupForm(programmeData, language);
-
-        await arrivalPage.waitForLoadingToFinish();
-
-        await storeSetupPage.navigateToPopulationDemographics();
-        await storeSetupPage.editGroup1AndSave();
-        await storeSetupPage.editVaccine5AndSave();
-        await storeSetupPage.fillStockParametersAndClickDocument();
-
-        await homePage.logout();
-
-        console.log(` Programme setup completed for ${language}`);
-
-      } catch (error) {
-        console.error(`Setup failed:`, error.message);
-        try {
-          await page.screenshot({ path: `setup-failed-${language}-${Date.now()}.png`, fullPage: true });
-          console.log(`Screenshot saved for debugging`);
-        } catch (e) { }
-        throw error;
-      } finally {
-        await page.close().catch(() => { });
-      }
-    });
-
-    // ================== BEFORE EACH ==================
     test.beforeEach(async ({ page }) => {
-      //test.setTimeout(180000);
 
       const loginPage = new LoginPage(page);
       const issuingPage = new IssuingPage(page, language);
@@ -79,8 +35,8 @@ languages.forEach(language => {
       console.log(` Logging in as Store Operator for ${language}`);
 
       await loginPage.loginAs('syriaStoreOperator', language);
-     // await storePageInstance.selectStore(programmeData[0].store[language]);
-  await storePageInstance.selectStore(programmeData[0].Mainstore[language]);
+
+      await storePageInstance.selectStore(programmeData[0].Mainstore[language]);
       stockOverviewPage = new StockOverviewPage(page, language);
       await stockOverviewPage.navigateTostockOverviewpage();
 
@@ -89,25 +45,21 @@ languages.forEach(language => {
 
     // ================== TEST ==================
 
-    test(` reafctored Verify alert appears when stock is below minimum level for Vaccines`, async () => {
+    test(`US-280112:TC-01 : Verify alert appears when stock is below minimum level for Vaccines`, async () => {
       const expected = await calculationService.evaluateMinimumStockLevelForVaccines(BCGData,
         BCGData.CurrentStockBelowMinimumLevel
       );
-
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
-
-
-
       const productType = 'Vaccines';
-      await stockOverviewPage.evaluateCurrentStockBalance(    
-               programDatanew[0].vaccine[language],
-                addLineToIssueData.wastage[language],
-                addLineToArrivalData.SimpleArrival[language],
-                productTypeArrivalDataNew,
-                productTypeIssueDataNew,
-                productType,
-                language,
-                BCGData.CurrentStockBelowMinimumLevel
+      await stockOverviewPage.evaluateCurrentStockBalance(
+        programDatanew[0].vaccine[language],
+        addLineToIssueData.wastage[language],
+        addLineToArrivalData.SimpleArrival[language],
+        productTypeArrivalDataNew,
+        productTypeIssueDataNew,
+        productType,
+        language,
+        BCGData.CurrentStockBelowMinimumLevel
       );
 
       const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
@@ -139,7 +91,7 @@ languages.forEach(language => {
       expect(tooltipText.trim()).toContain(expectedTooltip);
     });
 
-    test(` reafctored Verify No alert appears when stock is above minimum level for Vaccines`, async () => {
+    test(`US-280112:TC-02 :  Verify No alert appears when stock is above minimum level for Vaccines`, async () => {
       const expected = await calculationService.evaluateMinimumStockLevelForVaccines(BCGData,
         BCGData.CurrentStockAboveMinimumLevel
       );
@@ -147,43 +99,43 @@ languages.forEach(language => {
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
 
       const productType = 'Vaccines';
-      await stockOverviewPage.evaluateCurrentStockBalance(    
-               programDatanew[0].vaccine[language],
-                addLineToIssueData.wastage[language],
-                addLineToArrivalData.SimpleArrival[language],
-                productTypeArrivalDataNew,
-                productTypeIssueDataNew,
-                productType,
-                language,
-                BCGData.CurrentStockAboveMinimumLevel
+      await stockOverviewPage.evaluateCurrentStockBalance(
+        programDatanew[0].vaccine[language],
+        addLineToIssueData.wastage[language],
+        addLineToArrivalData.SimpleArrival[language],
+        productTypeArrivalDataNew,
+        productTypeIssueDataNew,
+        productType,
+        language,
+        BCGData.CurrentStockAboveMinimumLevel
       );
       const tooltipCount = await stockOverviewPage.highlightTdAndVerifyNoTooltip(
-       programDatanew[0].vaccine[language]
+        programDatanew[0].vaccine[language]
       );
 
       expect(expected).toBeGreaterThanOrEqual(
         BCGData.saftyWeeks + BCGData.LeadWeeks
       );
 
-   expect(tooltipCount).toBe(true);
+      expect(tooltipCount).toBe(true);
     });
 
 
-    test(` reafctored Verify real Zero Stock alert appears for Vaccines`, async () => {
+    test(`US-280112:TC-03: Verify  Zero Stock alert appears for Vaccines`, async () => {
       const productType = 'Vaccines';
       await stockOverviewPage.validateZeroStockBalance(
-         programDatanew[0].vaccine[language],
-                addLineToIssueData.wastage[language],
-                addLineToArrivalData.SimpleArrival[language],
-                productTypeArrivalDataNew,
-                productTypeIssueDataNew,
-                productType,
-                language,
-                BCGData.CurrentStockMinimumLevel
+        programDatanew[0].vaccine[language],
+        addLineToIssueData.wastage[language],
+        addLineToArrivalData.SimpleArrival[language],
+        productTypeArrivalDataNew,
+        productTypeIssueDataNew,
+        productType,
+        language,
+        BCGData.CurrentStockMinimumLevel
       );
 
       const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
-       programDatanew[0].vaccine[language]
+        programDatanew[0].vaccine[language]
       );
       let expectedTooltip;
 
@@ -206,7 +158,7 @@ languages.forEach(language => {
       expect(tooltipText.trim()).toContain(expectedTooltip);
     });
 
-    test(` reafctored Verify alert appears when stock is below minimum level for Diluents`, async () => {
+    test(`US-280112:TC-04 : Verify alert appears when stock is below minimum level for Diluents`, async () => {
       const expected = await calculationService.evaluateMinimumStockLevelForDiluents(
         BCGData, BCGData.CurrentStockBelowMinimumLevel
       );
@@ -216,20 +168,20 @@ languages.forEach(language => {
 
 
       const productType = 'Diluents';
-      await stockOverviewPage.evaluateCurrentStockBalance(   
-          programDatanew[0].dilution[language],
-                addLineToIssueData.wastage[language],
-                addLineToArrivalData.SimpleArrival[language],
-                productTypeArrivalDataNew,
-                productTypeIssueDataNew,
-                productType,
-                language,
-                BCGData.CurrentStockBelowMinimumLevel
+      await stockOverviewPage.evaluateCurrentStockBalance(
+        programDatanew[0].dilution[language],
+        addLineToIssueData.wastage[language],
+        addLineToArrivalData.SimpleArrival[language],
+        productTypeArrivalDataNew,
+        productTypeIssueDataNew,
+        productType,
+        language,
+        BCGData.CurrentStockBelowMinimumLevel
 
       );
 
       const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
-       programDatanew[0].dilution[language]
+        programDatanew[0].dilution[language]
       );
 
       expect(expected).toBeLessThanOrEqual(
@@ -256,7 +208,7 @@ languages.forEach(language => {
       expect(tooltipText.trim()).toContain(expectedTooltip);
     });
 
-    test(`reafctored Verify No alert appears when stock is above minimum level for Diluents`, async () => {
+    test(`US-280112:TC-05: Verify No alert appears when stock is above minimum level for Diluents`, async () => {
       const expected = await calculationService.evaluateMinimumStockLevelForDiluents(BCGData,
         BCGData.CurrentStockAboveMinimumLevel
       );
@@ -264,15 +216,15 @@ languages.forEach(language => {
       console.log(` expected: ${expected}, safety+lead: ${BCGData.saftyWeeks + BCGData.LeadWeeks}`);
 
       const productType = 'Diluents';
-      await stockOverviewPage.evaluateCurrentStockBalance(      
+      await stockOverviewPage.evaluateCurrentStockBalance(
         programDatanew[0].dilution[language],
-                addLineToIssueData.wastage[language],
-                addLineToArrivalData.SimpleArrival[language],
-                productTypeArrivalDataNew,
-                productTypeIssueDataNew,
-                productType,
-                language,
-                BCGData.CurrentStockAboveMinimumLevel
+        addLineToIssueData.wastage[language],
+        addLineToArrivalData.SimpleArrival[language],
+        productTypeArrivalDataNew,
+        productTypeIssueDataNew,
+        productType,
+        language,
+        BCGData.CurrentStockAboveMinimumLevel
       );
 
       const tooltipCount = await stockOverviewPage.highlightTdAndVerifyNoTooltip(
@@ -283,25 +235,25 @@ languages.forEach(language => {
         BCGData.saftyWeeks + BCGData.LeadWeeks
       );
 
-     expect(tooltipCount).toBe(true);
+      expect(tooltipCount).toBe(true);
     });
 
 
-    test(` reafctored Verify Zero Stock alert appears for Diluents`, async () => {
+    test(` US-280112:TC-06: Verify Zero Stock alert appears for Diluents`, async () => {
       const productType = 'Diluents';
       await stockOverviewPage.validateZeroStockBalance(
         programDatanew[0].dilution[language],
-                addLineToIssueData.wastage[language],
-                addLineToArrivalData.SimpleArrival[language],
-                productTypeArrivalDataNew,
-                productTypeIssueDataNew,
-                productType,
-                language,
-                BCGData.CurrentStockMinimumLevel
+        addLineToIssueData.wastage[language],
+        addLineToArrivalData.SimpleArrival[language],
+        productTypeArrivalDataNew,
+        productTypeIssueDataNew,
+        productType,
+        language,
+        BCGData.CurrentStockMinimumLevel
       );
 
       const tooltipText = await stockOverviewPage.highlightTdAndVerifyTooltip(
-         programDatanew[0].dilution[language]
+        programDatanew[0].dilution[language]
       );
 
       let expectedTooltip;

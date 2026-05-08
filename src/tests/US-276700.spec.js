@@ -28,7 +28,7 @@ const arrivalTypes = ["ARRIVAL"];
 
 // =======================================================
 
-test.describe('SMT FULL FLOW - ARRIVAL + ISSUING AUTOMATION', () => {
+test.describe('@regression12 ISSUING AUTOMATION', () => {
 
   languages.forEach(language => {
 
@@ -40,7 +40,7 @@ test.describe('SMT FULL FLOW - ARRIVAL + ISSUING AUTOMATION', () => {
     // =======================================================
     // 1. CREATE ARRIVAL
     // =======================================================
-    test.describe('1. Create New Arrival and Validate buttons', () => {
+    test.describe('US-276700:TC-01 : Create New Arrival and Validate Finalize Button Enabled', () => {
 
       arrivalTypes.forEach(type => {
 
@@ -72,7 +72,7 @@ test.describe('SMT FULL FLOW - ARRIVAL + ISSUING AUTOMATION', () => {
     // =======================================================
     // 2. DELETE FLOW
     // =======================================================
-    test.describe('2. Arrival Deletion Popup Behaviour', () => {
+    test.describe('US-276700:TC-02  :  Create Arrival  and Deletion Popup Behaviour validate success message', () => {
 
       arrivalTypes.forEach(type => {
 
@@ -111,7 +111,7 @@ test.describe('SMT FULL FLOW - ARRIVAL + ISSUING AUTOMATION', () => {
     // =======================================================
     // 3. FINALIZE FLOW
     // =======================================================
-    test.describe('3. Finalize Arrival and Lock Delete', () => {
+    test.describe('US-276700:TC-03 : Create Arrival and Finalize  and Verify Success message', () => {
 
       arrivalTypes.forEach(type => {
 
@@ -149,7 +149,7 @@ test.describe('SMT FULL FLOW - ARRIVAL + ISSUING AUTOMATION', () => {
     // =======================================================
     // 4. AUTOMATIC APPROVAL + ISSUING FLOW
     // =======================================================
-    test.describe('4. Automatic Approval and Issuing Flow', () => {
+    test.describe('US-276700:TC-04 : Verify Automatic Approval of the issue and verify the Alert', () => {
 
       arrivalTypes.forEach(type => {
 
@@ -194,7 +194,7 @@ test.describe('SMT FULL FLOW - ARRIVAL + ISSUING AUTOMATION', () => {
           await issuingPage.fillIssuingFormCRROnly(issuingScenario);
           await issuingPage.addProductToIssuingTabPopup(product, language);
           await issuingPage.clickFinalizeVerifyPopupinIssuingTab();
-
+         await arrivalPage.confirmationDialog.clickConfirm();
           await homePage.logout();
           await loginPage.loginAs('storeOperator1', language);
           await storePage.selectStore(data2.store[language]);

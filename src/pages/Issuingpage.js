@@ -10,6 +10,10 @@ class IssuingPage {
     this.page = page;                   
     this.language = language;          
     this.form = new FormComponent(page);
+     this.dialog = page.locator('[role="dialog"]');
+    this.confirmButton = this.page.locator(
+  'button:has-text("Continue"), button:has-text("Continuer"), button:has-text("Continuar")'
+);
     this.issueNewStockButton  = () => this.page.locator('//button[contains(@class,"MuiButton-containedPrimary")]');
     this.issueTypeDropdown = () => this.page.locator('#issueTypes');
     this.recipientStoreDropdown = () => this.page.locator("//div[@id='recipientStore' and contains(@class,'MuiSelect-root')]");
@@ -47,24 +51,50 @@ class IssuingPage {
 
     return false;
   }
-  async clickSaveWithRetry() {
-    const maxAttempts = 3;
+async clickSaveWithRetry() {
 
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+  const maxAttempts = 3;
 
-      await this.saveButton().click();
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
 
-      const isSuccess = await this.waitForNoError(300);
+    await this.saveButton().click();
 
-      if (isSuccess) {
-        return true;
+    // ✅ handle UI issue only on first attempt
+    if (attempt === 1) {
+
+      if (
+        await this.confirmButton
+          .isVisible({ timeout: 2000 })
+          .catch(() => false)
+      ) {
+
+        console.log(
+          'Confirmation popup detected - clicking confirm button'
+        );
+
+        // ✅ highlight confirm button
+        await this.confirmButton.evaluate(el => {
+          el.style.border = '3px solid red';
+          el.style.backgroundColor = 'yellow';
+        });
+
+        await this.confirmButton.click();
       }
-
-      console.log(`Save attempt ${attempt} failed, retrying...`);
     }
 
-    throw new Error('Save failed after 3 attempts due to validation errors');
+    const isSuccess = await this.waitForNoError(300);
+
+    if (isSuccess) {
+      return true;
+    }
+
+    console.log(`Save attempt ${attempt} failed, retrying...`);
   }
+
+  throw new Error(
+    'Save failed after 3 attempts due to validation errors'
+  );
+}
 async fillIssuingFormCRROnly(data) {
 
   console.log('Full data received:', JSON.stringify(data, null, 2));

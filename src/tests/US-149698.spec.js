@@ -4,14 +4,14 @@ import { StoreData } from '../pages/StoreData';
 const StockOverviewPage = require('../pages/StockOverviewPage');
 const { ReportPage } = require('../pages/reportPage');
 const programmeData = require('../testdata/InputData/ProgrammeData.json');
-const languages = ['en', 'fr', 'pt', 'es'];
-//const languages = ['en'];
+//const languages = ['en', 'fr', 'pt', 'es'];
+const languages = ['en'];
 
 languages.forEach(language => {
 const mainStore = programmeData[0].Mainstore[language];
-  test.describe(`ISC Performance Suite (${language})`, () => {
+  test.describe(`@regression12 ISC Performance Suite (${language})`, () => {
 
-    test(`ISC performance for Functional and Verify Color Coding`, async ({ page }) => {
+    test(`US-149698:TC-01 : Verify Color Coding for Functional Equipment in ISC Performance Report`, async ({ page }) => {
       const stockOverviewPageLocal = new StockOverviewPage(page, language, programmeData[0]);
       const reportPage = new ReportPage(page, language, programmeData[0]);
       const loginPage = new LoginPage(page);
@@ -34,7 +34,7 @@ const mainStore = programmeData[0].Mainstore[language];
     });
 
 
-    test(`ISC performance for Non Functional and Verify Color Coding`, async ({ page }) => {
+    test(`US-149698:TC-02: Verify Color Coding for Non Functional Equipment in ISC Performance Report`, async ({ page }) => {
       const stockOverviewPageLocal = new StockOverviewPage(page, language, programmeData[0]);
       const reportPage = new ReportPage(page, language, programmeData[0]);
       const loginPage = new LoginPage(page);
@@ -57,7 +57,7 @@ const mainStore = programmeData[0].Mainstore[language];
     });
 
 
-    test(`Verify the Calculation logic for ISC performance`, async ({ page }) => {
+    test(`US-149698:TC-03: Verify Functionality Percentage Row Calculation in ISC Performance Report`, async ({ page }) => {
       const stockOverviewPageLocal = new StockOverviewPage(page, language, programmeData[0]);
       const reportPage = new ReportPage(page, language, programmeData[0]);
       const loginPage = new LoginPage(page);

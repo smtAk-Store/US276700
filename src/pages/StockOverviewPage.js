@@ -389,7 +389,7 @@ class StockOverviewPage {
     throw new Error(`Equipment not found for key: ${equipmentKey}`);
   }
 
-  const statusLabel = this.testData?.[statusKey]?.[language];
+  const statusLabel = this.testData?.[statusKey]?.[this.language];
   if (!statusLabel) {
     throw new Error(`Status not found for key: ${statusKey}`);
   }
